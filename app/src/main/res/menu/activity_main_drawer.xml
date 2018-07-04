@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_search_patient"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="@string/search_patient_titie" />
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_perm_contact_calendar_black_24dp"
+            android:title="@string/history_work_title" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Slideshow" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Tools" />
+    </group>
+
+    <item android:title="Tài khoản">
+        <menu>
+            <item
+                android:id="@+id/nav_my_accout"
+                android:icon="@drawable/ic_account_circle_black_24dp"
+                android:title="@string/my_accout_fragment_title" />
+            <item
+                android:id="@+id/nav_log_out"
+                android:icon="@drawable/ic_power_settings_new_black_24dp"
+                android:title="@string/logout_titile" />
+        </menu>
+    </item>
+
+</menu>

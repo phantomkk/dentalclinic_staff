@@ -1,0 +1,115 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/color_blue_900</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="value_style" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/color_blue_grey_900</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="custom_button_green" parent="@android:style/Widget.Button">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:textColor">#FFFFFFFF</item>
+        <!--<item name="android:shadowColor">#FF000000</item>-->
+        <!--<item name="android:shadowDx">0</item>-->
+        <!--<item name="android:shadowDy">-1</item>-->
+        <!--<item name="android:shadowRadius">0.2</item>-->
+        <item name="android:textSize">16sp</item>
+        <!--<item name="android:textStyle">bold</item>-->
+        <item name="android:background">@drawable/ripple_effect</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="custom_button_blue" parent="@android:style/Widget.Button">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:textColor">#FFFFFFFF</item>
+        <!--<item name="android:shadowColor">#FF000000</item>-->
+        <!--<item name="android:shadowDx">0</item>-->
+        <!--<item name="android:shadowDy">-1</item>-->
+        <!--<item name="android:shadowRadius">0.2</item>-->
+        <item name="android:textSize">16sp</item>
+        <!--<item name="android:textStyle">bold</item>-->
+        <item name="android:background">@drawable/side_nav_bar</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="custom_button_red" parent="custom_button_green">
+        <item name="android:background">@drawable/ripple_effect_2</item>
+    </style>
+
+    <style name="custom_button_orange" parent="custom_button_green">
+        <item name="android:background">@drawable/ripple_effect_3</item>
+    </style>
+
+    <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/color_white</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="succeToast">
+        <item name="textBold">false</item>
+        <item name="textColor">#fff</item>
+        <!--<item name="font">@font/retrofont</item>-->
+        <item name="textSize">14sp</item>
+        <item name="colorBackground">@color/color_green_500</item>
+        <item name="solidBackground">true</item>
+        <item name="strokeWidth">3dp</item>
+        <item name="strokeColor">#fff</item>
+        <item name="iconStart">@drawable/ic_check_white_24dp</item>
+        <!--<item name="iconEnd">@drawable/ic</item>-->
+        <item name="length">LONG</item> LONG or SHORT
+        <!--<item name="gravity">bottom</item> top or center-->
+        <item name="radius">5dp</item>
+    </style>
+    <style name="errorToast">
+        <item name="textBold">false</item>
+        <item name="textColor">#fff</item>
+        <!--<item name="font">@font/retrofont</item>-->
+        <item name="textSize">14sp</item>
+        <item name="colorBackground">@color/color_red_500</item>
+        <item name="solidBackground">true</item>
+        <item name="strokeWidth">3dp</item>
+        <item name="strokeColor">#fff</item>
+        <item name="iconStart">@drawable/ic_warning_white_24dp</item>
+        <!--<item name="iconEnd">@drawable/ic</item>-->
+        <item name="length">LONG</item> LONG or SHORT
+        <!--<item name="gravity">bottom</item> top or center-->
+        <item name="radius">5dp</item>
+    </style>
+    <style name="warningToast">
+        <item name="textBold">false</item>
+        <item name="textColor">#fff</item>
+        <!--<item name="font">@font/retrofont</item>-->
+        <item name="textSize">14sp</item>
+        <item name="colorBackground">@color/color_blue_500</item>
+        <item name="solidBackground">true</item>
+        <item name="strokeWidth">3dp</item>
+        <item name="strokeColor">#fff</item>
+        <item name="iconStart">@drawable/ic_info_white_24dp</item>
+        <!--<item name="iconEnd">@drawable/ic</item>-->
+        <item name="length">LONG</item> LONG or SHORT
+        <!--<item name="gravity">bottom</item> top or center-->
+        <item name="radius">5dp</item>
+    </style>
+</resources>

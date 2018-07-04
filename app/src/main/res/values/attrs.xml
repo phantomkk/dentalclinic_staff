@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <declare-styleable name="DigitalView">
+        <attr name="digital_img" format="integer" />
+        <attr name="bit" format="integer" />
+        <attr name="decimal_bit" format="integer" />
+        <attr name="animate_duration" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="CustomCalendar">
+        <attr name="cellSize" format="integer"  />
+    </declare-styleable>
+
+</resources>
