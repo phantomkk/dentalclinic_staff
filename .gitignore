@@ -6,5 +6,4 @@ gradle
 .DS_Store
 /build
 /captures
-.externalNativeBuild
-/settings.gradle
+.externalNativeBuildb
