@@ -36,7 +36,7 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
     EditText txtDegree;
     TextView txtDateOfBirth, txtDateError;
     AutoCompleteTextView txtAddress;
-    RadioGroup rgGender;
+    RadioGroup rgGender; 
     RadioButton rbMale, rbFemale, rbOther;
     Spinner spDistrict, spCity;
     Button btnUpdate;
