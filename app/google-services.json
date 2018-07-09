@@ -1,0 +1,174 @@
+{
+  "project_info": {
+    "project_number": "353232148503",
+    "firebase_url": "https://demofbase-ac217.firebaseio.com",
+    "project_id": "demofbase-ac217",
+    "storage_bucket": "demofbase-ac217.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353232148503:android:0fcb17b7e1846e9a",
+        "android_client_info": {
+          "package_name": "com.dentalclinic.capstone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353232148503-n82mjods8ll9361lmb56fain2n01cdq7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dentalclinic.capstone",
+            "certificate_hash": "638419cd6972c151d6fbf9daa1d092a943073fa7"
+          }
+        },
+        {
+          "client_id": "353232148503-3uk3qiq98ef0qcak12trfj6hfpht8072.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDITzHso4Cc5CyBozE4VLxGqmMcgSSc2Rg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353232148503-3uk3qiq98ef0qcak12trfj6hfpht8072.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353232148503:android:81249ba1d29e7f53",
+        "android_client_info": {
+          "package_name": "com.dentalclinic.capstone.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353232148503-3uk3qiq98ef0qcak12trfj6hfpht8072.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDITzHso4Cc5CyBozE4VLxGqmMcgSSc2Rg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353232148503:android:0339c5741a134849",
+        "android_client_info": {
+          "package_name": "com.dentalclinic.capstone.firebasedatabasedemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353232148503-48ootim757u1ei27lt3rdgjnkcd1b5t5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dentalclinic.capstone.firebasedatabasedemo",
+            "certificate_hash": "638419cd6972c151d6fbf9daa1d092a943073fa7"
+          }
+        },
+        {
+          "client_id": "353232148503-3uk3qiq98ef0qcak12trfj6hfpht8072.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDITzHso4Cc5CyBozE4VLxGqmMcgSSc2Rg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353232148503-3uk3qiq98ef0qcak12trfj6hfpht8072.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353232148503:android:eb7145af4506dc90",
+        "android_client_info": {
+          "package_name": "com.example.luc.firebasedemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353232148503-5d4i9p0df4d4ppldb4nrm9k65k04u20j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.luc.firebasedemo",
+            "certificate_hash": "638419cd6972c151d6fbf9daa1d092a943073fa7"
+          }
+        },
+        {
+          "client_id": "353232148503-3uk3qiq98ef0qcak12trfj6hfpht8072.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDITzHso4Cc5CyBozE4VLxGqmMcgSSc2Rg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353232148503-3uk3qiq98ef0qcak12trfj6hfpht8072.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

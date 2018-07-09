@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.lenovo.dentalclinicadmin"
+        applicationId "com.dentalclinic.capstone.admin"
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
@@ -45,6 +45,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.0.0'
     implementation "com.google.android.gms:play-services-gcm:15.0.1"
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.google.firebase:firebase-core:16.0.0'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.5.+'
 //    implementation 'com.vamsi:customcalendar:1.0.0'
     //Toast cumtomzie
@@ -61,3 +62,4 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+apply plugin: 'com.google.gms.google-services'
