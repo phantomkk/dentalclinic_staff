@@ -1,4 +1,4 @@
-package com.dentalclinic.capstone.admin.model;
+package com.dentalclinic.capstone.admin.models;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -34,18 +34,10 @@ public class User implements Serializable {
     private City city;
     @SerializedName("roles")
     private List<Role> roles;
-
-//    private List<Patient> patients;
-//    private Patient currentPatient;
-
-//    public List<Patient> getPatients() {
-//        return patients;
-//    }
-//
-//    public void setPatients(List<Patient> patients) {
-//        this.patients = patients;
-//    }
-
+    @SerializedName("access_token")
+    private String accessToken;
+    @SerializedName("refresh_token")
+    private String refreshToken;
     public String getPhone() {
         return phone;
     }
@@ -149,5 +141,21 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

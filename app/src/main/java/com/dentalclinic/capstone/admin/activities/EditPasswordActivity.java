@@ -7,17 +7,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.dentalclinic.capstone.admin.R;
-import com.dentalclinic.capstone.admin.model.User;
+import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.Validation;
 
-import java.io.IOException;
-
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import retrofit2.Response;
 
 public class EditPasswordActivity extends BaseActivity implements View.OnClickListener {
     private EditText txtPassword, txtConfirmPassword, txtCurrentPassword;

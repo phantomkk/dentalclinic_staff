@@ -3,9 +3,7 @@ package com.dentalclinic.capstone.admin.utils;
 import android.content.Context;
 import android.util.Log;
 
-import com.dentalclinic.capstone.admin.model.User;
-
-import java.util.List;
+import com.dentalclinic.capstone.admin.models.User;
 
 
 /**

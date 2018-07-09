@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
-import com.dentalclinic.capstone.admin.model.City;
-import com.dentalclinic.capstone.admin.model.District;
+import com.dentalclinic.capstone.admin.models.City;
+import com.dentalclinic.capstone.admin.models.District;
 
 import java.util.ArrayList;
 import java.util.List;

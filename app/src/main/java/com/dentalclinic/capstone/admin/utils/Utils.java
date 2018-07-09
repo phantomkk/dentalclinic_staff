@@ -5,8 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 
-import com.dentalclinic.capstone.admin.R;
-import com.dentalclinic.capstone.admin.model.User;
+import com.dentalclinic.capstone.admin.models.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;

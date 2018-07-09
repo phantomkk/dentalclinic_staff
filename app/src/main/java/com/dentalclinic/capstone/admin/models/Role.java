@@ -1,31 +1,16 @@
-package com.dentalclinic.capstone.admin.model;
+package com.dentalclinic.capstone.admin.models;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class City implements Serializable {
+public class Role implements Serializable {
     @SerializedName("id")
     private int id;
     @SerializedName("name")
     private String name;
-
-    public City(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-
-    public City(String name) {
-        this.name = name;
-    }
-
-    public City() {
-    }
-
-    public City(int id) {
-        this.id = id;
-    }
+    @SerializedName("description")
+    private String description;
 
     public int getId() {
         return id;
@@ -41,5 +26,13 @@ public class City implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

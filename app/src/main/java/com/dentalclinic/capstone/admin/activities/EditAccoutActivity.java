@@ -20,9 +20,9 @@ import com.dentalclinic.capstone.admin.adapter.CitySpinnerAdapter;
 import com.dentalclinic.capstone.admin.adapter.DistrictSpinnerAdapter;
 import com.dentalclinic.capstone.admin.api.requestobject.UpdateUserRequest;
 import com.dentalclinic.capstone.admin.databaseHelper.DatabaseHelper;
-import com.dentalclinic.capstone.admin.model.City;
-import com.dentalclinic.capstone.admin.model.District;
-import com.dentalclinic.capstone.admin.model.User;
+import com.dentalclinic.capstone.admin.models.City;
+import com.dentalclinic.capstone.admin.models.District;
+import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.Validation;
 
@@ -36,7 +36,7 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
     EditText txtDegree;
     TextView txtDateOfBirth, txtDateError;
     AutoCompleteTextView txtAddress;
-    RadioGroup rgGender; 
+    RadioGroup rgGender;
     RadioButton rbMale, rbFemale, rbOther;
     Spinner spDistrict, spCity;
     Button btnUpdate;

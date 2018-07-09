@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.dentalclinic.capstone.admin.model.City;
+import com.dentalclinic.capstone.admin.models.City;
 
 import java.util.List;
 

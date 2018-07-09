@@ -3,7 +3,7 @@ package com.dentalclinic.capstone.admin.api.services;
 import com.dentalclinic.capstone.admin.api.requestobject.LoginRequest;
 import com.dentalclinic.capstone.admin.api.requestobject.UpdateUserRequest;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
-import com.dentalclinic.capstone.admin.model.User;
+import com.dentalclinic.capstone.admin.models.User;
 
 import io.reactivex.Single;
 import okhttp3.MultipartBody;

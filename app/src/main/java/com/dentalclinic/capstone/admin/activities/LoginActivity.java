@@ -9,20 +9,19 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.activities.BaseActivity;
+import com.dentalclinic.capstone.admin.activities.MainActivity;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
+import com.dentalclinic.capstone.admin.api.RetrofitClient;
 import com.dentalclinic.capstone.admin.api.requestobject.LoginRequest;
-import com.dentalclinic.capstone.admin.api.responseobject.ErrorResponse;
+import com.dentalclinic.capstone.admin.api.services.StaffService;
 import com.dentalclinic.capstone.admin.api.services.UserService;
-import com.dentalclinic.capstone.admin.model.User;
+import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
-import com.dentalclinic.capstone.admin.utils.Utils;
-
-import java.io.IOException;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,7 +29,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 
-//import com.dentalclinic.capstone.firebase.FirebaseDataReceiver;
+//import com.dentalclinic.capstone.admin.firebase.FirebaseDataReceiver;
 
 /**
  * A login screen that offers login via email/password.
@@ -44,7 +43,6 @@ public class LoginActivity extends BaseActivity {
     private View btnLinkAppointment;
     private View btnSingin;
     private TextView txtErrorServer;
-    private TextView tvLinkRegister;
 
 
     private Disposable disposable;
@@ -74,12 +72,7 @@ public class LoginActivity extends BaseActivity {
         txtPhone = findViewById(R.id.txt_phone_loginact);
         txtErrorServer = findViewById(R.id.txt_error_server_loginact);
         txtPassword = findViewById(R.id.password);
-        tvLinkRegister = findViewById(R.id.tv_link_quickregister);
-        tvLinkRegister.setOnClickListener((v) -> {
-//            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-//            startActivity(intent);
-        });
-        btnLinkAppointment = findViewById(R.id.link_book_appointment_loginact);
+
         txtPassword.setOnEditorActionListener((TextView textView, int id, KeyEvent keyEvent) -> {
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                 attemptLogin();
@@ -89,14 +82,9 @@ public class LoginActivity extends BaseActivity {
 
         });
 
-        btnLinkAppointment.setOnClickListener((view) ->
-        {
-//            Intent intent = new Intent(LoginActivity.this, QuickBookActivity.class);
-//            startActivity(intent);
-        });
 
         mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+//        mProgressView = findViewById(R.id.login_progress);
         btnSingin = findViewById(R.id.btn_signin_loginact);
         btnSingin.setOnClickListener((view) ->
         {
@@ -105,12 +93,12 @@ public class LoginActivity extends BaseActivity {
         });
 
 
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.dummy_focus_loginact);
-        linearLayout.requestFocus();
+//        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.dummy_focus_loginact);
+//        linearLayout.requestFocus();
         txtPassword.clearFocus();
         txtPhone.clearFocus();
         User user = CoreManager.getUser(this);
-        if(user!=null){
+        if (user != null) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
@@ -135,7 +123,7 @@ public class LoginActivity extends BaseActivity {
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
+        // Check for a valid password, if the user entered one.admin.
 
         if (TextUtils.isEmpty(phone) && !isPhoneValid(phone)) {
             txtPhone.setError(getString(R.string.error_invalid_phone));
@@ -169,14 +157,15 @@ public class LoginActivity extends BaseActivity {
         finish();
         return true;
     }
+
     public void callApiLogin(String phone, String password) {
         showLoading();
-        LoginRequest request  = new LoginRequest();
+        LoginRequest request = new LoginRequest();
         request.setPassword(password);
         request.setPhone(phone);
-//        request.setNotifToken(FirebaseInstanceId.getInstance().getToken());
-        UserService userService = APIServiceManager.getService(UserService.class);
-        userService.login(request)
+        request.setNotifToken(FirebaseInstanceId.getInstance().getToken());
+        StaffService staffService = APIServiceManager.getService(StaffService.class);
+        staffService.login(phone, password)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Response<User>>() {
@@ -188,27 +177,31 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<User> userResponse) {
                         if (userResponse.isSuccessful()) {
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        } else {
-                            if (userResponse.errorBody() != null) {
-                                try {
-                                    String errorMsgJson = userResponse.errorBody().string();
-                                    ErrorResponse errorResponse = Utils.parseJson(errorMsgJson, ErrorResponse.class);
-                                    if(errorMsgJson!=null) {
-                                        Toast.makeText(LoginActivity.this, errorResponse.getErrorMessage(), Toast.LENGTH_SHORT).show();
-                                        logError( "onSuccess", errorResponse.getExceptionMessage());
-                                        txtErrorServer.setText(errorResponse.getErrorMessage());
-
-                                    }
-                                } catch (IOException e) {
-                                  logError(LoginActivity.class,"Login method", e.getMessage());
-                                }
+//                            Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                            //////donothing
+                            if (userResponse.body() != null) {
+                                User u = userResponse.body();
+                                CoreManager.setUser(LoginActivity.this, u);
+                                RetrofitClient.setAccessToken(u.getAccessToken());
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                finish();
                             }
-                            hideLoading();
+                        } else if (userResponse.code() == 500) {
+                            showFatalError(userResponse.errorBody(), "callApiLogin");
+                        } else if (userResponse.code() == 401) {
+                            showErrorUnAuth();
+                        } else if (userResponse.code() == 400) {
+                            showBadRequestError(userResponse.errorBody(), "callApiLogin");
+                        } else {
+                            showErrorMessage(getString(R.string.error_on_error_when_call_api));
                         }
+                        hideLoading();
+
                     }
+
                     @Override
                     public void onError(Throwable e) {
+                        showWarningMessage(getResources().getString(R.string.error_on_error_when_call_api));
                         logError(LoginActivity.class, "attemptLogin", e.getMessage());
                         hideLoading();
                     }

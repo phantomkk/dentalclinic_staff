@@ -1,4 +1,4 @@
-package com.dentalclinic.capstone.admin.model;
+package com.dentalclinic.capstone.admin.models;
 
 import com.google.gson.annotations.SerializedName;
 

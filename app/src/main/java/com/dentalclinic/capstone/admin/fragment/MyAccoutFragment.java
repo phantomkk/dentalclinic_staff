@@ -1,8 +1,6 @@
 package com.dentalclinic.capstone.admin.fragment;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,15 +19,12 @@ import android.widget.Toast;
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.activities.EditAccoutActivity;
 import com.dentalclinic.capstone.admin.activities.EditPasswordActivity;
-import com.dentalclinic.capstone.admin.activities.MainActivity;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
-import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.api.services.UserService;
-import com.dentalclinic.capstone.admin.model.City;
-import com.dentalclinic.capstone.admin.model.District;
-import com.dentalclinic.capstone.admin.model.User;
+import com.dentalclinic.capstone.admin.models.City;
+import com.dentalclinic.capstone.admin.models.District;
+import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
-import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
 import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.dentalclinic.capstone.admin.utils.GenderUtils;
@@ -42,14 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
