@@ -12,13 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.dentalclinic.capstone.admin.R;
-import com.dentalclinic.capstone.admin.activities.BaseActivity;
-import com.dentalclinic.capstone.admin.activities.MainActivity;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.RetrofitClient;
 import com.dentalclinic.capstone.admin.api.requestobject.LoginRequest;
 import com.dentalclinic.capstone.admin.api.services.StaffService;
-import com.dentalclinic.capstone.admin.api.services.UserService;
 import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.google.firebase.iid.FirebaseInstanceId;

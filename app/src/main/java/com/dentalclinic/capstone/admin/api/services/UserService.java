@@ -20,19 +20,6 @@ import retrofit2.http.Part;
  */
 
 public interface UserService {
-    //    @GET("/api/users/{id}")
-//    Call<User> getByID(@Path("id") int id);
-//    @POST("/api/users/login")
-//    Call<User> login(@Body User user);
-//    @POST("/api/users/register")
-//    Call<User> register(@Body User user);
-//    @PUT("/api/users/{id}")
-//    Call<User> update(@Path("id") int id, @Body User user);
-
-//    @FormUrlEncoded
-//     @POST("/api/users/updatepwd")
-//    Call<User> updatePassword(@Field("id") int id, @Field("password") String password);
-
     @POST("/api/user/login")
     Single<Response<User>> login(@Body LoginRequest request);
 

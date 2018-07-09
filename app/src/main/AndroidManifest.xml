@@ -21,6 +21,10 @@
         </activity>
 
         <activity android:name=".activities.LoginActivity">
+        </activity>
+
+        <activity android:name=".activities.CreatePatientActivity" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -6,58 +6,50 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.dentalclinic.capstone.admin.models.City;
 import com.dentalclinic.capstone.admin.models.District;
-import com.dentalclinic.capstone.admin.models.City;
 import com.dentalclinic.capstone.admin.models.District;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
-    // Phiên bản
+/**
+ * Created by Lenovo on 15/10/2017.
+ */
+
+public class DistrictDatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
 
     // Tên cơ sở dữ liệu.
     private static final String DATABASE_NAME = "DentalClinicUser";
 
-    public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public DistrictDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
-    public DatabaseHelper(Context context) {
+    public DistrictDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    private String createCityTableQuery =  "CREATE TABLE " + TABLE_CITY + "("
-            + COLUMN_CITY_ID + " INTEGER,"
-            + COLUMN_CITY_NAME + " TEXT" + ")";
-    private String createDistrictQuery = "CREATE TABLE " + TABLE_DISTRICT + "("
-            + COLUMN_DISTRICT_ID + " INTEGER,"
-            + COLUMN_DISTRICT_NAME + " TEXT,"
-            + COLUMN_DISTRICT_CITY_ID + " INTEGER"
-            + ")";
-
     //name table
-    private static final String TABLE_CITY = "City";
-    private static final String COLUMN_CITY_ID = "id";
-    private static final String COLUMN_CITY_NAME = "name";
     private static final String TABLE_DISTRICT = "Districts";
     private static final String COLUMN_DISTRICT_ID = "id";
     private static final String COLUMN_DISTRICT_NAME = "name";
     private static final String COLUMN_DISTRICT_CITY_ID = "city_id";
 
+
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(createCityTableQuery);
-        db.execSQL(createDistrictQuery);
-
+        String script = "CREATE TABLE " + TABLE_DISTRICT + "("
+                + COLUMN_DISTRICT_ID + " INTEGER,"
+                + COLUMN_DISTRICT_NAME + " TEXT,"
+                + COLUMN_DISTRICT_CITY_ID + " INTEGER"
+                + ")";
+        db.execSQL(script);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CITY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISTRICT);
         // Và tạo lại.
         onCreate(db);
@@ -71,100 +63,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //    }
 
 
-    public ArrayList<City> getAllCity() {
-        // Log.i(TAG, "MyDatabaseHelper.getAllNotes ... " );
-
-        ArrayList<City> cities = new ArrayList<City>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_CITY + " ORDER BY " + COLUMN_CITY_ID + " ASC";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-
-        // Duyệt trên con trỏ, và thêm vào danh sách.
-        if (cursor.moveToFirst()) {
-            do {
-                City city = new City();
-                city.setId(cursor.getInt(0));
-                city.setName(cursor.getString(1));
-                // Thêm vào danh sách.
-                cities.add(city);
-            } while (cursor.moveToNext());
-        }
-
-        // return note list
-        return cities;
-    }
-
-    public int getPositionCityById(int id) {
-        // Log.i(TAG, "MyDatabaseHelper.getAllNotes ... " );
-
-        ArrayList<City> cities = getAllCity();
-        // Select All Query
-       for (int i = 0; i<cities.size();i++){
-           if(cities.get(i).getId()==id){
-               return i;
-           }
-       }
-        // return note list
-        return -1;
-    }
-
-
-    public int getPositionDistrictById(District district) {
-        // Log.i(TAG, "MyDatabaseHelper.getAllNotes ... " );
-
-        ArrayList<District> districts = getDistrictOfCity(district.getCityId());
-        // Select All Query
-        for (int i = 0; i<districts.size();i++){
-            if(districts.get(i).getId()==district.getId()){
-                return i;
-            }
-        }
-        // return note list
-        return -1;
-    }
-
-    public District getDistrictFromId(int id) {
-        String selectQuery = "SELECT  * FROM " + TABLE_DISTRICT + " WHERE "+ COLUMN_DISTRICT_ID + "= "+id;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        District district = new District();
-        if (cursor.moveToFirst()) {
-            do {
-                district.setId(cursor.getInt(0));
-                district.setName(cursor.getString(1));
-                district.setCityId(cursor.getInt(2));
-                // Thêm vào danh sách.
-            } while (cursor.moveToNext());
-        }
-        // return note list
-        return district;
-    }
-
-    public City getCityFromId(int id) {
-        String selectQuery = "SELECT  * FROM " + TABLE_CITY + " WHERE "+ COLUMN_CITY_ID + "= "+id;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        City city = new City();
-        if (cursor.moveToFirst()) {
-            do {
-                city.setId(cursor.getInt(0));
-                city.setName(cursor.getString(1));
-                // Thêm vào danh sách.
-            } while (cursor.moveToNext());
-        }
-        // return note list
-        return city;
-    }
-
     public ArrayList<District> getAllDistrict() {
         // Log.i(TAG, "MyDatabaseHelper.getAllNotes ... " );
 
         ArrayList<District> districts = new ArrayList<District>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_DISTRICT + " ORDER BY " + COLUMN_DISTRICT_ID + " ASC";
+        String selectQuery = "SELECT  * FROM " + TABLE_DISTRICT + " ORDER BY " + COLUMN_DISTRICT_ID + " DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -186,52 +90,54 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return districts;
     }
 
-    public ArrayList<District> getDistrictOfCity(int cityId) {
-        // Log.i(TAG, "MyDatabaseHelper.getAllNotes ... " );
+//    public ArrayList<District> getDistrictOfCity(int cityId) {
+//        // Log.i(TAG, "MyDatabaseHelper.getAllNotes ... " );
+//
+//        ArrayList<District> districts = new ArrayList<District>();
+//        // Select All Query
+//        String selectQuery = "SELECT  * FROM " + TABLE_DISTRICT +" WHERE "+COLUMN_DISTRICT_ID+" = "+cityId+" ORDER BY "+ COLUMN_DISTRICT_ID +" DESC";
+//
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//
+//
+//        // Duyệt trên con trỏ, và thêm vào danh sách.
+//        if (cursor.moveToFirst()) {
+//            do {
+//                District district = new District();
+//                district.setId(cursor.getInt(0));
+//                district.setName(cursor.getString(1));
+//                district.setCityId(cursor.getInt(2));
+//                // Thêm vào danh sách.
+//                districts.add(district);
+//            } while (cursor.moveToNext());
+//        }
+//
+//        // return note list
+//        return districts;
+//    }
 
-        ArrayList<District> districts = new ArrayList<District>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_DISTRICT +" WHERE "+COLUMN_DISTRICT_CITY_ID+" = "+cityId;
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-
-        // Duyệt trên con trỏ, và thêm vào danh sách.
-        if (cursor.moveToFirst()) {
-            do {
-                District district = new District();
-                district.setId(cursor.getInt(0));
-                district.setName(cursor.getString(1));
-                district.setCityId(cursor.getInt(2));
-                // Thêm vào danh sách.
-                districts.add(district);
-            } while (cursor.moveToNext());
-        }
-
-        // return note list
-        return districts;
-    }
-
-    public void addCity(City city) {
+    public void addCity(District city) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_CITY_ID, city.getId());
-        values.put(COLUMN_CITY_NAME, city.getName());
+        values.put(COLUMN_DISTRICT_ID, city.getId());
+        values.put(COLUMN_DISTRICT_NAME, city.getName());
+        values.put(COLUMN_DISTRICT_CITY_ID, city.getCityId());
         // Insert 1 row to database.
-        db.insert(TABLE_CITY, null, values);
+        db.insert(TABLE_DISTRICT, null, values);
         // close connect database
         db.close();
     }
 
-    public void addAllCities(List<City> cities) {
+    public void addAllCities(List<District> districts) {
         SQLiteDatabase db = this.getWritableDatabase();
-        for (City city : cities) {
+        for (District district : districts) {
             ContentValues values = new ContentValues();
-            values.put(COLUMN_CITY_ID, city.getId());
-            values.put(COLUMN_CITY_NAME, city.getName());
+            values.put(COLUMN_DISTRICT_ID, district.getId());
+            values.put(COLUMN_DISTRICT_NAME, district.getName());
+            values.put(COLUMN_DISTRICT_CITY_ID, district.getCityId());
             // Insert 1 row to database.
-            db.insert(TABLE_CITY, null, values);
+            db.insert(TABLE_DISTRICT, null, values);
         }
         db.close();
     }
@@ -240,82 +146,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteCity(int id) {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CITY, COLUMN_CITY_ID + " = ?",
+        db.delete(TABLE_DISTRICT, COLUMN_DISTRICT_ID + " = ?",
                 new String[]{String.valueOf(id)});
         db.close();
     }
 
-    public void insertDataCity(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query ="INSERT INTO "+TABLE_CITY+" (`id`, `name`) VALUES \n" +
-                "(01,'Thành Phố Hà Nội'),\n" +
-                "(02,'Tỉnh Hà Giang'),\n" +
-                "(04,'Tỉnh Cao Bằng'),\n" +
-                "(06,'Tỉnh Bắc Kạn'),\n" +
-                "(08,'Tỉnh Tuyên Quang'),\n" +
-                "(10,'Tỉnh Lào Cai'),\n" +
-                "(11,'Tỉnh Điện Biên'),\n" +
-                "(12,'Tỉnh Lai Châu'),\n" +
-                "(14,'Tỉnh Sơn La'),\n" +
-                "(15,'Tỉnh Yên Bái'),\n" +
-                "(17,'Tỉnh Hòa Bình'),\n" +
-                "(19,'Tỉnh Thái Nguyên'),\n" +
-                "(20,'Tỉnh Lạng Sơn'),\n" +
-                "(22,'Tỉnh Quảng Ninh'),\n" +
-                "(24,'Tỉnh Bắc Giang'),\n" +
-                "(25,'Tỉnh Phú Thọ'),\n" +
-                "(26,'Tỉnh Vĩnh Phúc'),\n" +
-                "(27,'Tỉnh Bắc Ninh'),\n" +
-                "(30,'Tỉnh Hải Dương'),\n" +
-                "(31,'Thành Phố Hải Phòng'),\n" +
-                "(33,'Tỉnh Hưng Yên'),\n" +
-                "(34,'Tỉnh Thái Bình'),\n" +
-                "(35,'Tỉnh Hà Nam'),\n" +
-                "(36,'Tỉnh Nam Định'),\n" +
-                "(37,'Tỉnh Ninh Bình'),\n" +
-                "(38,'Tỉnh Thanh Hóa'),\n" +
-                "(40,'Tỉnh Nghệ An'),\n" +
-                "(42,'Tỉnh Hà Tĩnh'),\n" +
-                "(44,'Tỉnh Quảng Bình'),\n" +
-                "(45,'Tỉnh Quảng Trị'),\n" +
-                "(46,'Tỉnh Thừa Thiên Huế'),\n" +
-                "(48,'Thành Phố Đà Nẵng'),\n" +
-                "(49,'Tỉnh Quảng Nam'),\n" +
-                "(51,'Tỉnh Quảng Ngãi'),\n" +
-                "(52,'Tỉnh Bình Định'),\n" +
-                "(54,'Tỉnh Phú Yên'),\n" +
-                "(56,'Tỉnh Khánh Hòa'),\n" +
-                "(58,'Tỉnh Ninh Thuận'),\n" +
-                "(60,'Tỉnh Bình Thuận'),\n" +
-                "(62,'Tỉnh Kon Tum'),\n" +
-                "(64,'Tỉnh Gia Lai'),\n" +
-                "(66,'Tỉnh Đắk Lắk'),\n" +
-                "(67,'Tỉnh Đắk Nông'),\n" +
-                "(68,'Tỉnh Lâm Đồng'),\n" +
-                "(70,'Tỉnh Bình Phước'),\n" +
-                "(72,'Tỉnh Tây Ninh'),\n" +
-                "(74,'Tỉnh Bình Dương'),\n" +
-                "(75,'Tỉnh Đồng Nai'),\n" +
-                "(77,'Tỉnh Bà Rịa - Vũng Tàu'),\n" +
-                "(79,'Thành Phố Hồ Chí Minh'),\n" +
-                "(80,'Tỉnh Long An'),\n" +
-                "(82,'Tỉnh Tiền Giang'),\n" +
-                "(83,'Tỉnh Bến Tre'),\n" +
-                "(84,'Tỉnh Trà Vinh'),\n" +
-                "(86,'Tỉnh Vĩnh Long'),\n" +
-                "(87,'Tỉnh Đồng Tháp'),\n" +
-                "(89,'Tỉnh An Giang'),\n" +
-                "(91,'Tỉnh Kiên Giang'),\n" +
-                "(92,'Thành Phố Cần Thơ'),\n" +
-                "(93,'Tỉnh Hậu Giang'),\n" +
-                "(94,'Tỉnh Sóc Trăng'),\n" +
-                "(95,'Tỉnh Bạc Liêu'),\n" +
-                "(96,'Tỉnh Cà Mau')\n";
-        db.execSQL(query);
-        db.close();
-    }
-
-    public void insertDataDistrict(){
+    public void insertData(){
         SQLiteDatabase db = this.getWritableDatabase();
         String query ="INSERT INTO "+TABLE_DISTRICT+" (`id`, `name`, `city_id`) VALUES\n" +
                 "(001,'Quận Ba Đình',01),\n" +
@@ -1018,4 +854,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
         db.close();
     }
+
 }
