@@ -1,0 +1,149 @@
+package com.dentalclinic.capstone.admin.activities;
+
+import android.content.Intent;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.content.res.AppCompatResources;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.models.Event;
+import com.dentalclinic.capstone.admin.models.Patient;
+import com.dentalclinic.capstone.admin.models.Tooth;
+import com.dentalclinic.capstone.admin.models.Treatment;
+import com.dentalclinic.capstone.admin.models.TreatmentHistory;
+import com.dentalclinic.capstone.admin.utils.AppConst;
+import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
+import com.dentalclinic.capstone.admin.utils.DateUtils;
+import com.dentalclinic.capstone.admin.utils.GenderUtils;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class PatientDetailActivity extends BaseActivity implements View.OnClickListener {
+    private CircleImageView cvAvatar;
+    private Button btnViewTreatment;
+    private Button btnViewPayment;
+    private TextView txtName, txtGender, txtPhone, txtAddress, txtDateOfBirth;
+    private Patient patient;
+    public static String LIST_TREATMENT = "LIST_TREATMENT";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_patient_detail);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        btnViewPayment = findViewById(R.id.btn_view_payment);
+        btnViewTreatment = findViewById(R.id.btn_view_treatment);
+        cvAvatar = findViewById(R.id.img_avatar_user);
+        txtName = findViewById(R.id.txt_name);
+        txtDateOfBirth = findViewById(R.id.txt_date_of_birth);
+        txtGender = findViewById(R.id.txt_gender);
+        txtPhone = findViewById(R.id.txt_phone);
+        txtAddress = findViewById(R.id.txt_address);
+        setListenter();
+
+    }
+
+    public void dummyData(ArrayList<TreatmentHistory> treatmentHistories) {
+        TreatmentHistory treatmentHistory = new TreatmentHistory();
+        treatmentHistory.setTreatment(new Treatment("Trám Răng", new Event(10)));
+        treatmentHistory.setTooth(new Tooth("răng cửa"));
+        treatmentHistory.setTotalPrice(Long.valueOf("100000"));
+        treatmentHistory.setPrice(Long.valueOf("100000"));
+        String dtStart3 = "1996-06-30 00:00:00";
+        treatmentHistory.setCreateDate(dtStart3);
+        treatmentHistory.setFinishDate(dtStart3);
+//        treatmentHistory.setCreateDate(DateUtils.changeDateFormat(dtStart3, DateTimeFormat.DATE_TIME_DB, DateTimeFormat.DATE_APP_2));
+//        treatmentHistory.setFinishDate(DateUtils.changeDateFormat(dtStart3, DateTimeFormat.DATE_TIME_DB, DateTimeFormat.DATE_APP_2));
+        treatmentHistories.add(treatmentHistory);
+        treatmentHistories.add(treatmentHistory);
+    }
+    public void setListenter() {
+        btnViewTreatment.setOnClickListener(view -> {
+//            if (patient != null) {
+//                ArrayList<TreatmentHistory> treatmentHistories = (ArrayList<TreatmentHistory>) patient.getTreatmentHistories();
+                ArrayList<TreatmentHistory> treatmentHistories =new ArrayList<TreatmentHistory>();
+                ///testttttttt
+                dummyData(treatmentHistories);
+                if (treatmentHistories != null && treatmentHistories.size() > 0) {
+                    Intent intent = new Intent(PatientDetailActivity.this, PatientTreatmentActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(LIST_TREATMENT, treatmentHistories);
+                    intent.putExtra(AppConst.BUNDLE, bundle);
+
+                    startActivity(intent);
+                } else {
+                    showMessage("Lịch sử điều trị");
+                }
+//            }
+        });
+        btnViewPayment.setOnClickListener(view -> {
+            if (patient != null) {
+
+            }
+        });
+    }
+
+    private void callApiPatient(int patientId) {
+
+    }
+
+    private void setData(Patient patient) {
+        if (patient != null) {
+            if (patient.getAvatar() != null && patient.getAvatar().trim().length() > 0) {
+//                Picasso.get().invalidate(patient.getAvatar());
+                Picasso.get().load(patient.getAvatar()).into(cvAvatar);
+            }
+            if (patient.getName() != null) {
+                txtName.setText(patient.getName());
+            }
+            if (patient.getDateOfBirth() != null) {
+                txtDateOfBirth.setText(DateUtils.changeDateFormat(patient.getDateOfBirth(), DateTimeFormat.DATE_TIME_DB_2, DateTimeFormat.DATE_APP));
+            }
+            if (patient.getGender() != null) {
+                txtGender.setText(GenderUtils.toString(patient.getGender()));
+            }
+            if (patient.getPhone() != null) {
+                txtPhone.setText(patient.getPhone());
+            }
+            if (patient.getAddress() != null) {
+                String address = patient.getAddress();
+                if (patient.getDistrict() != null) {
+                    address += ", " + patient.getDistrict().getName();
+                    if (patient.getCity() != null) {
+                        address += ", " + patient.getCity().getName();
+                    }
+                }
+                txtAddress.setText(address);
+            }
+        }
+    }
+
+    @Override
+    public String getMainTitle() {
+        return "Thông tin bệnh nhân";
+    }
+
+    @Override
+    public void onCancelLoading() {
+        showMessage("Bạn đã hủy");
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id) {
+
+        }
+    }
+}
