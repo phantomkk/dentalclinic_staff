@@ -53,9 +53,17 @@
 
         <activity android:name=".activities.SearchPatientActivity" />
         <activity
-            android:name=".activities.TestActivity"
-            android:label="@string/title_activity_test"
-            android:theme="@style/AppTheme"></activity>
+            android:name=".activities.AnamnesisListActivity"
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
+        <activity android:name=".activities.PatientDetailActivity">
+
+        </activity>  <activity
+        android:name=".activities.TestActivity"
+        android:label="@string/title_activity_test"
+        android:theme="@style/AppTheme"></activity>
+
+        <activity android:name=".activities.PatientTreatmentActivity" />
+        <activity android:name=".activities.PatientPaymentActivity"></activity>
     </application>
 
 </manifest>

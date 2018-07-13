@@ -60,7 +60,6 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
         txtPhone = findViewById(R.id.txt_phone);
         txtAddress = findViewById(R.id.txt_address);
         setListenter();
-
     }
 
     public void dummyData(ArrayList<TreatmentHistory> treatmentHistories) {
