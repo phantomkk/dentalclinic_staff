@@ -24,8 +24,9 @@ public class Patient implements Serializable {
     private District district;
     @SerializedName("city")
     private City city;
-//    @SerializedName("treatment_histories")
-//    private List<TreatmentHistory> treatmentHistories;
+
+    @SerializedName("treatment_histories")
+    private List<TreatmentHistory> treatmentHistories;
 
     @SerializedName("subaccounts")
     private List<Patient> subAccounts;
@@ -44,19 +45,6 @@ public class Patient implements Serializable {
     }
 
     public Patient() {
-    }
-
-    public Patient(String name, String dateOfBirth, String gender, String avatar) {
-        this.name = name;
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
-        this.avatar = avatar;
-    }
-
-    public Patient(String name, String dateOfBirth, String gender) {
-        this.name = name;
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
     }
 
     public int getId() {
@@ -126,13 +114,13 @@ public class Patient implements Serializable {
         this.district = district;
     }
 
-//    public List<TreatmentHistory> getTreatmentHistories() {
-//        return treatmentHistories;
-//    }
+    public List<TreatmentHistory> getTreatmentHistories() {
+        return treatmentHistories;
+    }
 
-//    public void setTreatmentHistories(List<TreatmentHistory> treatmentHistories) {
-//        this.treatmentHistories = treatmentHistories;
-//    }
+    public void setTreatmentHistories(List<TreatmentHistory> treatmentHistories) {
+        this.treatmentHistories = treatmentHistories;
+    }
 
 
     public List<Patient> getSubAccounts() {

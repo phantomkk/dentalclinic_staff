@@ -50,7 +50,7 @@ public class PatientAdapter extends ArrayAdapter<Patient> {
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
-        }
+        }Z
 
         Patient patient = patients.get(position);
         if(patient!=null){

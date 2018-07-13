@@ -1,20 +1,8 @@
 package com.dentalclinic.capstone.admin.models;
 
-import android.annotation.SuppressLint;
-import android.graphics.Color;
-
-import com.alamkanak.weekview.WeekViewEvent;
-import com.dentalclinic.capstone.admin.R;
-import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
-import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 
 public class Appointment implements Serializable {
@@ -34,16 +22,6 @@ public class Appointment implements Serializable {
     private String estimatedTime;
     @SerializedName("start_time")
     private String startTime;
-    @SerializedName("status")
-    private int status;
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
 
     public int getId() {
         return id;
@@ -108,31 +86,5 @@ public class Appointment implements Serializable {
 
     public void setStaffId(int staffId) {
         this.staffId = staffId;
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    public WeekViewEvent toWeekViewEvent(){
-
-        // Create an week view event.
-        WeekViewEvent weekViewEvent = new WeekViewEvent();
-        weekViewEvent.setId(getId());
-        weekViewEvent.setName(getPhone());
-        Calendar calendar= Calendar.getInstance();
-        Date startTime = DateUtils.getDate(getStartTime(), DateTimeFormat.DATE_TIME_DB);
-        calendar.setTime(startTime);
-        weekViewEvent.setStartTime(calendar);
-        Calendar calendarEnd = Calendar.getInstance();
-        calendarEnd.setTime(startTime);
-        Time estimatedTime = Time.valueOf(getEstimatedTime());
-        calendarEnd.add(Calendar.HOUR,estimatedTime.getHours());
-        calendarEnd.add(Calendar.MINUTE,estimatedTime.getMinutes());
-        weekViewEvent.setEndTime(calendarEnd);
-        if(getStatus()==1) {
-            weekViewEvent.setColor(Color.parseColor("#b71414"));
-        }else{
-            weekViewEvent.setColor(Color.parseColor("#1480b7"));
-        }
-
-        return weekViewEvent;
     }
 }
