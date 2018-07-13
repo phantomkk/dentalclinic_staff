@@ -7,8 +7,10 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.dentalclinic.capstone.admin.activities.MainActivity"
     tools:showIn="@layout/app_bar_main">
+
     <FrameLayout
-        android:id="@+id/main_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+    android:id="@+id/main_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"></FrameLayout>
+
 </android.support.constraint.ConstraintLayout>

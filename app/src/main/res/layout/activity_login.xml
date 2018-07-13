@@ -89,19 +89,19 @@
                     android:text="@string/label_button_login"  />
 
 
-                <TextView
-                    android:id="@+id/tv_link_quickregister"
-                    style="?android:textAppearanceSmall"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_weight="1"
-                    android:autoLink="web"
-                    android:clickable="true"
-                    android:gravity="center_horizontal"
-                    android:linksClickable="true"
-                    android:text="@string/label_suggest_register"
-                    android:textColor="@color/color_light_blue_a400" />
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_link_quickregister"-->
+                    <!--style="?android:textAppearanceSmall"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="15dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:autoLink="web"-->
+                    <!--android:clickable="true"-->
+                    <!--android:gravity="center_horizontal"-->
+                    <!--android:linksClickable="true"-->
+                    <!--android:text="@string/label_suggest_register"-->
+                    <!--android:textColor="@color/color_light_blue_a400" />-->
             </LinearLayout>
         </RelativeLayout>
 

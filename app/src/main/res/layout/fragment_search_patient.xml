@@ -1,0 +1,60 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dentalclinic.capstone.admin.fragment.SearchPatientFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.baoyz.swipemenulistview.SwipeMenuListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/multiple_actions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            app:fab_addButtonColorNormal="@color/colorPrimary"
+            app:fab_addButtonColorPressed="@color/color_blue_900"
+            app:fab_addButtonPlusIconColor="@color/white"
+            app:fab_labelStyle="@style/menu_labels_style">
+
+            <!--<com.getbase.floatingactionbutton.FloatingActionButton-->
+            <!--android:id="@+id/btn_new_patient"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:fab_colorNormal="@color/white"-->
+            <!--app:fab_title="Action A"-->
+            <!--app:fab_colorPressed="@color/white_pressed"/>-->
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_new_appointment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/color_green_500"
+                app:fab_colorPressed="@color/color_green_800"
+                app:fab_icon="@drawable/ic_schedule_white_24dp"
+                app:fab_title="Đặt lịch cho bệnh nhân" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_new_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/color_yellow_600"
+                app:fab_colorPressed="@color/color_yellow_800"
+                app:fab_icon="@drawable/ic_payment_payment_24dp"
+                app:fab_title="Thanh toán" />
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+    </RelativeLayout>
+</FrameLayout>
