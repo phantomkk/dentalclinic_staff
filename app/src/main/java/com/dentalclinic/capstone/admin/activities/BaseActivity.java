@@ -125,12 +125,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             showWarningMessage("Vui lòng kiểm tra kết nối mạng của bạn đã được bật.");
         }
     }
-
-
-    public void showErrorUnAuth() {
-        showErrorMessage("401 Unauthentication");
-    }
-
     public void showFatalError(ResponseBody errorBody, String method) {
         if (errorBody != null) {
             showErrorMessage("Lỗi server");
@@ -140,10 +134,13 @@ public abstract class BaseActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         } else {
             logError("showFatalError: " + method, "errorBody is null");
         }
+    }
+
+    public void showErrorUnAuth() {
+        showErrorMessage("401 Unauthentication");
     }
 
     public void showBadRequestError(ResponseBody errorBody, String method) {

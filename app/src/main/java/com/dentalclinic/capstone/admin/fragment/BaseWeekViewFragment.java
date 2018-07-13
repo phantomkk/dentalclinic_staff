@@ -19,50 +19,68 @@ import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.responseobject.Event;
+import com.dentalclinic.capstone.admin.api.services.AppointmentService;
 import com.dentalclinic.capstone.admin.api.services.MyJsonService;
+import com.dentalclinic.capstone.admin.api.services.StaffService;
+import com.dentalclinic.capstone.admin.models.Appointment;
+import com.dentalclinic.capstone.admin.models.DateCheck;
+import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
+import com.dentalclinic.capstone.admin.utils.DateUtils;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+//
+//import retrofit.Callback;
+//import retrofit.RestAdapter;
+//import retrofit.RetrofitError;
+//import retrofit.client.Response;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BaseWeekViewFragment extends BaseFragment implements WeekView.EventClickListener, MonthLoader.MonthChangeListener, WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener
-, Callback<List<Event>> {
+public class BaseWeekViewFragment extends BaseFragment implements WeekView.EventClickListener, MonthLoader.MonthChangeListener, WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener {
 
     private static final int TYPE_DAY_VIEW = 1;
     private static final int TYPE_THREE_DAY_VIEW = 2;
     private static final int TYPE_WEEK_VIEW = 3;
     private int mWeekViewType = TYPE_THREE_DAY_VIEW;
     private WeekView mWeekView;
-
+    private List<DateCheck> dateChecks = new ArrayList<>();
     private List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
     boolean calledNetwork = false;
 
     public BaseWeekViewFragment() {
         // Required empty public constructor
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -102,7 +120,7 @@ public class BaseWeekViewFragment extends BaseFragment implements WeekView.Event
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         setupDateTimeInterpreter(id == R.id.action_week_view);
-        switch (id){
+        switch (id) {
             case R.id.action_today:
                 mWeekView.goToToday();
                 return true;
@@ -171,7 +189,7 @@ public class BaseWeekViewFragment extends BaseFragment implements WeekView.Event
     }
 
     protected String getEventTitle(Calendar time) {
-        return String.format("Event of %02d:%02d %s/%d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.MONTH)+1, time.get(Calendar.DAY_OF_MONTH));
+        return String.format("Event of %02d:%02d %s/%d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.MONTH) + 1, time.get(Calendar.DAY_OF_MONTH));
     }
 
     @Override
@@ -194,43 +212,73 @@ public class BaseWeekViewFragment extends BaseFragment implements WeekView.Event
         return mWeekView;
     }
 
+    private Disposable disposable;
+    private boolean isOk = true;
+
     @Override
     public List<? extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
-        // downloaded using retrofit, visit http://square.github.io/retrofit
-        if (!calledNetwork) {
-            RestAdapter retrofit = new RestAdapter.Builder()
-                    .setEndpoint("https://api.myjson.com/bins")
-                    .build();
-            MyJsonService service = retrofit.create(MyJsonService.class);
-            service.listEvents(this);
-            calledNetwork = true;
-        }
-
-        // Return only the events that matches newYear and newMonth.
-        List<WeekViewEvent> matchedEvents = new ArrayList<WeekViewEvent>();
-        for (WeekViewEvent event : events) {
-            if (eventMatches(event, newYear, newMonth)) {
-                matchedEvents.add(event);
+        isOk=true;
+        List<WeekViewEvent> viewEvents = new ArrayList<>();
+        DateCheck dateCheck = new DateCheck(newMonth, newYear);
+        if (this.dateChecks.isEmpty()) {
+            this.dateChecks.add(dateCheck);
+        } else {
+            for (int i = 0; i < dateChecks.size(); i++) {
+                if (dateChecks.get(i).getMonth() == dateCheck.getMonth() && dateChecks.get(i).getYear() == dateCheck.getYear()) {
+                    isOk = false;
+                    break;
+                }
             }
         }
-        return matchedEvents;
-    }
-    private boolean eventMatches(WeekViewEvent event, int year, int month) {
-        return (event.getStartTime().get(Calendar.YEAR) == year && event.getStartTime().get(Calendar.MONTH) == month - 1) || (event.getEndTime().get(Calendar.YEAR) == year && event.getEndTime().get(Calendar.MONTH) == month - 1);
-    }
+        if (isOk) {
+            showMessage("mont" + newMonth);
+            dateChecks.add(dateCheck);
+            StaffService service = APIServiceManager.getService(StaffService.class);
+            service.getAppointments(2, newMonth - 1, newYear)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SingleObserver<Response<List<Appointment>>>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            disposable = d;
+                        }
 
-    @Override
-    public void success(List<Event> events, Response response) {
-        this.events.clear();
-        for (Event event : events) {
-            this.events.add(event.toWeekViewEvent());
+                        @Override
+                        public void onSuccess(Response<List<Appointment>> response) {
+                            if (response.isSuccessful()) {
+                                if (response.body() != null) {
+                                    for (Appointment event : response.body()) {
+                                        events.add(event.toWeekViewEvent());
+                                    }
+                                    getWeekView().notifyDatasetChanged();
+                                }
+                            } else if (response.code() == 500) {
+//                            showFatalError(userResponse.errorBody(), "callApiLogin");
+                            } else if (response.code() == 401) {
+//                            showErrorUnAuth();
+                            } else if (response.code() == 400) {
+//                            showBadRequestError(userResponse.errorBody(), "callApiLogin");
+                            } else {
+//                            showErrorMessage(getString(R.string.error_on_error_when_call_api));
+                            }
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            showDialog(getContext().getResources().getString(R.string.async_error));
+                        }
+                    });
+
+
         }
-        getWeekView().notifyDatasetChanged();
+        for (WeekViewEvent event: events){
+            if(event.getStartTime().get(Calendar.MONTH) == newMonth-1){
+                viewEvents.add(event);
+            }
+        }
+        return viewEvents;
     }
 
-    @Override
-    public void failure(RetrofitError error) {
-        error.printStackTrace();
-        showDialog( getContext().getResources().getString(R.string.async_error));
-    }
 }

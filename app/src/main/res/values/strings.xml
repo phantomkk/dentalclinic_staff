@@ -180,11 +180,17 @@
     <string name="history_work_title">Lịch đặt</string>
 
 
-    <string name="action_today">Today</string>
-    <string name="action_day_view">Day view</string>
-    <string name="action_three_day_view">3 day view</string>
-    <string name="action_week_view">Week view</string>
-    <string name="title_activity_basic">Basic Example</string>
-    <string name="title_activity_asynchronous">Asynchronous Events</string>
-    <string name="async_error">Could not download events from the internet</string>
+    <string name="action_today">Hôm Hay</string>
+    <string name="action_day_view">Xem ngày</string>
+    <string name="action_three_day_view">Xem 3 ngày</string>
+    <string name="action_week_view">Xem Tuần</string>
+    <string name="async_error">Không thể tải dữ liệu</string>
+
+
+    <!--Search Patient-->
+    <string name="search_patient_title">Tìm Kiếm Bệnh Nhân</string>
+    <string name="search_phone_hint">Nhập số điện thoại</string>
+    <string name="title_activity_test">TestActivity</string>
+
+
 </resources>

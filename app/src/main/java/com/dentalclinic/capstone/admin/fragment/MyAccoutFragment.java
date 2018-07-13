@@ -23,8 +23,10 @@ import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.services.UserService;
 import com.dentalclinic.capstone.admin.models.City;
 import com.dentalclinic.capstone.admin.models.District;
+import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
+import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
 import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.dentalclinic.capstone.admin.utils.GenderUtils;
@@ -47,8 +49,9 @@ public class MyAccoutFragment extends BaseFragment implements View.OnClickListen
     Button btnChangeAvatar, btnEdit, btnChangePhone, btnChangePassword;
     CircleImageView cvAvatar;
     TextView txtName, txtGender, txtPhone, txtAddress, txtDateOfBirth, txtEmail, txtDegree;
-    User user;
+    Staff staff = new Staff();
     LinearLayout llEditPassword;
+
     public MyAccoutFragment() {
         // Required empty public constructor
     }
@@ -75,14 +78,15 @@ public class MyAccoutFragment extends BaseFragment implements View.OnClickListen
         txtAddress = v.findViewById(R.id.txt_address);
         txtEmail = v.findViewById(R.id.txt_email);
         txtDegree = v.findViewById(R.id.txt_degree);
-        prepareData();
 //        setData(CoreManager.getCurrentuser(getContext()));
-        setData(user);
-
+        staff = CoreManager.getStaff(getContext());
+        if (staff != null) {
+            setData(staff);
+        }
         return v;
     }
 
-    private void setData(User user) {
+    private void setData(Staff user) {
         if (user != null) {
             if (user.getAvatar() != null) {
 //                Picasso.get().invalidate(user.getAvatar());
@@ -91,10 +95,10 @@ public class MyAccoutFragment extends BaseFragment implements View.OnClickListen
             if (user.getName() != null) {
                 txtName.setText(user.getName());
             }
-            if(user.getEmail()!=null){
+            if (user.getEmail() != null) {
                 txtEmail.setText(user.getEmail());
             }
-            if(user.getDegree()!=null){
+            if (user.getDegree() != null) {
                 txtDegree.setText(user.getDegree());
             }
             if (user.getDateOfBirth() != null) {
@@ -119,21 +123,21 @@ public class MyAccoutFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    private void prepareData() {
-//        user = new User("Vo Quoc Trinh", "Quang Trung p11", "01695149049", "1996-06-30 00:00:00", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8lVVU1zu2SCLibBztyJFTTqCkOaNFg97S3RHyDpjbDbseoBOY");
-//        user.setDistrict(new District("Go Vap", new City("Ho Chi Minh")));
-        user = new User();
-        user.setPhone("01685149049");
-        user.setAddress("Quang trung p11");
-        user.setDegree("Bác sĩ");
-        user.setEmail("mr.trinhvo1996@gmail.com");
-        user.setDateOfBirth("1996-30-06");
-        user.setGender("MALE");
-        user.setCity(new City(1));
-        user.setDistrict(new District(1));
-        user.setAvatar("https://cdn.iconscout.com/public/images/icon/free/png-512/avatar-user-hacker-3830b32ad9e0802c-512x512.png");
-        user.setName("Võ Quốc Trịnh");
-    }
+//    private void prepareData() {
+////        user = new User("Vo Quoc Trinh", "Quang Trung p11", "01695149049", "1996-06-30 00:00:00", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8lVVU1zu2SCLibBztyJFTTqCkOaNFg97S3RHyDpjbDbseoBOY");
+////        user.setDistrict(new District("Go Vap", new City("Ho Chi Minh")));
+//        user = new User();
+//        user.setPhone("01685149049");
+//        user.setAddress("Quang trung p11");
+//        user.setDegree("Bác sĩ");
+//        user.setEmail("mr.trinhvo1996@gmail.com");
+//        user.setDateOfBirth("1996-30-06");
+//        user.setGender("MALE");
+//        user.setCity(new City(1));
+//        user.setDistrict(new District(1));
+//        user.setAvatar("https://cdn.iconscout.com/public/images/icon/free/png-512/avatar-user-hacker-3830b32ad9e0802c-512x512.png");
+//        user.setName("Võ Quốc Trịnh");
+//    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -215,14 +219,14 @@ public class MyAccoutFragment extends BaseFragment implements View.OnClickListen
                 intent = new Intent(getActivity(), EditAccoutActivity.class);
                 bundle = new Bundle();
 //                bundle.putSerializable(AppConst.USER_OBJ, CoreManager.getCurrentuser(getContext()));
-                bundle.putSerializable(AppConst.USER_OBJ,user);
+                bundle.putSerializable(AppConst.STAFF_OBJ, staff);
                 intent.putExtra(AppConst.BUNDLE, bundle);
                 startActivityForResult(intent, REQUEST_CHANGE_PASSWORD);
                 break;
             case R.id.ln_edit_password:
                 intent = new Intent(getActivity(), EditPasswordActivity.class);
                 bundle = new Bundle();
-                bundle.putSerializable(AppConst.USER_OBJ, user);
+                bundle.putSerializable(AppConst.STAFF_OBJ, staff);
 //                bundle.putSerializable(AppConst.USER_OBJ, CoreManager.getCurrentuser(getContext()));
                 intent.putExtra(AppConst.BUNDLE, bundle);
                 startActivity(intent);

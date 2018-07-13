@@ -5,15 +5,19 @@ import com.dentalclinic.capstone.admin.api.requestobject.UpdateUserRequest;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.models.User;
 
+import java.util.List;
+
 import io.reactivex.Single;
 import okhttp3.MultipartBody;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 /**
  * Created by lucky on 15-Oct-17.
@@ -41,5 +45,8 @@ public interface UserService {
     @FormUrlEncoded
     @POST("api/user/updateNotifToken")
     Single<Response<String>> updateNotifyFirebaseToken(@Field("notif_token") String token, @Field("phone") String phone);
+
+    @GET("api/user/searchListPhone")
+    Single<Response<List<String>>> getAllPhone(@Query("keyword") String query);
 
 }

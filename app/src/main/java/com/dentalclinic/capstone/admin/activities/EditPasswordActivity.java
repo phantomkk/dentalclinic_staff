@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.Validation;
@@ -15,7 +16,7 @@ import io.reactivex.disposables.Disposable;
 
 public class EditPasswordActivity extends BaseActivity implements View.OnClickListener {
     private EditText txtPassword, txtConfirmPassword, txtCurrentPassword;
-    private User user;
+    private Staff user;
     private Button btnChangePassword;
 
     @Override
@@ -28,10 +29,10 @@ public class EditPasswordActivity extends BaseActivity implements View.OnClickLi
             getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.side_nav_bar));
         }
         Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
-        if (bundle.getSerializable(AppConst.USER_OBJ) != null) {
-            user = (User) bundle.getSerializable(AppConst.USER_OBJ);
+        if (bundle.getSerializable(AppConst.STAFF_OBJ) != null) {
+            user = (Staff) bundle.getSerializable(AppConst.STAFF_OBJ);
         } else {
-            user = new User();
+            user = new Staff();
             user.setPhone("00");
         }
         txtPassword = findViewById(R.id.edt_password);

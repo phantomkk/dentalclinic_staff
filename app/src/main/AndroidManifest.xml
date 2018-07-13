@@ -16,9 +16,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity" />
-        <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.CreatePatientActivity" />
+        <activity android:name=".activities.MainActivity"></activity>
+        <activity android:name=".activities.CreatePatientActivity"></activity>
+        <activity android:name=".activities.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activities.EditAccoutActivity" />
         <activity android:name=".activities.EditPasswordActivity" />
         <activity
@@ -45,18 +51,11 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".activities.SearchPatientActivity" />
         <activity
-            android:name=".activities.AnamnesisListActivity"
-            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
-        <activity android:name=".activities.PatientDetailActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activities.PatientTreatmentActivity" />
-        <activity android:name=".activities.PatientPaymentActivity"></activity>
+            android:name=".activities.TestActivity"
+            android:label="@string/title_activity_test"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

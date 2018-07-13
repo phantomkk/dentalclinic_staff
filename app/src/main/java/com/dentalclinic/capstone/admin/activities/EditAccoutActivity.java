@@ -22,6 +22,7 @@ import com.dentalclinic.capstone.admin.api.requestobject.UpdateUserRequest;
 import com.dentalclinic.capstone.admin.databaseHelper.DatabaseHelper;
 import com.dentalclinic.capstone.admin.models.City;
 import com.dentalclinic.capstone.admin.models.District;
+import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.Validation;
@@ -40,7 +41,7 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
     RadioButton rbMale, rbFemale, rbOther;
     Spinner spDistrict, spCity;
     Button btnUpdate;
-    User user;
+    Staff staff;
     private Disposable addrServiceDisposable;
     private Disposable registerServiceDisposable;
     private Disposable districtServiceDisposable;
@@ -74,12 +75,12 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
         btnUpdate = findViewById(R.id.btn_register);
         btnUpdate.setOnClickListener(this);
         txtDateOfBirth.setOnClickListener(this);
-        if (bundle.getSerializable(AppConst.USER_OBJ) != null) {
-            user = (User) bundle.getSerializable(AppConst.USER_OBJ);
-            setDataUser(user);
+        if (bundle.getSerializable(AppConst.STAFF_OBJ) != null) {
+            staff = (Staff) bundle.getSerializable(AppConst.STAFF_OBJ);
+            setDataUser(staff);
         } else {
-            user = new User();
-            user.setPhone("0");
+            staff = new Staff();
+            staff.setPhone("0");
         }
 
         if(cityDatabaseHelper.getAllCity().isEmpty()){
@@ -98,7 +99,7 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
                 if (city != null) {
                     spDistrict.setAdapter(new DistrictSpinnerAdapter(EditAccoutActivity.this,
                             android.R.layout.simple_spinner_item,cityDatabaseHelper.getDistrictOfCity(city.getId())));
-                    spDistrict.setSelection(cityDatabaseHelper.getPositionDistrictById(user.getDistrict()));
+                    spDistrict.setSelection(cityDatabaseHelper.getPositionDistrictById(staff.getDistrict()));
                 }
             }
             @Override
@@ -106,7 +107,7 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
 
             }
         });
-        spCity.setSelection(cityDatabaseHelper.getPositionCityById(user.getCity().getId()));
+        spCity.setSelection(cityDatabaseHelper.getPositionCityById(staff.getCity().getId()));
 
     }
 
@@ -214,7 +215,7 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
             focusView.requestFocus();
         } else {
             UpdateUserRequest request = new UpdateUserRequest();
-            request.setPhone(user.getPhone());
+            request.setPhone(staff.getPhone());
             request.setName(name);
             request.setAddress(address);
             request.setGender(gender);
@@ -225,7 +226,7 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    public void setDataUser(User user) {
+    public void setDataUser(Staff user) {
         if (user != null) {
             if (user.getName() != null) {
                 txtName.setText(user.getName());

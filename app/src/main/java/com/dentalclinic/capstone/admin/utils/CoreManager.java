@@ -3,7 +3,11 @@ package com.dentalclinic.capstone.admin.utils;
 import android.content.Context;
 import android.util.Log;
 
+import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
+import com.dentalclinic.capstone.admin.model.FingerAuthObj;
+
+import java.util.List;
 
 
 /**
@@ -11,34 +15,40 @@ import com.dentalclinic.capstone.admin.models.User;
  */
 
 public class CoreManager {
-    private static User mUser = null;
-//    private static Patient mCurrentPatient = null;
+    private static Staff mStaff = null;
+    private static FingerAuthObj fingerAuthObj = null;
+    //    private static Patient mCurrentPatient = null;
     private CoreManager() {
 
     }
 
-    public static User getUser(Context context) {
-        mUser = Utils.getUserInSharePref(context);
-        if (mUser == null) {
+    public static Staff getStaff(Context context) {
+        mStaff = Utils.getStaffInSharePref(context);
+        if (mStaff == null) {
             Log.d(AppConst.DEBUG_CORE_TAG, "get User from share prefef Null");
         }
-        return mUser;
+        return mStaff;
     }
 
-    public static void setUser(Context context, User user) {
-//        if (user != null) {
-//            List<Patient> list = user.getPatients();
-//            mUser = user;
-//            if (list != null && list.size() > 0) {
-//                user.setCurrentPatient(user.getPatients().get(0));
-//            } else {
-//                Log.d(AppConst.DEBUG_TAG, "class CoreManager.setUser(): LIST PATIENT IS NULL OR EMPTY PLEASE CHECK");
-//            }
-//        } else {
-//            Log.d(AppConst.DEBUG_TAG, "class CoreManager.setUser(): USER IS NULL");
-//        }
-        Utils.saveUserInSharePref(context, user);
+    public static void setStaff(Context context, Staff staff) {
+        Utils.saveStaffInSharePref(context, staff);
 
+    }
+    public static FingerAuthObj getFingerAuthObj(Context context) {
+        fingerAuthObj = Utils.getFingerAuthInSharePref(context);
+        return fingerAuthObj;
+    }
+
+    public static void setFingerAuthObj(Context context,FingerAuthObj fingerAuthObj) {
+        if(fingerAuthObj!=null){
+            if(fingerAuthObj.getPhone()!=null && !fingerAuthObj.getPhone().isEmpty()){
+                if(fingerAuthObj.getPassword()!=null && !fingerAuthObj.getPassword().isEmpty()){
+                    Utils.saveFingerAuthInSharePref(context,fingerAuthObj);
+                }
+            }else{
+                Utils.saveFingerAuthInSharePref(context,null);
+            }
+        }
     }
 
 
@@ -102,10 +112,10 @@ public class CoreManager {
 ////        }
 ////        Utils.saveUserInSharePref(context, mUser);
 ////    }
-    public static void clearUser(Context context){
-        Utils.saveUserInSharePref(context, null);
+    public static void clearStaff(Context context){
+        Utils.saveStaffInSharePref(context, null);
 //         setCurrentPatient(-1, context);
-         mUser=null;
+         mStaff=null;
     }
 
 

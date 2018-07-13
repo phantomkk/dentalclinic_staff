@@ -3,13 +3,14 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="windowActionBar">true</item>
-        <item name="windowNoTitle">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/color_blue_900</item>
 
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -67,6 +68,7 @@
         <item name="android:textColor">@color/color_white</item>
         <item name="android:textStyle">normal</item>
     </style>
+
     <style name="succeToast">
         <item name="textBold">false</item>
         <item name="textColor">#fff</item>
@@ -78,10 +80,12 @@
         <item name="strokeColor">#fff</item>
         <item name="iconStart">@drawable/ic_check_white_24dp</item>
         <!--<item name="iconEnd">@drawable/ic</item>-->
-        <item name="length">LONG</item> LONG or SHORT
+        <item name="length">LONG</item>
+        LONG or SHORT
         <!--<item name="gravity">bottom</item> top or center-->
         <item name="radius">5dp</item>
     </style>
+
     <style name="errorToast">
         <item name="textBold">false</item>
         <item name="textColor">#fff</item>
@@ -93,10 +97,12 @@
         <item name="strokeColor">#fff</item>
         <item name="iconStart">@drawable/ic_warning_white_24dp</item>
         <!--<item name="iconEnd">@drawable/ic</item>-->
-        <item name="length">LONG</item> LONG or SHORT
+        <item name="length">LONG</item>
+        LONG or SHORT
         <!--<item name="gravity">bottom</item> top or center-->
         <item name="radius">5dp</item>
     </style>
+
     <style name="warningToast">
         <item name="textBold">false</item>
         <item name="textColor">#fff</item>
@@ -108,8 +114,15 @@
         <item name="strokeColor">#fff</item>
         <item name="iconStart">@drawable/ic_info_white_24dp</item>
         <!--<item name="iconEnd">@drawable/ic</item>-->
-        <item name="length">LONG</item> LONG or SHORT
+        <item name="length">LONG</item>
+        LONG or SHORT
         <!--<item name="gravity">bottom</item> top or center-->
         <item name="radius">5dp</item>
     </style>
+
+    <style name="menu_labels_style">
+        <item name="android:background">@drawable/fab_label_background</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

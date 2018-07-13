@@ -1,5 +1,10 @@
 package com.dentalclinic.capstone.admin.utils;
 
+import android.content.Context;
+import android.widget.TextView;
+
+import com.dentalclinic.capstone.admin.R;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,5 +33,22 @@ public class GenderUtils {
                 break;
         }
         return rs;
+    }
+
+    public static void changeTextView(String gender, TextView txt_gender, Context context){
+        String rs = FORMAT_OTHER;
+        switch (gender) {
+            case MALE:
+                txt_gender.setText(FORMAT_MALE);
+                txt_gender.setTextColor(context.getResources().getColor(R.color.color_blue_500));
+                break;
+            case FEMALE:
+                txt_gender.setText(FORMAT_FEMALE);
+                txt_gender.setTextColor(context.getResources().getColor(R.color.color_pink_500));
+                break;
+            case OTHER:
+                txt_gender.setText(FORMAT_OTHER);
+                break;
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.services.UserService;
+import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
@@ -27,10 +28,10 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
         //To displaying token on logcat
         Log.d("TOKEN: ", refreshedToken);
-        User user = CoreManager.getUser(this);
-        if (user != null) {
+        Staff staff = CoreManager.getStaff(this);
+        if (staff != null) {
             UserService userService = APIServiceManager.getService(UserService.class);
-            userService.updateNotifyFirebaseToken(refreshedToken, user.getPhone()).observeOn(AndroidSchedulers.mainThread())
+            userService.updateNotifyFirebaseToken(refreshedToken, staff.getPhone()).observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.newThread()).subscribe(new SingleObserver<Response<String>>() {
                 @Override
                 public void onSubscribe(Disposable d) {

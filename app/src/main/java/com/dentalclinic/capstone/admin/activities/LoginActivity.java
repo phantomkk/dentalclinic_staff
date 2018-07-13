@@ -16,9 +16,14 @@ import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.RetrofitClient;
 import com.dentalclinic.capstone.admin.api.requestobject.LoginRequest;
 import com.dentalclinic.capstone.admin.api.services.StaffService;
+import com.dentalclinic.capstone.admin.api.services.UserService;
+import com.dentalclinic.capstone.admin.model.FingerAuthObj;
+import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.marcoscg.fingerauth.FingerAuth;
+import com.marcoscg.fingerauth.FingerAuthDialog;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -40,6 +45,7 @@ public class LoginActivity extends BaseActivity {
     private View btnLinkAppointment;
     private View btnSingin;
     private TextView txtErrorServer;
+    private FingerAuthDialog fingerAuthDialog;
 
 
     private Disposable disposable;
@@ -60,6 +66,17 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Staff staff = CoreManager.getStaff(this);
+        if (staff != null) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
+            final boolean hasFingerprintSupport = FingerAuth.hasFingerprintSupport(this);
+            if (hasFingerprintSupport && CoreManager.getFingerAuthObj(LoginActivity.this)!=null) {
+                createAndShowDialog();
+            }
+        }
         // Set up the login form.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -76,29 +93,16 @@ public class LoginActivity extends BaseActivity {
                 return true;
             }
             return false;
-
         });
-
-
         mLoginFormView = findViewById(R.id.login_form);
-//        mProgressView = findViewById(R.id.login_progress);
         btnSingin = findViewById(R.id.btn_signin_loginact);
         btnSingin.setOnClickListener((view) ->
         {
             attemptLogin();
-//            showLoading();
         });
-
-
-//        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.dummy_focus_loginact);
-//        linearLayout.requestFocus();
         txtPassword.clearFocus();
         txtPhone.clearFocus();
-        User user = CoreManager.getUser(this);
-        if (user != null) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
+
     }
 
 
@@ -165,20 +169,21 @@ public class LoginActivity extends BaseActivity {
         staffService.login(phone, password)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<User>>() {
+                .subscribe(new SingleObserver<Response<Staff>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         disposable = d;
                     }
 
                     @Override
-                    public void onSuccess(Response<User> userResponse) {
+                    public void onSuccess(Response<Staff> userResponse) {
                         if (userResponse.isSuccessful()) {
 //                            Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
                             //////donothing
                             if (userResponse.body() != null) {
-                                User u = userResponse.body();
-                                CoreManager.setUser(LoginActivity.this, u);
+                                Staff u = userResponse.body();
+                                CoreManager.setStaff(LoginActivity.this, u);
+                                CoreManager.setFingerAuthObj(LoginActivity.this,new FingerAuthObj(phone,password));
                                 RetrofitClient.setAccessToken(u.getAccessToken());
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finish();
@@ -211,6 +216,41 @@ public class LoginActivity extends BaseActivity {
         if (disposable != null) {
             disposable.dispose();
         }
+    }
+
+    private void createAndShowDialog() {
+        fingerAuthDialog = new FingerAuthDialog(this)
+                .setTitle("Đăng Nhập Vân Tay")
+                .setCancelable(false)
+                .setPositiveButton("Đăng Nhập", null)
+                .setNegativeButton("Hủy", null)
+                .setOnFingerAuthListener(new FingerAuth.OnFingerAuthListener() {
+                    @Override
+                    public void onSuccess() {
+                        FingerAuthObj fingerAuthObj= CoreManager.getFingerAuthObj(LoginActivity.this);
+                        if(fingerAuthObj!=null){
+                            callApiLogin(fingerAuthObj.getPhone(),fingerAuthObj.getPassword());
+                        }else{
+                            showErrorMessage("Đăng nhập vân tay không thành công.");
+                        }
+//                        Toast.makeText(LoginActivity.this, "onSuccess", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        showErrorMessage("Đăng nhập vân tay không thành công.");
+
+//                        Toast.makeText(LoginActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError() {
+                        showErrorMessage("Đăng nhập vân tay không thành công.");
+
+//                        Toast.makeText(LoginActivity.this, "onError", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        fingerAuthDialog.show();
     }
 }
 
