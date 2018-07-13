@@ -10,8 +10,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.api.APIServiceManager;
+import com.dentalclinic.capstone.admin.api.services.PaymentService;
 import com.dentalclinic.capstone.admin.models.Event;
 import com.dentalclinic.capstone.admin.models.Patient;
+import com.dentalclinic.capstone.admin.models.Payment;
 import com.dentalclinic.capstone.admin.models.Tooth;
 import com.dentalclinic.capstone.admin.models.Treatment;
 import com.dentalclinic.capstone.admin.models.TreatmentHistory;
@@ -25,6 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 public class PatientDetailActivity extends BaseActivity implements View.OnClickListener {
     private CircleImageView cvAvatar;
@@ -33,6 +41,7 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
     private TextView txtName, txtGender, txtPhone, txtAddress, txtDateOfBirth;
     private Patient patient;
     public static String LIST_TREATMENT = "LIST_TREATMENT";
+    public static String LIST_PAYMENT = "LIST_PAYMENT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,28 +77,67 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
         treatmentHistories.add(treatmentHistory);
         treatmentHistories.add(treatmentHistory);
     }
+
     public void setListenter() {
         btnViewTreatment.setOnClickListener(view -> {
 //            if (patient != null) {
 //                ArrayList<TreatmentHistory> treatmentHistories = (ArrayList<TreatmentHistory>) patient.getTreatmentHistories();
-                ArrayList<TreatmentHistory> treatmentHistories =new ArrayList<TreatmentHistory>();
-                ///testttttttt
-                dummyData(treatmentHistories);
-                if (treatmentHistories != null && treatmentHistories.size() > 0) {
-                    Intent intent = new Intent(PatientDetailActivity.this, PatientTreatmentActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(LIST_TREATMENT, treatmentHistories);
-                    intent.putExtra(AppConst.BUNDLE, bundle);
+            ArrayList<TreatmentHistory> treatmentHistories = new ArrayList<TreatmentHistory>();
+            ///testttttttt
+            dummyData(treatmentHistories);
+            if (treatmentHistories != null && treatmentHistories.size() > 0) {
+                Intent intent = new Intent(PatientDetailActivity.this, PatientTreatmentActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(LIST_TREATMENT, treatmentHistories);
+                intent.putExtra(AppConst.BUNDLE, bundle);
 
-                    startActivity(intent);
-                } else {
-                    showMessage("Lịch sử điều trị");
-                }
+                startActivity(intent);
+            } else {
+                showMessage("Lịch sử điều trị");
+            }
 //            }
         });
         btnViewPayment.setOnClickListener(view -> {
             if (patient != null) {
+                List<TreatmentHistory> treatmentHistories = patient.getTreatmentHistories();
+                PaymentService paymentService = APIServiceManager.getService(PaymentService.class);
+                paymentService.getByPhone(patient.getPhone())
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new SingleObserver<Response<List<Payment>>>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
 
+                            }
+
+                            @Override
+                            public void onSuccess(Response<List<Payment>> listResponse) {
+                                ArrayList<Payment> list = (ArrayList<Payment>) listResponse.body();
+                                if (list != null) {
+                                    list.addAll(list);
+                                    Intent intent = new Intent(PatientDetailActivity.this, PatientPaymentActivity.class);
+                                    intent.putExtra(LIST_PAYMENT, list);
+                                    startActivity(intent);
+                                } else if (listResponse.code() == 500) {
+                                    showFatalError(listResponse.errorBody(), "prepareData");
+                                } else if (listResponse.code() == 401) {
+                                    showErrorUnAuth();
+                                } else if (listResponse.code() == 400) {
+                                    showBadRequestError(listResponse.errorBody(), "prepareData");
+                                }
+                                hideLoading();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                                showErrorMessage("Không thể kết nối đến server");
+                            }
+                        });
+                List<Payment> listPayment = new ArrayList<>();
+                for (TreatmentHistory t : treatmentHistories) {
+
+                }
             }
         });
     }
