@@ -80,11 +80,11 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
 
     public void setListenter() {
         btnViewTreatment.setOnClickListener(view -> {
-//            if (patient != null) {
-//                ArrayList<TreatmentHistory> treatmentHistories = (ArrayList<TreatmentHistory>) patient.getTreatmentHistories();
-            ArrayList<TreatmentHistory> treatmentHistories = new ArrayList<TreatmentHistory>();
+            if (patient != null) {
+                ArrayList<TreatmentHistory> treatmentHistories = (ArrayList<TreatmentHistory>) patient.getTreatmentHistories();
+//            ArrayList<TreatmentHistory> treatmentHistories = new ArrayList<TreatmentHistory>();
             ///testttttttt
-            dummyData(treatmentHistories);
+//            dummyData(treatmentHistories);
             if (treatmentHistories != null && treatmentHistories.size() > 0) {
                 Intent intent = new Intent(PatientDetailActivity.this, PatientTreatmentActivity.class);
                 Bundle bundle = new Bundle();
@@ -95,11 +95,11 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
             } else {
                 showMessage("Lịch sử điều trị");
             }
-//            }
+            }
         });
         btnViewPayment.setOnClickListener(view -> {
+            showLoading();
             if (patient != null) {
-                List<TreatmentHistory> treatmentHistories = patient.getTreatmentHistories();
                 PaymentService paymentService = APIServiceManager.getService(PaymentService.class);
                 paymentService.getByPhone(patient.getPhone())
                         .subscribeOn(Schedulers.newThread())
@@ -114,7 +114,6 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
                             public void onSuccess(Response<List<Payment>> listResponse) {
                                 ArrayList<Payment> list = (ArrayList<Payment>) listResponse.body();
                                 if (list != null) {
-                                    list.addAll(list);
                                     Intent intent = new Intent(PatientDetailActivity.this, PatientPaymentActivity.class);
                                     intent.putExtra(LIST_PAYMENT, list);
                                     startActivity(intent);
@@ -132,12 +131,13 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
                             public void onError(Throwable e) {
                                 e.printStackTrace();
                                 showErrorMessage("Không thể kết nối đến server");
+                                hideLoading();
                             }
                         });
-                List<Payment> listPayment = new ArrayList<>();
-                for (TreatmentHistory t : treatmentHistories) {
-
-                }
+//                List<Payment> listPayment = new ArrayList<>();
+//                for (TreatmentHistory t : treatmentHistories) {
+//
+//                }
             }
         });
     }
@@ -175,6 +175,12 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
                 txtAddress.setText(address);
             }
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     @Override

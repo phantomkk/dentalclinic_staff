@@ -1,6 +1,7 @@
 package com.dentalclinic.capstone.admin.activities;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ExpandableListView;
@@ -28,7 +29,10 @@ public class PatientTreatmentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_treatment);
         listView = findViewById(R.id.list_treatment);
-
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         Intent i = getIntent();
         if(treatmentHistories == null){
             treatmentHistories = new ArrayList<>();
@@ -54,4 +58,11 @@ public class PatientTreatmentActivity extends BaseActivity {
     public void onCancelLoading() {
 
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
 }
