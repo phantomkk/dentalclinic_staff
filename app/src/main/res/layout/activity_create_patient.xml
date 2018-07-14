@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
     android:background="@color/color_white"
-    tools:context=".activities.CreatePatientActivity"
-    android:layout_height="wrap_content">
+    tools:context=".activities.CreatePatientActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,13 +23,13 @@
                 android:id="@+id/edt_fullname_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_account_circle_black_24dp"
                 android:drawablePadding="@dimen/drawable_padding"
+                android:drawableStart="@drawable/ic_account_circle_black_24dp"
                 android:hint="@string/tv_promt_fullname"
                 android:imeOptions="actionNext"
                 android:inputType="text"
-                android:textSize="@dimen/input_size_normal"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textSize="@dimen/input_size_normal" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -47,8 +48,8 @@
                 android:hint="@string/label_phone_quickbook"
                 android:imeOptions="actionNext"
                 android:inputType="text"
-                android:textSize="@dimen/input_size_normal"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textSize="@dimen/input_size_normal" />
         </android.support.design.widget.TextInputLayout>
 
         <RadioGroup
@@ -57,6 +58,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/input_margin_top"
             android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
 
             android:weightSum="100">
 
@@ -65,24 +68,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="33"
-                android:textSize="@dimen/input_size_normal"
-                android:text="Nam" />
+                android:text="Nam"
+
+                android:textSize="@dimen/input_size_normal" />
 
             <RadioButton
                 android:id="@+id/rbt_female_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="33"
-                android:textSize="@dimen/input_size_normal"
-                android:text="Nữ" />
+                android:text="Nữ"
+                android:textSize="@dimen/input_size_normal" />
 
             <RadioButton
                 android:id="@+id/rbt_others_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="33"
-                android:textSize="@dimen/input_size_normal"
-                android:text="Khác" />
+                android:text="Khác"
+                android:textSize="@dimen/input_size_normal" />
         </RadioGroup>
 
         <LinearLayout
@@ -90,6 +94,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
             android:weightSum="100">
 
             <TextView
@@ -102,9 +108,9 @@
                 android:drawableStart="@drawable/ic_date_range_black_24dp"
                 android:focusable="true"
                 android:paddingStart="5dp"
-                android:textSize="@dimen/input_size_normal"
                 android:text="@string/label_birthday_register"
-                android:textColor="@color/color_blue_grey_300"  />
+                android:textColor="@color/color_blue_grey_300"
+                android:textSize="@dimen/input_size_normal" />
 
             <TextView
                 android:id="@+id/txt_error_date_register"
@@ -112,8 +118,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="60"
                 android:gravity="left"
-                android:paddingStart="9dp"
                 android:paddingEnd="1dp"
+                android:paddingStart="9dp"
                 android:text=""
                 android:textColor="@color/error_label" />
         </LinearLayout>
@@ -122,8 +128,11 @@
             android:id="@+id/btn_select_anamnesis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chọn tiền sử bệnh"
-            />
+            android:layout_marginTop="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            style="@style/custom_button_blue"
+            android:text="Chọn tiền sử bệnh" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -135,46 +144,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|left"
-                android:drawableStart="@drawable/ic_home_black_24dp"
                 android:drawablePadding="9dp"
+                android:drawableStart="@drawable/ic_home_black_24dp"
                 android:hint="@string/label_address_quickbook"
-                android:textSize="@dimen/input_size_normal"
                 android:imeOptions="actionNext"
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLength="2000"
                 android:maxLines="4"
                 android:minLines="3"
-                android:paddingStart="6dp"
                 android:paddingEnd="2dp"
-                android:singleLine="true" />
+                android:paddingStart="6dp"
+                android:singleLine="true"
+                android:textSize="@dimen/input_size_normal" />
         </android.support.design.widget.TextInputLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="100">
+
             <Spinner
                 android:id="@+id/spinner_district_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="50">            </Spinner>
+                android:layout_weight="50"></Spinner>
+
             <Spinner
                 android:id="@+id/spinner_city_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="50">
-            </Spinner>
+                android:layout_weight="50"></Spinner>
         </LinearLayout>
-
 
 
         <Button
             android:id="@+id/btn_register"
-            style="@style/custom_button_green"
+            style="@style/custom_button_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="@string/label_button_register" />
+            android:text="Tạo hồ sơ" />
     </LinearLayout>
 
 </ScrollView>

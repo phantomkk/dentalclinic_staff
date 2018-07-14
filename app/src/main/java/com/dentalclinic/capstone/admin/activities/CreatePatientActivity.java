@@ -50,7 +50,6 @@ public class CreatePatientActivity extends BaseActivity {
 
     private EditText edtFullname;
     private EditText edtPhone;
-    private EditText edtConfirmPassword;
     private RadioGroup radioGroup;
     private EditText edtAddress;
     private Button btnRegister;
@@ -179,6 +178,7 @@ public class CreatePatientActivity extends BaseActivity {
                     ArrayList<AnamnesisCatalog> list = b.get(PATIENT_ANAMNESIS) instanceof ArrayList ?
                             (ArrayList<AnamnesisCatalog>) b.get(PATIENT_ANAMNESIS) : null;
                     if (list != null) {
+                        patientAnamnesis.clear();
                         patientAnamnesis.addAll(list);
                         String listAnamnesis = "";
                         for (AnamnesisCatalog a : patientAnamnesis) {
@@ -230,7 +230,6 @@ public class CreatePatientActivity extends BaseActivity {
         String name = edtFullname.getText().toString().trim();
         String phone = edtPhone.getText().toString().trim();
         String address = edtAddress.getText().toString().trim();
-        String confirmPassword = edtConfirmPassword.getText().toString().trim();
         String birthdayStr = tvBirthday.getText().toString().trim();
         District district = (District) spnDistrict.getSelectedItem();
         int districtID = -1;
@@ -260,6 +259,12 @@ public class CreatePatientActivity extends BaseActivity {
             focusView = tvBirthday;
         }
         String gender = getGenderValue(radioGroup.getCheckedRadioButtonId());
+        List<Integer> listAnamnesis = new ArrayList<>();
+        for (AnamnesisCatalog ac : patientAnamnesis) {
+            listAnamnesis.add(ac.getId());
+        }
+
+
         if (cancel) {
             focusView.requestFocus();
         } else {
@@ -270,6 +275,9 @@ public class CreatePatientActivity extends BaseActivity {
             profileRequest.setName(name);
             profileRequest.setGender(gender);
             profileRequest.setBirthday(birthdayStr);
+            if(listAnamnesis.size()>0){
+                profileRequest.setListAnamnesis(listAnamnesis);
+            }
             createPatientAPI(profileRequest);
 
         }
@@ -311,8 +319,8 @@ public class CreatePatientActivity extends BaseActivity {
                             AlertDialog.Builder alertDialog = new AlertDialog.Builder(CreatePatientActivity.this)
                                     .setMessage("Đăng kí tài khoản thành công")
                                     .setPositiveButton("Đăng nhập", (DialogInterface dialogInterface, int i) -> {
-                                        Intent intent = new Intent(CreatePatientActivity.this, LoginActivity.class);
-                                        startActivity(intent);
+//                                        Intent intent = new Intent(CreatePatientActivity.this, LoginActivity.class);
+//                                        startActivity(intent);
                                     });
                             alertDialog.show();
                         } else if (patientResponse.code() == 500) {

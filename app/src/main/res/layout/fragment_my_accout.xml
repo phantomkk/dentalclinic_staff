@@ -257,7 +257,7 @@
 
             <Button
                 android:id="@+id/btn_edit_accout"
-                style="@style/custom_button_green"
+                style="@style/custom_button_blue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

@@ -27,7 +27,7 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="custom_button_green" parent="@android:style/Widget.Button">
+    <style name="custom_button_blue" parent="@android:style/Widget.Button">
         <item name="android:gravity">center_vertical|center_horizontal</item>
         <item name="android:textColor">#FFFFFFFF</item>
         <!--<item name="android:shadowColor">#FF000000</item>-->
@@ -41,7 +41,7 @@
         <item name="android:clickable">true</item>
     </style>
 
-    <style name="custom_button_blue" parent="@android:style/Widget.Button">
+    <style name="custom_button_2" parent="@android:style/Widget.Button">
         <item name="android:gravity">center_vertical|center_horizontal</item>
         <item name="android:textColor">#FFFFFFFF</item>
         <!--<item name="android:shadowColor">#FF000000</item>-->
@@ -55,11 +55,11 @@
         <item name="android:clickable">true</item>
     </style>
 
-    <style name="custom_button_red" parent="custom_button_green">
+    <style name="custom_button_red" parent="custom_button_blue">
         <item name="android:background">@drawable/ripple_effect_2</item>
     </style>
 
-    <style name="custom_button_orange" parent="custom_button_green">
+    <style name="custom_button_orange" parent="custom_button_blue">
         <item name="android:background">@drawable/ripple_effect_3</item>
     </style>
 

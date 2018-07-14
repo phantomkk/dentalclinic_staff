@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.models.Anamnesis;
 import com.dentalclinic.capstone.admin.models.AnamnesisCatalog;
 import com.squareup.picasso.Picasso;
 
@@ -21,7 +23,8 @@ import java.util.List;
 public class AnamnesisCalatalogAdapter extends ArrayAdapter<AnamnesisCatalog> {
     List<AnamnesisCatalog> list;
 
-    private List<AnamnesisCatalog> listPatientAnamnesis ;
+    private List<AnamnesisCatalog> listPatientAnamnesis;
+
     private static class ViewHolder {
         public CheckBox chkAnamnesis;
         public TextView txtAnamnesis;
@@ -31,7 +34,7 @@ public class AnamnesisCalatalogAdapter extends ArrayAdapter<AnamnesisCatalog> {
 
     public AnamnesisCalatalogAdapter(@NonNull Context context,
                                      List<AnamnesisCatalog> list,
-                                       List<AnamnesisCatalog> listPatientAnamnesis
+                                     List<AnamnesisCatalog> listPatientAnamnesis
     ) {
         super(context, 0, list);
         this.list = list;
@@ -57,16 +60,20 @@ public class AnamnesisCalatalogAdapter extends ArrayAdapter<AnamnesisCatalog> {
         if (anamnesisCatalog != null) {
 
             viewHolder.txtAnamnesis.setText(anamnesisCatalog.getName());
-            if(isInPreviousList(anamnesisCatalog)){
+            if (isInPreviousList(anamnesisCatalog)) {
                 viewHolder.chkAnamnesis.setChecked(true);
+                viewHolder.checked = true;
+            }else{
+                viewHolder.chkAnamnesis.setChecked(false);
+                viewHolder.checked = false;
             }
             convertView.setOnClickListener((View view) -> {
                 viewHolder.checked = !viewHolder.checked;
                 viewHolder.chkAnamnesis.setChecked(viewHolder.checked);
-                if(viewHolder.checked){
+                if (viewHolder.checked) {
                     listPatientAnamnesis.add(anamnesisCatalog);
-                }else{
-                    listPatientAnamnesis.remove(anamnesisCatalog);
+                } else {
+                    deleteAnamnesis(anamnesisCatalog.getId());
                 }
             });
         }
@@ -74,12 +81,26 @@ public class AnamnesisCalatalogAdapter extends ArrayAdapter<AnamnesisCatalog> {
 
     }
 
-    private boolean isInPreviousList(AnamnesisCatalog a){
-        if(listPatientAnamnesis==null){
+    private void deleteAnamnesis(int id) {
+        AnamnesisCatalog tmp = null;
+        for (AnamnesisCatalog c : listPatientAnamnesis) {
+            if (c.getId() == id) {
+                tmp = c;
+                break;
+            }
+        }
+        if (listPatientAnamnesis != null && tmp!=null) {
+            listPatientAnamnesis.remove(tmp);
+        }
+    }
+static int count = 0;
+    private boolean isInPreviousList(AnamnesisCatalog a) {
+        Log.d("COUNBT:", (count++)+"");
+        if (listPatientAnamnesis == null) {
             return false;
         }
         for (AnamnesisCatalog tmp : listPatientAnamnesis) {
-            if(a.getId() == tmp.getId()){
+            if (a.getId() == tmp.getId()) {
                 return true;
             }
         }

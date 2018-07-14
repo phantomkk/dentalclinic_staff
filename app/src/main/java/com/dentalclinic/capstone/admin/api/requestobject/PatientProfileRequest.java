@@ -3,6 +3,8 @@ package com.dentalclinic.capstone.admin.api.requestobject;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PatientProfileRequest implements Serializable{
     @SerializedName("phone")
@@ -17,6 +19,9 @@ public class PatientProfileRequest implements Serializable{
     private int districtId;
     @SerializedName("address")
     private String address;
+    @SerializedName("anamnesis[]")
+    private List<Integer> listAnamnesis = new ArrayList<>();
+
 
 
     public String getPhone() {
@@ -65,5 +70,13 @@ public class PatientProfileRequest implements Serializable{
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<Integer> getListAnamnesis() {
+        return listAnamnesis;
+    }
+
+    public void setListAnamnesis(List<Integer> listAnamnesis) {
+        this.listAnamnesis = listAnamnesis;
     }
 }
