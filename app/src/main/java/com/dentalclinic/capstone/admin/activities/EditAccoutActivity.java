@@ -56,7 +56,7 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.side_nav_bar));
+//            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.side_nav_bar));
         }
         Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
 
@@ -99,7 +99,9 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
                 if (city != null) {
                     spDistrict.setAdapter(new DistrictSpinnerAdapter(EditAccoutActivity.this,
                             android.R.layout.simple_spinner_item,cityDatabaseHelper.getDistrictOfCity(city.getId())));
-                    spDistrict.setSelection(cityDatabaseHelper.getPositionDistrictById(staff.getDistrict()));
+                    if(staff.getDistrict()!=null) {
+                        spDistrict.setSelection(cityDatabaseHelper.getPositionDistrictById(staff.getDistrict()));
+                    }
                 }
             }
             @Override
@@ -107,8 +109,9 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
 
             }
         });
-        spCity.setSelection(cityDatabaseHelper.getPositionCityById(staff.getCity().getId()));
-
+        if (staff.getCity()!=null) {
+            spCity.setSelection(cityDatabaseHelper.getPositionCityById(staff.getCity().getId()));
+        }
     }
 
     @Override

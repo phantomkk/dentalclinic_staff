@@ -28,6 +28,8 @@ public class Appointment implements Serializable {
     private String phone;
     @SerializedName("note")
     private String note;
+    @SerializedName("name")
+    private String name;
     @SerializedName("numerical_order")
     private int numericalOrder;
     @SerializedName("estimated_time")
@@ -36,6 +38,16 @@ public class Appointment implements Serializable {
     private String startTime;
     @SerializedName("status")
     private int status;
+    @SerializedName("patient")
+    private Patient patient;
+
+    private boolean isExpand = false;
+    public Appointment(String note, String name, int numericalOrder, int status) {
+        this.note = note;
+        this.name = name;
+        this.numericalOrder = numericalOrder;
+        this.status = status;
+    }
 
     public int getStatus() {
         return status;
@@ -110,6 +122,30 @@ public class Appointment implements Serializable {
         this.staffId = staffId;
     }
 
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isExpand() {
+        return isExpand;
+    }
+
+    public void setExpand(boolean expand) {
+        isExpand = expand;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @SuppressLint("SimpleDateFormat")
     public WeekViewEvent toWeekViewEvent(){
 
@@ -135,4 +171,6 @@ public class Appointment implements Serializable {
 
         return weekViewEvent;
     }
+
+
 }

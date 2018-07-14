@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -51,10 +52,10 @@ import retrofit2.Response;
 public class SearchPatientFragment extends BaseFragment {
     private FloatingActionsMenu menuMultipleActions;
     private FloatingActionButton btnNewPatient, btnNewAppointment, btnNewPayment;
-    private List<Patient> patients;
+    private List<Patient> patients = new ArrayList<>();
     private PatientAdapter mAdapter;
     private SwipeMenuListView mListView;
-
+    private TextView textView;
 
     public SearchPatientFragment() {
         // Required empty public constructor
@@ -67,8 +68,9 @@ public class SearchPatientFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
-
+        getActivity().setTitle("Tìm kiếm bệnh nhân");
         View view = inflater.inflate(R.layout.fragment_search_patient, container, false);
+        textView = view.findViewById(R.id.txt_label_message);
         btnNewPatient = new FloatingActionButton(getContext());
         btnNewPatient.setTitle("Thêm mới bệnh nhân");
         btnNewPatient.setIconDrawable(getResources().getDrawable(R.drawable.ic_supervisor_account_white_24dp));
@@ -101,7 +103,7 @@ public class SearchPatientFragment extends BaseFragment {
 
         menuMultipleActions = (FloatingActionsMenu) view.findViewById(R.id.multiple_actions);
 
-        prepareData();
+//        prepareData();
         mListView = (SwipeMenuListView) view.findViewById(R.id.listView);
         mAdapter = new PatientAdapter(getContext(), patients);
         mListView.setAdapter(mAdapter);
@@ -191,10 +193,21 @@ public class SearchPatientFragment extends BaseFragment {
     }
 
     private void prepareData() {
-        patients = new ArrayList<>();
+//        patients = new ArrayList<>();
         patients.add(new Patient("Vo Quoc Trinh", "1996-10-01", "MALE"));
         patients.add(new Patient("Vo Quoc Trinh", "1996-10-01", "FEMALE"));
         patients.add(new Patient("Vo Quoc Trinh", "1996-10-01", "OTHER"));
+    }
+
+    public void setPatientsAndNotifiAdapter(List<Patient> patientList){
+        if(patientList.isEmpty()){
+            textView.setVisibility(View.VISIBLE);
+        }else{
+            textView.setVisibility(View.GONE);
+        }
+        patients.clear();
+        patients.addAll(patientList);
+        mAdapter.notifyDataSetChanged();
     }
 
 

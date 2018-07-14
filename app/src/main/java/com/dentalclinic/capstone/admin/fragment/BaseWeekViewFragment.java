@@ -231,7 +231,7 @@ public class BaseWeekViewFragment extends BaseFragment implements WeekView.Event
             }
         }
         if (isOk) {
-            showMessage("mont" + newMonth);
+//            showMessage("mont" + newMonth);
             dateChecks.add(dateCheck);
             StaffService service = APIServiceManager.getService(StaffService.class);
             service.getAppointments(2, newMonth - 1, newYear)

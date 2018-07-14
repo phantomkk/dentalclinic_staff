@@ -177,7 +177,9 @@
     <string name="title_activity_main">MainActivity</string>
 
     <string name="search_patient_titie">Tìm kiếm bệnh nhân</string>
-    <string name="history_work_title">Lịch đặt</string>
+    <string name="history_work_title">Lịch hẹn</string>
+    <string name="appointment_title">Khám bệnh</string>
+    <string name="absent_title">Xin Nghĩ</string>
 
 
     <string name="action_today">Hôm Hay</string>
