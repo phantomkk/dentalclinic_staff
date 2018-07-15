@@ -1,6 +1,7 @@
 package com.dentalclinic.capstone.admin.fragment;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.activities.ShowTreatmentHistoryActivity;
 import com.dentalclinic.capstone.admin.adapter.AppointmentAdapter;
 import com.dentalclinic.capstone.admin.models.Appointment;
 
@@ -79,6 +81,31 @@ public class AppointmentFragment extends BaseFragment {
         };
         // set creator
         mListView.setMenuCreator(creator);
+
+        mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+//                ApplicationInfo item = mAppList.get(position);
+                switch (index) {
+                    case 0:
+                        // open
+                        showMessage(0+"");
+                        break;
+                    case 1:
+                        // delete
+//					delete(item);
+                        showMessage(1+"");
+                        break;
+                    case 2:
+                        showMessage(2+"");
+                        Intent intent = new Intent(getContext(), ShowTreatmentHistoryActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+                return false;
+            }
+        });
+
         return view;
     }
 
@@ -86,7 +113,7 @@ public class AppointmentFragment extends BaseFragment {
         // create "open" item
         SwipeMenuItem editItem = new SwipeMenuItem(getContext());
         editItem.setBackground(R.color.color_blue_500);
-        editItem.setWidth(dp2px(50));
+        editItem.setWidth(dp2px(70));
         editItem.setIcon(R.drawable.ic_edit_white_24dp);
         editItem.setTitleSize(18);
         editItem.setTitleColor(Color.WHITE);
@@ -98,7 +125,7 @@ public class AppointmentFragment extends BaseFragment {
         // set item background
         deleteItem.setBackground(R.color.color_red_500);
         // set item width
-        deleteItem.setWidth(dp2px(50));
+        deleteItem.setWidth(dp2px(70));
         // set a icon
         deleteItem.setIcon(R.drawable.ic_delete_white_24dp);
         // add to menu
@@ -106,10 +133,33 @@ public class AppointmentFragment extends BaseFragment {
     }
     public void createMenu2(SwipeMenu menu){
         // create "open" item
+
+
+        SwipeMenuItem editItem = new SwipeMenuItem(getContext());
+        editItem.setBackground(R.color.color_blue_500);
+        editItem.setWidth(dp2px(70));
+        editItem.setIcon(R.drawable.ic_edit_white_24dp);
+        editItem.setTitleSize(18);
+        editItem.setTitleColor(Color.WHITE);
+        // add to menu
+        menu.addMenuItem(editItem);
+
+        // create "delete" item
+        SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
+        // set item background
+        deleteItem.setBackground(R.color.color_red_500);
+        // set item width
+        deleteItem.setWidth(dp2px(70));
+        // set a icon
+        deleteItem.setIcon(R.drawable.ic_delete_white_24dp);
+        // add to menu
+        menu.addMenuItem(deleteItem);
+
+
         SwipeMenuItem skipItem = new SwipeMenuItem(getContext());
         // set item background
         // set item width
-        skipItem.setWidth(dp2px(50));
+        skipItem.setWidth(dp2px(70));
         // set item title
         // set item title fontsize
         skipItem.setIcon(R.drawable.ic_done_white_24dp);
@@ -120,26 +170,6 @@ public class AppointmentFragment extends BaseFragment {
         skipItem.setBackground(R.color.color_green_500);
         // add to menu
         menu.addMenuItem(skipItem);
-
-        SwipeMenuItem editItem = new SwipeMenuItem(getContext());
-        editItem.setBackground(R.color.color_blue_500);
-        editItem.setWidth(dp2px(50));
-        editItem.setIcon(R.drawable.ic_edit_white_24dp);
-        editItem.setTitleSize(18);
-        editItem.setTitleColor(Color.WHITE);
-        // add to menu
-        menu.addMenuItem(editItem);
-
-        // create "delete" item
-        SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
-        // set item background
-        deleteItem.setBackground(R.color.color_red_500);
-        // set item width
-        deleteItem.setWidth(dp2px(50));
-        // set a icon
-        deleteItem.setIcon(R.drawable.ic_delete_white_24dp);
-        // add to menu
-        menu.addMenuItem(deleteItem);
     }
     public void prepareData(){
         appointments= new ArrayList<>();
