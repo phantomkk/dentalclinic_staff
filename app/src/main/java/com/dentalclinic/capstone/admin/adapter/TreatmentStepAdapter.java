@@ -3,7 +3,6 @@ package com.dentalclinic.capstone.admin.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.models.Treatment;
 import com.dentalclinic.capstone.admin.models.TreatmentStep;
 
 import java.util.List;
@@ -69,7 +69,7 @@ public class TreatmentStepAdapter extends ArrayAdapter<TreatmentStep> {
                 if (viewHolder.checked) {
                     listCurrentStep.add(step);
                 } else {
-                    deleteAnamnesis(step.getId());
+                    deleteStep(step );
                 }
             });
         }
@@ -77,10 +77,10 @@ public class TreatmentStepAdapter extends ArrayAdapter<TreatmentStep> {
 
     }
 
-    private void deleteAnamnesis(int id) {
+    private void deleteStep(TreatmentStep step) {
         TreatmentStep tmp = null;
         for (TreatmentStep c : listCurrentStep) {
-            if (c.getId() == id) {
+            if (c.getStepId() == step.getStepId() && c.getTreatmentId() == step.getTreatmentId()) {
                 tmp = c;
                 break;
             }
@@ -91,12 +91,11 @@ public class TreatmentStepAdapter extends ArrayAdapter<TreatmentStep> {
     }
 static int count = 0;
     private boolean isInPreviousList(TreatmentStep a) {
-        Log.d("COUNBT:", (count++)+"");
         if (listCurrentStep == null) {
             return false;
         }
         for (TreatmentStep tmp : listCurrentStep) {
-            if (a.getId() == tmp.getId()) {
+            if (a.getStepId() == tmp.getStepId() && a.getTreatmentId() == tmp.getTreatmentId()) {
                 return true;
             }
         }

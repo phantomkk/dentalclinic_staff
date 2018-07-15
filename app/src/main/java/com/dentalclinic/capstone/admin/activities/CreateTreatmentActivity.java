@@ -25,12 +25,10 @@ import com.dentalclinic.capstone.admin.adapter.ToothSpinnerAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.services.ToothService;
 import com.dentalclinic.capstone.admin.api.services.TreatmentService;
-import com.dentalclinic.capstone.admin.models.AnamnesisCatalog;
 import com.dentalclinic.capstone.admin.models.Tooth;
 import com.dentalclinic.capstone.admin.models.Treatment;
 import com.dentalclinic.capstone.admin.models.TreatmentStep;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -54,15 +52,16 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private Spinner spnTooth;
     private List<Tooth> listTooth;
     private List<Treatment> listTreatment;
-    private List<TreatmentStep> listTreatmentSteps;
+    private List<TreatmentStep> crrTreatmentSteps;
     private Button btnShowListTreatment;
     private Button btnShowListTreatmentStep;
     private Treatment currentTreatment;
     private SearchableDialog searchableDialog;
     private List<SearchListItem> listItems;
     public static String LIST_STEP = "LIST_STEP";
-    public static String PREVIOUS_STEP = "PREVIOUS_STEP";
+    public static String CURRENT_STEP = "CURRENT_STEP";
     public static int REQUEST_CODE_STEP = 121;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,11 +72,12 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         lblTreatment = findViewById(R.id.lbl_treatment_slt);
         listTooth = new ArrayList<>();
         listTreatment = new ArrayList<>();
+        crrTreatmentSteps = new ArrayList<>();
         adapter = new ToothSpinnerAdapter(this, android.R.layout.simple_spinner_item, listTooth);
         spnTooth.setAdapter(
                 adapter
         );
-         listItems = convertTreatmentList(listTreatment);
+        listItems = convertTreatmentList(listTreatment);
         searchableDialog = new SearchableDialog(this, listItems, "Chọn điều trị");
         searchableDialog.setOnItemSelected(new OnSearchItemSelected() {
             @Override
@@ -86,6 +86,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 for (Treatment t : listTreatment) {
                     if (t.getId() == treatmentId) {
                         currentTreatment = t;
+                        crrTreatmentSteps.addAll(currentTreatment.getTreatmentSteps());
                         lblTreatment.setText(currentTreatment.getName());
                         break;
                     }
@@ -94,7 +95,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         });
         btnShowListTreatment = findViewById(R.id.btn_list_treatments);
         btnShowListTreatment.setOnClickListener((v) -> {
-            if (searchableDialog!= null && listTreatment != null && listTreatment.size() > 0) {
+            if (searchableDialog != null && listTreatment != null && listTreatment.size() > 0) {
                 searchableDialog.show();
             } else {
                 showMessage("Danh sách điều trị trống");
@@ -104,8 +105,14 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         btnShowListTreatmentStep = findViewById(R.id.btn_list_treatmentstep);
         btnShowListTreatmentStep.setOnClickListener((v) -> {
             Intent intent = new Intent(CreateTreatmentActivity.this, StepListActivity.class);
-            intent.putExtra(LIST_STEP, (ArrayList<TreatmentStep>)currentTreatment.getTreatmentSteps());
-            startActivity(intent);
+            intent.putExtra(LIST_STEP, (ArrayList<TreatmentStep>) currentTreatment.getTreatmentSteps());
+            if (currentTreatment != null && currentTreatment.getTreatmentSteps() != null) {
+                intent.putExtra(CURRENT_STEP, (ArrayList<TreatmentStep>) crrTreatmentSteps);
+            } else {
+                logError("btnShowTreatmentStep", "currentTreatment!=null && currentTreatment.getTreatmentSteps()!=null else");
+            }
+
+            startActivityForResult(intent,REQUEST_CODE_STEP);
         });
         prepareData();
 //        FirebaseMessaging.getInstance().subscribeToTopic("AAA");
@@ -114,18 +121,20 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         LocalBroadcastManager.getInstance(this).registerReceiver(onNotice, filter);
 //        logError("NOTHING", FirebaseInstanceId.getInstance().getToken());
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         Bundle b = (data == null ? null : data.getExtras());
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE_STEP) {
                 if (b != null) {
-                    ArrayList<TreatmentStep> list = b.get(PREVIOUS_STEP) instanceof ArrayList ?
-                            (ArrayList<TreatmentStep>) b.get(PREVIOUS_STEP) : null;
+                    ArrayList<TreatmentStep> list = b.get(CURRENT_STEP) instanceof ArrayList ?
+                            (ArrayList<TreatmentStep>) b.get(CURRENT_STEP) : null;
                     if (list != null) {
-                        listTreatmentSteps.clear();
-                        listTreatmentSteps.addAll(list);
+                        crrTreatmentSteps.clear();
+                        crrTreatmentSteps.addAll(list);
                         String listAnamnesis = "";
 
                     }

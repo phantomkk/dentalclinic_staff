@@ -5,8 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class TreatmentStep implements Serializable {
-    @SerializedName("id")
-    private int id;
+    @SerializedName("step_id")
+    private int stepId; @SerializedName("treatment_id")
+    private int treatmentId;
     @SerializedName("name")
     private String name;
     @SerializedName("treatment")
@@ -18,13 +19,7 @@ public class TreatmentStep implements Serializable {
         this.name = name;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -48,5 +43,21 @@ public class TreatmentStep implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getStepId() {
+        return stepId;
+    }
+
+    public void setStepId(int stepId) {
+        this.stepId = stepId;
+    }
+
+    public int getTreatmentId() {
+        return treatmentId;
+    }
+
+    public void setTreatmentId(int treatmentId) {
+        this.treatmentId = treatmentId;
     }
 }
