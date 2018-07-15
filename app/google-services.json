@@ -59,6 +59,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "353232148503-jb1657rhklc713hvn9i3i6hqqilh483c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dentalclinic.capstone.admin",
+            "certificate_hash": "638419cd6972c151d6fbf9daa1d092a943073fa7"
+          }
+        },
+        {
           "client_id": "353232148503-3uk3qiq98ef0qcak12trfj6hfpht8072.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -73,8 +81,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353232148503-3uk3qiq98ef0qcak12trfj6hfpht8072.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

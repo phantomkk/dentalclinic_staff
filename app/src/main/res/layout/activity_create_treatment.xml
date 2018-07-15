@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".activities.CreateTreatmentActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/lbl_tooth_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:paddingStart="39dp"
+            android:text="Chọn răng" />
+
+        <Spinner
+            android:id="@+id/spn_tooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/input_margin_top"
+            android:layout_toRightOf="@id/lbl_tooth_number" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/color_grey_600" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/input_margin_top">
+
+        <TextView
+            android:id="@+id/lbl_treatment_slt0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
+            android:text="Điều trị: " />
+
+        <TextView
+            android:id="@+id/lbl_treatment_slt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/lbl_treatment_slt0"
+            android:layout_toLeftOf="@+id/btn_list_treatments"
+            android:textColor="@color/color_black"
+            android:scrollHorizontally="false"
+            android:layout_alignParentTop="true"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btn_list_treatments"
+            style="@style/custom_button_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:minHeight="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Chọn" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/input_margin_top">
+
+        <TextView
+            android:id="@+id/lbl_treatmentstep_slt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="Bước điều trị: " />
+
+        <Button
+            android:id="@+id/btn_list_treatmentstep"
+            style="@style/custom_button_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:minHeight="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Chọn" />
+    </RelativeLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/input_margin_top">
+
+        <AutoCompleteTextView
+            android:id="@+id/tv_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_attach_money_black_24dp"
+            android:hint="Giá tiền"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="@dimen/input_size_normal" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/input_margin_top"
+        android:paddingTop="10dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/comtv_content_quickbook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:drawablePadding="9dp"
+            android:drawableStart="@drawable/ic_event_note_black_24dp"
+            android:hint="@string/label_content_quickbook"
+            android:imeActionLabel="@string/label_button_book_quickbook"
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine"
+            android:maxLength="2000"
+            android:maxLines="6"
+            android:minLines="4"
+            android:paddingEnd="6dp"
+            android:paddingStart="6dp"
+            android:singleLine="true"
+            android:textSize="@dimen/input_size_normal" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/btn_quickbook"
+        style="@style/custom_button_blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:text="Tạo" />
+
+</LinearLayout>

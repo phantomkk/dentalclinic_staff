@@ -19,11 +19,6 @@
         <activity android:name=".activities.MainActivity"/>
         <activity android:name=".activities.CreatePatientActivity" />
         <activity android:name=".activities.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".activities.EditAccoutActivity" />
         <activity android:name=".activities.EditPasswordActivity" />
@@ -62,7 +57,14 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.PatientTreatmentActivity" />
         <activity android:name=".activities.PatientPaymentActivity" />
+        <activity android:name=".activities.StepListActivity"></activity>
         <activity android:name=".activities.ShowTreatmentHistoryActivity"></activity>
+        <activity android:name=".activities.CreateTreatmentActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter></activity>
     </application>
 
 </manifest>
