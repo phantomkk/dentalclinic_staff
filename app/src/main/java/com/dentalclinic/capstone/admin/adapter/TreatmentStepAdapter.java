@@ -89,7 +89,6 @@ public class TreatmentStepAdapter extends ArrayAdapter<TreatmentStep> {
             listCurrentStep.remove(tmp);
         }
     }
-static int count = 0;
     private boolean isInPreviousList(TreatmentStep a) {
         if (listCurrentStep == null) {
             return false;

@@ -14,6 +14,10 @@ public class Medicine implements Serializable {
     @SerializedName("description")
     private String description;
 
+    public Medicine() {
+
+    }
+
     public Medicine(String name) {
         this.name = name;
     }

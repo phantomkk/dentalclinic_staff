@@ -28,6 +28,8 @@ import com.dentalclinic.capstone.admin.adapter.ToothSpinnerAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.services.ToothService;
 import com.dentalclinic.capstone.admin.api.services.TreatmentService;
+import com.dentalclinic.capstone.admin.models.Medicine;
+import com.dentalclinic.capstone.admin.models.MedicineQuantity;
 import com.dentalclinic.capstone.admin.models.Tooth;
 import com.dentalclinic.capstone.admin.models.Treatment;
 import com.dentalclinic.capstone.admin.models.TreatmentStep;
@@ -51,20 +53,27 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private AutoCompleteTextView actPrice;
     private TextView lblTreatment;
     private TextView lblTreatmentStep;
+    private TextView lblMedicineQuantity;
     private String current = "0";
     private ToothSpinnerAdapter adapter;
     private Spinner spnTooth;
     private List<Tooth> listTooth;
     private List<Treatment> listTreatment;
     private List<TreatmentStep> crrTreatmentSteps;
+    private List<MedicineQuantity> selectedMedicine;
+    private List<MedicineQuantity> listMedicine;
     private Button btnShowListTreatment;
     private Button btnShowListTreatmentStep;
+    private Button btnShowListMedicine;
     private Treatment currentTreatment;
     private SearchableDialog searchableDialog;
     private List<SearchListItem> listItems;
     public static String LIST_STEP = "LIST_STEP";
+    public static String LIST_MEDICINE = "LIST_MEDICINE";
     public static String CURRENT_STEP = "CURRENT_STEP";
+    public static String SELECTED_MEDICINE = "SELECTED_MEDICINE";
     public static int REQUEST_CODE_STEP = 121;
+    public static int REQUEST_CODE_MEDICINE = 129;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +84,15 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         spnTooth = findViewById(R.id.spn_tooth);
         lblTreatment = findViewById(R.id.lbl_treatment_slt);
         lblTreatmentStep = findViewById(R.id.lbl_treatmentstep_slt);
+        lblMedicineQuantity = findViewById(R.id.lbl_medicine_slt);
         listTooth = new ArrayList<>();
+        btnShowListTreatment = findViewById(R.id.btn_list_treatments);
+        btnShowListTreatmentStep = findViewById(R.id.btn_list_treatmentstep);
+        btnShowListMedicine = findViewById(R.id.btn_list_medicine);
         listTreatment = new ArrayList<>();
+        listMedicine = new ArrayList<>();
         crrTreatmentSteps = new ArrayList<>();
+        selectedMedicine = new ArrayList<>();
         adapter = new ToothSpinnerAdapter(this, android.R.layout.simple_spinner_item, listTooth);
         spnTooth.setAdapter(adapter);
 //        spnTooth.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
@@ -107,7 +122,6 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 }
             }
         });
-        btnShowListTreatment = findViewById(R.id.btn_list_treatments);
         btnShowListTreatment.setOnClickListener((v) -> {
             if (searchableDialog != null && listTreatment != null && listTreatment.size() > 0) {
                 searchableDialog.show();
@@ -116,7 +130,6 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             }
         });
 
-        btnShowListTreatmentStep = findViewById(R.id.btn_list_treatmentstep);
         btnShowListTreatmentStep.setOnClickListener((v) -> {
             Intent intent = new Intent(CreateTreatmentActivity.this, StepListActivity.class);
             intent.putExtra(LIST_STEP, (ArrayList<TreatmentStep>) currentTreatment.getTreatmentSteps());
@@ -128,7 +141,20 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
 
             startActivityForResult(intent, REQUEST_CODE_STEP);
         });
+        btnShowListMedicine.setOnClickListener((v)->{
+            Intent intent = new Intent(CreateTreatmentActivity.this, MedicineListActivity.class);
+            intent.putExtra(LIST_MEDICINE, (ArrayList<MedicineQuantity>) listMedicine);
+            if (selectedMedicine != null ) {
+                intent.putExtra(SELECTED_MEDICINE, (ArrayList<MedicineQuantity>) selectedMedicine);
+            } else {
+                logError("btnShowListMedicine", "selectedMedicine != null else");
+            }
+
+            startActivityForResult(intent, REQUEST_CODE_MEDICINE);
+
+        });
         prepareData();
+        prepareMedicineDummy();
 //        FirebaseMessaging.getInstance().subscribeToTopic("AAA");
         // REST OF YOUR CODE
         IntentFilter filter = new IntentFilter("Hello Main");
@@ -148,6 +174,15 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         lblTreatmentStep.setText(stepsStr);
     }
 
+
+    private void updateMedicineLabel(List<MedicineQuantity> medicines) {
+        String mStr = "";
+        for (MedicineQuantity s : medicines) {
+            mStr += s.getMedicine().getName()+ " ___ " +s.getQuantity()+" viên" + "\n";
+        }
+        lblMedicineQuantity.setText(mStr );
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -162,6 +197,16 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                         crrTreatmentSteps.clear();
                         crrTreatmentSteps.addAll(list);
                         updateTreatmentStepLabel(crrTreatmentSteps);
+                    }
+                }
+            } else if (requestCode == REQUEST_CODE_MEDICINE) {
+                if (b != null) {
+                    ArrayList<MedicineQuantity> list = b.get(SELECTED_MEDICINE) instanceof ArrayList ?
+                            (ArrayList<MedicineQuantity>) b.get(SELECTED_MEDICINE) : null;
+                    if (list != null) {
+                        selectedMedicine.clear();
+                        selectedMedicine.addAll(list);
+                        updateMedicineLabel(selectedMedicine);
                     }
                 }
             }
@@ -204,6 +249,55 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     @Override
     public void onCancelLoading() {
 
+    }
+
+    private void prepareMedicineDummy() {
+        Medicine m1 = new Medicine();
+        m1.setId(1);
+        m1.setName("paradol");
+        Medicine m2 = new Medicine();
+        m2.setId(2);
+        m2.setName("paracetamol");
+        Medicine m3 = new Medicine();
+        m3.setId(3);
+        m3.setName("pharmaton");
+        Medicine m4 = new Medicine();
+        m4.setId(4);
+        m4.setName("tiffy");
+        Medicine m5 = new Medicine();
+        m5.setId(5);
+        m5.setName("aquavina");
+        Medicine m6 = new Medicine();
+        m6.setId(6);
+        m6.setName("beberin");
+        Medicine m7 = new Medicine();
+        m7.setId(7);
+        m7.setName("torbrin");
+        Medicine m8 = new Medicine();
+        m8.setId(8);
+        m8.setName("acitonin");
+        Medicine m9 = new Medicine();
+        m9.setId(9);
+        m9.setName("hiruscar");
+        Medicine m10 = new Medicine();
+        m10.setId(10);
+        m10.setName("thuoc te");
+        List<Medicine> lst = new ArrayList<>();
+        lst.add(m1);
+        lst.add(m2);
+        lst.add(m3);
+        lst.add(m4);
+        lst.add(m5);
+        lst.add(m6);
+        lst.add(m7);
+        lst.add(m8);
+        lst.add(m9);
+        lst.add(m10);
+        for (Medicine m : lst) {
+            MedicineQuantity q = new MedicineQuantity(m.getId(), 0, 0);
+            q.setMedicine(m);
+            listMedicine.add(q);
+        }
     }
 
     private void prepareData() {
@@ -280,9 +374,11 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             }
         });
     }
-private void getData(){
 
-}
+    private void getData() {
+
+    }
+
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 //        current = charSequence.toString();
@@ -304,7 +400,6 @@ private void getData(){
             prePrice = formatted;
             actPrice.setText(formatted);
             actPrice.setSelection(formatted.length() > 1 ? formatted.length() - 1 : formatted.length());
-
         }
     }
 

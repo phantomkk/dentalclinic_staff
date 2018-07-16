@@ -59,6 +59,8 @@
         <activity android:name=".activities.PatientPaymentActivity" />
         <activity android:name=".activities.StepListActivity"
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"></activity>
+        <activity android:name=".activities.MedicineListActivity"
+            android:theme="@style/noAnimTheme"></activity>
         <activity android:name=".activities.ShowTreatmentHistoryActivity"></activity>
         <activity android:name=".activities.CreateTreatmentActivity">
             <intent-filter>
