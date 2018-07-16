@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SearchDialog</string>
-    <string name="select_or_search">Select or Search</string>
-    <string name="close">Close</string>
+    <string name="app_name">Hộp thoại tìm kiếm</string>
+    <string name="select_or_search">Chọn hoặc tìm kiếm</string>
+    <string name="close">Tắt</string>
 </resources>

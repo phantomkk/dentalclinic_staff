@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -47,6 +50,7 @@ import retrofit2.Response;
 public class CreateTreatmentActivity extends BaseActivity implements TextWatcher {
     private AutoCompleteTextView actPrice;
     private TextView lblTreatment;
+    private TextView lblTreatmentStep;
     private String current = "0";
     private ToothSpinnerAdapter adapter;
     private Spinner spnTooth;
@@ -70,13 +74,21 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         actPrice.addTextChangedListener(this);
         spnTooth = findViewById(R.id.spn_tooth);
         lblTreatment = findViewById(R.id.lbl_treatment_slt);
+        lblTreatmentStep = findViewById(R.id.lbl_treatmentstep_slt);
         listTooth = new ArrayList<>();
         listTreatment = new ArrayList<>();
         crrTreatmentSteps = new ArrayList<>();
         adapter = new ToothSpinnerAdapter(this, android.R.layout.simple_spinner_item, listTooth);
-        spnTooth.setAdapter(
-                adapter
-        );
+        spnTooth.setAdapter(adapter);
+//        spnTooth.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
+//            public void onItemSelected(AdapterView<?> parent, View view, int pos,
+//                                       long id) {
+//                ((TextView) view).setTextColor(Color.BLACK);
+//            }
+//            public void onNothingSelected(AdapterView<?> parent) {
+//            }
+//
+//        });
         listItems = convertTreatmentList(listTreatment);
         searchableDialog = new SearchableDialog(this, listItems, "Chọn điều trị");
         searchableDialog.setOnItemSelected(new OnSearchItemSelected() {
@@ -86,8 +98,10 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 for (Treatment t : listTreatment) {
                     if (t.getId() == treatmentId) {
                         currentTreatment = t;
+                        crrTreatmentSteps.clear();
                         crrTreatmentSteps.addAll(currentTreatment.getTreatmentSteps());
                         lblTreatment.setText(currentTreatment.getName());
+                        updateTreatmentStepLabel(crrTreatmentSteps);
                         break;
                     }
                 }
@@ -112,7 +126,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 logError("btnShowTreatmentStep", "currentTreatment!=null && currentTreatment.getTreatmentSteps()!=null else");
             }
 
-            startActivityForResult(intent,REQUEST_CODE_STEP);
+            startActivityForResult(intent, REQUEST_CODE_STEP);
         });
         prepareData();
 //        FirebaseMessaging.getInstance().subscribeToTopic("AAA");
@@ -120,6 +134,18 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         IntentFilter filter = new IntentFilter("Hello Main");
         LocalBroadcastManager.getInstance(this).registerReceiver(onNotice, filter);
 //        logError("NOTHING", FirebaseInstanceId.getInstance().getToken());
+    }
+
+    private void clearTreatmentStepLabel() {
+        lblTreatmentStep.setText("");
+    }
+
+    private void updateTreatmentStepLabel(List<TreatmentStep> steps) {
+        String stepsStr = "";
+        for (TreatmentStep s : steps) {
+            stepsStr += s.getName() + "\n";
+        }
+        lblTreatmentStep.setText(stepsStr);
     }
 
     @Override
@@ -135,8 +161,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                     if (list != null) {
                         crrTreatmentSteps.clear();
                         crrTreatmentSteps.addAll(list);
-                        String listAnamnesis = "";
-
+                        updateTreatmentStepLabel(crrTreatmentSteps);
                     }
                 }
             }
@@ -158,6 +183,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         }
 
     };
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -212,6 +238,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 if (toothResponse.isSuccessful()) {
                     if (toothResponse.body() != null) {
                         listTooth.addAll(toothResponse.body());
+                        adapter.notifyDataSetChanged();
                     } else {
                         logError("onSuccess", "list tooth null");
                     }
@@ -252,45 +279,10 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 showErrorMessage("Không thể kết nối đến server");
             }
         });
-
-
-//        ToothService service = APIServiceManager.getService(ToothService.class);
-//        service.getAllTooth().
-//                subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new SingleObserver<Response<List<Tooth>>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(Response<List<Tooth>> listResponse) {
-//                        hideLoading();
-//                        if (listResponse.isSuccessful()) {
-//                            if (listResponse.body() != null) {
-//                                listTooth.addAll(listResponse.body());
-//                                adapter.notifyDataSetChanged();
-//                            }
-//                        } else if (listResponse.code() == 500) {
-//                            showFatalError(listResponse.errorBody(), "getTooth");
-//                        } else if (listResponse.code() == 401) {
-//                            showErrorUnAuth();
-//                        } else if (listResponse.code() == 400) {
-//                            showBadRequestError(listResponse.errorBody(), "getTooth");
-//                        } else {
-//                            logError("getTooth", "ELSE get tooth api");
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        e.printStackTrace();
-//                        showErrorMessage("Không thể kết nối đến máy chủ");
-//                    }
-//                });
     }
+private void getData(){
 
+}
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 //        current = charSequence.toString();
