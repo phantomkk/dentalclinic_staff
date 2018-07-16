@@ -1,5 +1,6 @@
 package com.dentalclinic.capstone.admin.activities;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,10 @@ import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,6 +29,7 @@ import com.ajithvgiri.searchdialog.OnSearchItemSelected;
 import com.ajithvgiri.searchdialog.SearchListItem;
 import com.ajithvgiri.searchdialog.SearchableDialog;
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.adapter.ImageAdapter;
 import com.dentalclinic.capstone.admin.adapter.ToothSpinnerAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.services.ToothService;
@@ -32,7 +38,12 @@ import com.dentalclinic.capstone.admin.models.Medicine;
 import com.dentalclinic.capstone.admin.models.MedicineQuantity;
 import com.dentalclinic.capstone.admin.models.Tooth;
 import com.dentalclinic.capstone.admin.models.Treatment;
+import com.dentalclinic.capstone.admin.models.TreatmentImage;
 import com.dentalclinic.capstone.admin.models.TreatmentStep;
+import com.dentalclinic.capstone.admin.utils.AppConst;
+import com.nguyenhoanglam.imagepicker.model.Config;
+import com.nguyenhoanglam.imagepicker.model.Image;
+import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -56,6 +67,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private TextView lblMedicineQuantity;
     private String current = "0";
     private ToothSpinnerAdapter adapter;
+    private ImageAdapter imageAdapter;
     private Spinner spnTooth;
     private List<Tooth> listTooth;
     private List<Treatment> listTreatment;
@@ -65,6 +77,8 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private Button btnShowListTreatment;
     private Button btnShowListTreatmentStep;
     private Button btnShowListMedicine;
+    private Button btnImagePicker;
+    private RecyclerView recyclerView;
     private Treatment currentTreatment;
     private SearchableDialog searchableDialog;
     private List<SearchListItem> listItems;
@@ -79,6 +93,13 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_treatment);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.side_nav_bar));
+        }
         actPrice = findViewById(R.id.tv_price);
         actPrice.addTextChangedListener(this);
         spnTooth = findViewById(R.id.spn_tooth);
@@ -89,6 +110,8 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         btnShowListTreatment = findViewById(R.id.btn_list_treatments);
         btnShowListTreatmentStep = findViewById(R.id.btn_list_treatmentstep);
         btnShowListMedicine = findViewById(R.id.btn_list_medicine);
+        btnImagePicker = findViewById(R.id.btn_list_images);
+        recyclerView = findViewById(R.id.recyclerView);
         listTreatment = new ArrayList<>();
         listMedicine = new ArrayList<>();
         crrTreatmentSteps = new ArrayList<>();
@@ -160,6 +183,42 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         IntentFilter filter = new IntentFilter("Hello Main");
         LocalBroadcastManager.getInstance(this).registerReceiver(onNotice, filter);
 //        logError("NOTHING", FirebaseInstanceId.getInstance().getToken());
+
+        //imagepicker
+
+        btnImagePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                start();
+            }
+        });
+
+        imageAdapter = new ImageAdapter(this, images, new ImageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Image item, int position) {
+                Intent intent = new Intent(CreateTreatmentActivity.this, PhotoViewActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(AppConst.IMAGE_OBJ, new TreatmentImage(images.get(position).getPath()));
+                intent.putExtra(AppConst.BUNDLE, bundle);
+                startActivity(intent);
+            }
+        });
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(imageAdapter);
+    }
+
+    private ArrayList<Image> images= new ArrayList<>();
+
+    private void start() {
+
+        ImagePicker.with(this)
+                .setFolderMode(false)
+                .setCameraOnly(false)
+                .setMultipleMode(true)
+                .setSelectedImages(images)
+                .setMaxSize(10)
+                .start();
     }
 
     private void clearTreatmentStepLabel() {
@@ -210,6 +269,11 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                     }
                 }
             }
+        }
+
+        if (requestCode == Config.RC_PICK_IMAGES && resultCode == Activity.RESULT_OK && data != null) {
+            images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
+            imageAdapter.setData(images);
         }
     }
 
