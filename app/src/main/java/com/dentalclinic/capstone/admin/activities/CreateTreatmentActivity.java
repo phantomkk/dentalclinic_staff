@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -30,6 +28,7 @@ import com.ajithvgiri.searchdialog.SearchListItem;
 import com.ajithvgiri.searchdialog.SearchableDialog;
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.adapter.ImageAdapter;
+import com.dentalclinic.capstone.admin.adapter.ImageFileAdapter;
 import com.dentalclinic.capstone.admin.adapter.ToothSpinnerAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.services.ToothService;
@@ -60,14 +59,14 @@ import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 
-public class CreateTreatmentActivity extends BaseActivity implements TextWatcher {
+public class CreateTreatmentActivity extends BaseActivity implements TextWatcher{
     private AutoCompleteTextView actPrice;
     private TextView lblTreatment;
     private TextView lblTreatmentStep;
     private TextView lblMedicineQuantity;
     private String current = "0";
     private ToothSpinnerAdapter adapter;
-    private ImageAdapter imageAdapter;
+    private ImageFileAdapter imageAdapter;
     private Spinner spnTooth;
     private List<Tooth> listTooth;
     private List<Treatment> listTreatment;
@@ -197,7 +196,8 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             }
         });
 
-        imageAdapter = new ImageAdapter(this, images, new ImageAdapter.OnItemClickListener() {
+        imageAdapter = new ImageFileAdapter(this, images,
+                new ImageFileAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Image item, int position) {
                 Intent intent = new Intent(CreateTreatmentActivity.this, PhotoViewActivity.class);
@@ -205,6 +205,11 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 bundle.putSerializable(AppConst.IMAGE_OBJ, new TreatmentImage(images.get(position).getPath()));
                 intent.putExtra(AppConst.BUNDLE, bundle);
                 startActivity(intent);
+            }
+
+            @Override
+            public void onItemDelete(Image item, int position) {
+                imageAdapter.deleteItem(position);
             }
         });
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -497,6 +502,21 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
 //        current=editable.toString();
 //        current= current.replaceAll("[đ,. ]", "");
     }
+
+//    @Override
+//    public void onItemClick(Image item, int position) {
+//        Intent intent = new Intent(CreateTreatmentActivity.this, PhotoViewActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable(AppConst.IMAGE_OBJ, new TreatmentImage(images.get(position).getPath()));
+//                intent.putExtra(AppConst.BUNDLE, bundle);
+//                startActivity(intent);
+//    }
+//
+//    @Override
+//    public void onItemDelete(Image item, int position) {
+//            images.remove(position);
+//            this.imageAdapter.notifyDataSetChanged();
+//    }
 
     private class CombineClass {
         private Response<List<Treatment>> listTreatment;

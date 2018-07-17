@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.CreatePatientActivity" />
-        <activity android:name=".activities.LoginActivity"></activity>
+        <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.EditAccoutActivity" />
         <activity android:name=".activities.EditPasswordActivity" />
         <activity
@@ -71,6 +71,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.TreatmentDetailActivity"></activity>
     </application>
 
 </manifest>

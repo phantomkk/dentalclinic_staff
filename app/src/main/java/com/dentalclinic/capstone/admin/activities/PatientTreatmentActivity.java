@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 
@@ -12,11 +14,13 @@ import com.dentalclinic.capstone.admin.adapter.TreatmentHistoryAdapter;
 import com.dentalclinic.capstone.admin.models.Event;
 import com.dentalclinic.capstone.admin.models.Tooth;
 import com.dentalclinic.capstone.admin.models.Treatment;
+import com.dentalclinic.capstone.admin.models.TreatmentDetail;
 import com.dentalclinic.capstone.admin.models.TreatmentHistory;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PatientTreatmentActivity extends BaseActivity {
     ArrayList<TreatmentHistory> treatmentHistories;
@@ -44,8 +48,22 @@ public class PatientTreatmentActivity extends BaseActivity {
             Serializable serializable = bundle.getSerializable(PatientDetailActivity.LIST_TREATMENT);
             treatmentHistories.addAll((ArrayList<TreatmentHistory>) serializable);
             adapter.notifyDataSetChanged();
-
         }
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                List<TreatmentDetail> details = treatmentHistories.get(i).getTreatmentDetails();
+                if (details != null) {
+                    if (!details.isEmpty()) {
+                        Intent intent = new Intent(PatientTreatmentActivity.this, TreatmentDetailActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(AppConst.TREATMENT_HISTORY_OBJ, treatmentHistories.get(i));
+                        intent.putExtra(AppConst.BUNDLE, bundle);
+                        startActivity(intent);
+                    }
+                }
+            }
+        });
     }
 
 
