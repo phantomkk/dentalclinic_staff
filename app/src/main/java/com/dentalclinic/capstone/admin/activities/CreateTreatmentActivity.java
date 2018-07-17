@@ -86,8 +86,8 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     public static String LIST_MEDICINE = "LIST_MEDICINE";
     public static String CURRENT_STEP = "CURRENT_STEP";
     public static String SELECTED_MEDICINE = "SELECTED_MEDICINE";
-    public static int REQUEST_CODE_STEP = 121;
-    public static int REQUEST_CODE_MEDICINE = 129;
+    public static final int REQUEST_CODE_STEP = 121;
+    public static final int REQUEST_CODE_MEDICINE = 129;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,15 +154,19 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         });
 
         btnShowListTreatmentStep.setOnClickListener((v) -> {
-            Intent intent = new Intent(CreateTreatmentActivity.this, StepListActivity.class);
-            intent.putExtra(LIST_STEP, (ArrayList<TreatmentStep>) currentTreatment.getTreatmentSteps());
-            if (currentTreatment != null && currentTreatment.getTreatmentSteps() != null) {
-                intent.putExtra(CURRENT_STEP, (ArrayList<TreatmentStep>) crrTreatmentSteps);
-            } else {
-                logError("btnShowTreatmentStep", "currentTreatment!=null && currentTreatment.getTreatmentSteps()!=null else");
-            }
+            if(currentTreatment!=null) {
+                Intent intent = new Intent(CreateTreatmentActivity.this, StepListActivity.class);
+                intent.putExtra(LIST_STEP, (ArrayList<TreatmentStep>) currentTreatment.getTreatmentSteps());
+                if (currentTreatment != null && currentTreatment.getTreatmentSteps() != null) {
+                    intent.putExtra(CURRENT_STEP, (ArrayList<TreatmentStep>) crrTreatmentSteps);
+                } else {
+                    logError("btnShowTreatmentStep", "currentTreatment!=null && currentTreatment.getTreatmentSteps()!=null else");
+                }
 
-            startActivityForResult(intent, REQUEST_CODE_STEP);
+                startActivityForResult(intent, REQUEST_CODE_STEP);
+            }else{
+                showMessage("Vui lòng chọn loại điều trị");
+            }
         });
         btnShowListMedicine.setOnClickListener((v)->{
             Intent intent = new Intent(CreateTreatmentActivity.this, MedicineListActivity.class);

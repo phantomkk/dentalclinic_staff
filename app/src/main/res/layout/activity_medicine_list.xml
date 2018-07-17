@@ -5,15 +5,44 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:layout_margin="16dp"
+    android:minHeight="400dp"
     tools:context=".activities.MedicineListActivity">
+    <TextView
+        android:id="@+id/spinerTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tìm kiếm"
+        android:textSize="17sp"
+        android:textStyle="bold" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|left"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_search"
+            android:tint="@color/dark_background" />
+
+        <EditText
+            android:id="@+id/edt_search_medicine"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:background="@color/white"
+            android:inputType="text" />
+
+    </LinearLayout>
         <ListView
             android:id="@+id/list_medicine_activity"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="400dp"
             android:scrollbarStyle="outsideOverlay"
-            android:padding="16dp"
             android:layout_weight="1"
             />
         <Button
