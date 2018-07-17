@@ -42,14 +42,33 @@
                     android:layout_width="87dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
                     android:layout_centerVertical="true"
                     android:text="Chọn răng:" />
 
-                <Spinner
-                    android:id="@+id/spn_tooth"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/lbl_tooth_slt"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/lbl_tooth_number" />
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/lbl_tooth_number"
+                    android:layout_toStartOf="@+id/btn_list_tooth"
+                    android:paddingRight="5dp"
+                    android:scrollHorizontally="false"
+                    android:text=""
+                    android:textColor="@color/color_black" />
+
+                <Button
+                    android:id="@+id/btn_list_tooth"
+                    style="@style/custom_button_blue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:minHeight="30dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="Chọn" />
             </RelativeLayout>
 
             <View
@@ -227,13 +246,38 @@
                 android:paddingTop="10dp">
 
                 <AutoCompleteTextView
-                    android:id="@+id/comtv_content_quickbook"
+                    android:id="@+id/act_content_tmhistory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|left"
                     android:drawablePadding="9dp"
                     android:drawableStart="@drawable/ic_event_note_black_24dp"
                     android:hint="@string/label_content_quickbook"
+                    android:imeActionLabel="@string/label_button_book_quickbook"
+                    android:imeOptions="actionDone"
+                    android:inputType="textMultiLine"
+                    android:maxLength="2000"
+                    android:maxLines="6"
+                    android:minLines="4"
+                    android:paddingEnd="6dp"
+                    android:paddingStart="6dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/input_size_normal" />
+
+            </android.support.design.widget.TextInputLayout> <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/input_margin_top"
+                android:paddingTop="10dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/act_note_tmdetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|left"
+                    android:drawablePadding="9dp"
+                    android:drawableStart="@drawable/ic_event_note_black_24dp"
+                    android:hint="Ghi chú điều trị chi tiết"
                     android:imeActionLabel="@string/label_button_book_quickbook"
                     android:imeOptions="actionDone"
                     android:inputType="textMultiLine"
@@ -280,7 +324,7 @@
                 android:layout_marginTop="@dimen/input_margin_top" />
 
             <Button
-                android:id="@+id/btn_quickbook"
+                android:id="@+id/btn_create_tmhistory"
                 style="@style/custom_button_blue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
