@@ -5,12 +5,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.content.res.AppCompatResources;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
+import com.dentalclinic.capstone.admin.api.services.HistoryTreatmentService;
 import com.dentalclinic.capstone.admin.api.services.PaymentService;
 import com.dentalclinic.capstone.admin.models.Event;
 import com.dentalclinic.capstone.admin.models.Patient;
@@ -47,10 +49,14 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_detail);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.side_nav_bar));
         }
+
         btnViewPayment = findViewById(R.id.btn_view_payment);
         btnViewTreatment = findViewById(R.id.btn_view_treatment);
         cvAvatar = findViewById(R.id.img_avatar_user);
@@ -60,6 +66,13 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
         txtPhone = findViewById(R.id.txt_phone);
         txtAddress = findViewById(R.id.txt_address);
         setListenter();
+        Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
+        if (bundle != null) {
+            patient = (Patient) bundle.getSerializable(AppConst.PATIENT_OBJ);
+            if (patient != null) {
+                setData(patient);
+            }
+        }
     }
 
     public void dummyData(ArrayList<TreatmentHistory> treatmentHistories) {
@@ -80,20 +93,62 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
     public void setListenter() {
         btnViewTreatment.setOnClickListener(view -> {
             if (patient != null) {
-                ArrayList<TreatmentHistory> treatmentHistories = (ArrayList<TreatmentHistory>) patient.getTreatmentHistories();
-//            ArrayList<TreatmentHistory> treatmentHistories = new ArrayList<TreatmentHistory>();
-            ///testttttttt
-//            dummyData(treatmentHistories);
-            if (treatmentHistories != null && treatmentHistories.size() > 0) {
-                Intent intent = new Intent(PatientDetailActivity.this, PatientTreatmentActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(LIST_TREATMENT, treatmentHistories);
-                intent.putExtra(AppConst.BUNDLE, bundle);
+//                ArrayList<TreatmentHistory> treatmentHistories = (ArrayList<TreatmentHistory>) patient.getTreatmentHistories();
+////            ArrayList<TreatmentHistory> treatmentHistories = new ArrayList<TreatmentHistory>();
+//            ///testttttttt
+////            dummyData(treatmentHistories);
+//            if (treatmentHistories != null && treatmentHistories.size() > 0) {
+//                Intent intent = new Intent(PatientDetailActivity.this, PatientTreatmentActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable(LIST_TREATMENT, treatmentHistories);
+//                intent.putExtra(AppConst.BUNDLE, bundle);
+//
+//                startActivity(intent);
+//            } else {
+//                showMessage("Lịch sử điều trị");
+//            }
+//            }
 
-                startActivity(intent);
-            } else {
-                showMessage("Lịch sử điều trị");
-            }
+                HistoryTreatmentService service = APIServiceManager.getService(HistoryTreatmentService.class);
+                service.getHistoryTreatmentById(patient.getId())
+                        .subscribeOn(Schedulers.newThread())
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new SingleObserver<Response<List<TreatmentHistory>>>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onSuccess(Response<List<TreatmentHistory>> listResponse) {
+                                if (listResponse.isSuccessful()) {
+                                    if (listResponse.body() != null) {
+                                        Intent intent = new Intent(PatientDetailActivity.this, PatientTreatmentActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putSerializable(LIST_TREATMENT, (ArrayList<TreatmentHistory>) listResponse.body());
+                                        intent.putExtra(AppConst.BUNDLE, bundle);
+                                        startActivity(intent);
+                                    }
+                                } else if (listResponse.code() == 500) {
+                                    showFatalError(listResponse.errorBody(), "callApi");
+                                } else if (listResponse.code() == 401) {
+                                    showErrorUnAuth();
+                                } else if (listResponse.code() == 400) {
+                                    showBadRequestError(listResponse.errorBody(), "callApi");
+                                } else {
+                                    showDialog(getString(R.string.error_message_api));
+                                }
+                                hideLoading();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                                showWarningMessage(getResources().getString(R.string.error_on_error_when_call_api));
+                                hideLoading();
+                            }
+                        });
+
             }
         });
         btnViewPayment.setOnClickListener(view -> {

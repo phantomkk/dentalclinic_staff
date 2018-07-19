@@ -182,10 +182,15 @@ public class MainActivity extends BaseActivity
                                 showConfigCreateNewPatientDialog("Tạo thông tin bệnh nhân cho tài khoản này?");
                                 if(searchPatientFragment!=null){
                                     searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
+                                    searchPatientFragment.enableAllButton();
+                                    searchPatientFragment.removeButtonAppointment();
+                                    searchPatientFragment.removeButtonPayment();
                                 }
                             }else{
                                 if(searchPatientFragment!=null){
-                                    searchPatientFragment.setPatientsAndNotifiAdapter(response.body());
+                                    searchPatientFragment.setPatientsAndNotifiAdapter(response.body());                                    searchPatientFragment.enableAllButton();
+                                    searchPatientFragment.enableAllButton();
+
                                 }
                             }
                         } else if (response.code() == 500) {
@@ -196,6 +201,9 @@ public class MainActivity extends BaseActivity
                             showConfigCreateNewUserDialog("Tại tài khoản cho bệnh nhân?");
                             if(searchPatientFragment!=null){
                                 searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
+                                searchPatientFragment.enableAllButton();
+                                searchPatientFragment.removeButtonAppointment();
+                                searchPatientFragment.removeButtonPayment();
                             }
 //                            showBadRequestError(response.errorBody(), "callApiLogin");
                         } else {
@@ -236,6 +244,8 @@ public class MainActivity extends BaseActivity
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         showMessage("Tạo mới bệnh nhân");
+                        Intent intent = new Intent(MainActivity.this, CreatePatientActivity.class);
+                        startActivity(intent);
                     }
                 });
         alertDialog.show();
@@ -272,6 +282,7 @@ public class MainActivity extends BaseActivity
             mStaffPhone.setText(staff.getPhone());
         }
     }
+//    private void addButton
 
     @Override
     public void onBackPressed() {

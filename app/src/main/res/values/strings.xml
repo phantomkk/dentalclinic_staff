@@ -160,6 +160,7 @@
     <string name="my_acc_degree_label">Chức Vụ</string>
     <string name="my_acc_email_label">Email</string>
     <string name="my_acc_edit_button">Chỉnh Sửa Tài Khoản</string>
+    <string name="my_acc_edit_treatment_detail">Chỉnh Sửa</string>
     <string name="my_acc_district_text">Quận</string>
     <string name="my_acc_city_text">Thành phố</string>
     <!-- Edit Accout Activity -->
@@ -179,7 +180,7 @@
     <string name="search_patient_titie">Tìm kiếm bệnh nhân</string>
     <string name="history_work_title">Lịch hẹn</string>
     <string name="appointment_title">Khám bệnh</string>
-    <string name="absent_title">Xin Nghĩ</string>
+    <string name="absent_title">Xin Nghỉ</string>
 
 
     <string name="action_today">Hôm Hay</string>

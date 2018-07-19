@@ -123,39 +123,37 @@
                     android:textColor="@color/color_red_400" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ln_paypal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:orientation="vertical"
-                android:visibility="gone">
+            <!--<LinearLayout-->
+                <!--android:id="@+id/ln_paypal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="end"-->
+                <!--android:orientation="vertical">-->
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/color_grey_200" />
+                <!--<View-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="1dp"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:background="@color/color_grey_200" />-->
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/input_margin_top"
-                    android:text="Thanh toán" />
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/input_margin_top"-->
+                    <!--android:text="Thanh toán" />-->
 
-                <Button
-                    android:id="@+id/btn_check_out_paypal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/paypalexpress" />
-            </LinearLayout>
+                <!--<Button-->
+                    <!--android:id="@+id/btn_check_out_paypal"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@drawable/paypalexpress" />-->
+            <!--</LinearLayout>-->
 
             <LinearLayout
                 android:id="@+id/ln_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <View
                     android:layout_width="match_parent"

@@ -16,6 +16,7 @@ import com.dentalclinic.capstone.admin.adapter.PatientAdapter;
 import com.dentalclinic.capstone.admin.adapter.TreatmentHistoryAdapter;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.TreatmentHistory;
+import com.dentalclinic.capstone.admin.utils.AppConst;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,9 @@ public class ShowTreatmentHistoryActivity extends BaseActivity{
 //            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.side_nav_bar));
         }
         prepareData();
+
+        Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
+
         textView = findViewById(R.id.txt_label_message);
         btnAddNew = findViewById(R.id.btn_actions);
         mListView = findViewById(R.id.listView);
@@ -49,6 +53,7 @@ public class ShowTreatmentHistoryActivity extends BaseActivity{
                 showMessage(i+"");
             }
         });
+
 
     }
 

@@ -42,12 +42,18 @@ public class ImageFileAdapter extends RecyclerView.Adapter<ImageFileAdapter.Imag
         this.listener = listener;
     }
 
-    public ImageFileAdapter(Context context, List<TreatmentImage> treatmentImages, OnItemClickListener listener) {
-        this.context = context;
-        inflater = LayoutInflater.from(context);
-        this.treatmentImages = treatmentImages;
-        this.listener = listener;
-    }
+//    public ImageFileAdapter(Context context, List<TreatmentImage> treatmentImages, OnItemClickListener listener) {
+//        this.context = context;
+//        inflater = LayoutInflater.from(context);
+//        this.treatmentImages = treatmentImages;
+//        this.listener = listener;
+//        this.images = new ArrayList<>();
+//        for (TreatmentImage treatmentImage: treatmentImages) {
+//            Image image = new Image(tr);
+//
+//            this.images.add(treatmentImage.getImageLink());
+//        }
+//    }
 
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

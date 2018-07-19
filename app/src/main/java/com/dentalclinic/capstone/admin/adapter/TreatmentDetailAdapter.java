@@ -1,8 +1,11 @@
 package com.dentalclinic.capstone.admin.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +21,7 @@ import com.dentalclinic.capstone.admin.custom.MyGridView;
 import com.dentalclinic.capstone.admin.models.Medicine;
 import com.dentalclinic.capstone.admin.models.Step;
 import com.dentalclinic.capstone.admin.models.TreatmentDetail;
+import com.dentalclinic.capstone.admin.models.TreatmentImage;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
 import com.dentalclinic.capstone.admin.utils.DateUtils;
@@ -32,7 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TreatmentDetailAdapter extends ArrayAdapter<TreatmentDetail> {
     private List<TreatmentDetail> treatmentDetails;
-
+    private ImageAdapter imageAdapter;
     public TreatmentDetailAdapter(Context context, List<TreatmentDetail> treatmentDetails) {
         super(context, 0, treatmentDetails);
         this.treatmentDetails = treatmentDetails;
@@ -123,32 +127,36 @@ public class TreatmentDetailAdapter extends ArrayAdapter<TreatmentDetail> {
                 } else {
                     ArrayList<Image> images = new ArrayList<>();
 
-                    ImageFileAdapter imageAdapter = new ImageFileAdapter(getContext(), treatmentDetail.getImages(), new ImageFileAdapter.OnItemClickListener() {
+                    imageAdapter = new ImageAdapter(getContext(), treatmentDetail.getImages(), new ImageAdapter.OnItemClickListener() {
                         @Override
-                        public void onItemClick(Image item, int position) {
+                        public void onItemClick(TreatmentImage item, int position) {
                             Intent intent = new Intent(getContext(), PhotoViewActivity.class);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(AppConst.IMAGE_OBJ, treatmentDetail.getImages().get(position));
                             intent.putExtra(AppConst.BUNDLE, bundle);
                             getContext().startActivity(intent);
                         }
-
-                        @Override
-                        public void onItemDelete(Image item, int position) {
-
-                        }
                     });
-                    viewHolder.recyclerView.setAdapter(imageAdapter);
-//                    viewHolder.recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+//                    new ImageFileAdapter.OnItemClickListener() {
 //                        @Override
-//                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                        public void onItemClick(Image item, int position) {
 //                            Intent intent = new Intent(getContext(), PhotoViewActivity.class);
 //                            Bundle bundle = new Bundle();
-//                            bundle.putSerializable(AppConst.IMAGE_OBJ, treatmentDetail.getImages().get(i));
+//                            bundle.putSerializable(AppConst.IMAGE_OBJ, treatmentDetail.getImages().get(position));
 //                            intent.putExtra(AppConst.BUNDLE, bundle);
 //                            getContext().startActivity(intent);
 //                        }
+//
+//                        @Override
+//                        public void onItemDelete(Image item, int position) {
+//                            showDialog("Bạn có chắc muốn xóa hình ảnh này");
+//                            imageAdapter.deleteItem(position);
+//                        }
 //                    });
+                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                    viewHolder.recyclerView.setLayoutManager(layoutManager);
+                    viewHolder.recyclerView.setAdapter(imageAdapter);
                 }
             } else {
                 viewHolder.llImages.setVisibility(View.GONE);
@@ -158,4 +166,18 @@ public class TreatmentDetailAdapter extends ArrayAdapter<TreatmentDetail> {
         return convertView;
     }
 
+    public void showDialog(String message) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext())
+                .setMessage(message)
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setPositiveButton("Thử lại", (DialogInterface dialogInterface, int i) -> {
+
+                });
+        alertDialog.show();
+    }
 }

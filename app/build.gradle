@@ -66,6 +66,8 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
     //photoview
     implementation group: 'com.github.chrisbanes.photoview', name: 'library', version: '1.2.4'
+    //swifmenudel
+    implementation 'com.github.mcxtzhang:SwipeDelMenuLayout:V1.3.0'
 
 
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'

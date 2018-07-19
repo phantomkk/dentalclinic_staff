@@ -6,12 +6,22 @@ import android.widget.ListView;
 
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.adapter.TreatmentDetailAdapter;
+import com.dentalclinic.capstone.admin.api.APIServiceManager;
+import com.dentalclinic.capstone.admin.api.services.HistoryTreatmentService;
+import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.TreatmentDetail;
 import com.dentalclinic.capstone.admin.models.TreatmentHistory;
 import com.dentalclinic.capstone.admin.utils.AppConst;
+import com.dentalclinic.capstone.admin.utils.CoreManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 public class TreatmentDetailActivity extends BaseActivity {
     ListView listView;
@@ -49,5 +59,7 @@ public class TreatmentDetailActivity extends BaseActivity {
         finish();
         return true;
     }
+
+
 
 }

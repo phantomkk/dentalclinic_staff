@@ -30,7 +30,7 @@ public class RetrofitClient {
         clientBuilder.addInterceptor((chain) -> {
                     Request original = chain.request();
                     Request.Builder reqBuilder = original.newBuilder()
-                            .addHeader("Authorization", "Bearer " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjU4MDU1YWQ1N2E1ODMzOGQ5NGQ0MmFmZmI5M2M3MWUwODFhOTRiMDA2ZWIxNDZkZjQ3ZjI0YTU1NzM2OGI5YjdiNWFlODY2ODA3MTYxYjI0In0.eyJhdWQiOiIxIiwianRpIjoiNTgwNTVhZDU3YTU4MzM4ZDk0ZDQyYWZmYjkzYzcxZTA4MWE5NGIwMDZlYjE0NmRmNDdmMjRhNTU3MzY4YjliN2I1YWU4NjY4MDcxNjFiMjQiLCJpYXQiOjE1MzE1NjI0MzcsIm5iZiI6MTUzMTU2MjQzNywiZXhwIjoxNTYzMDk4NDM3LCJzdWIiOiIwMTI3OTAxMTA5NyIsInNjb3BlcyI6W119.oQO5OaftKdDshcZcHpdNdBl0Hc-ST90Ga5Ryj-ifu9bJsWi_8N-5SSYJQrLMWbyBcL0oNnnabga2VeF2bxWcPJNaTOEXOj16KSezJ-buSk0pkBtp8Mazm_1E3CztYTPyUwD4P4D77rHjgoHIouF-sfHV35zYtKm5On-HKPcvGja_Qy2MN_1rJcilfqr9wjBoz-5whykm2OlSbi0gDfMsWJ0D9QRm39fz_xnwJdceUYjMKsQoXfIM7TKO9DeqlArEqmm0xWXBp6RX1BOdLASv8rI184347DDTo9I9L7gGlnAtHqDjPtAw0MffesrUcR2T7_0rl3rrWToYnxYVq4j4T1-Vr3EhdBh2lRfJCPrfzhf7zHBcwDLevKDrhF8ohYnHbff0ZS2Yi2Stsldk05mXGLR2A8JJetlTmwhVxZBCTqhXN_N4Ji8dM0bp737BzrBuXIaIBLPmywGrQXi5lNh7NP0Tu7fOOzP-G2DitLXCDNy8mW7MRXBj95qYj47rS1ta0MYs1YUrJ84DNEXdurGA4rNLyRFnzxlYkTPvhfUyQu7MoSM8_JQukzBMHWj-rOIiJWbF92qczrghP-elinlUP4SSkw-ccGa1P44WvotcFrv5j0AVvSoXjWTYwN1u1C86pZxspfQS0Kwfvq9N7qCQ0mDd27Gk86vWDcQPq0tJj2I")
+                            .addHeader("Authorization", "Bearer " + accessToken)
                             .addHeader("Accept", "application/json");
                     Request request = reqBuilder.build();
                     return chain.proceed(request);

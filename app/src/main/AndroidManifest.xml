@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.CreatePatientActivity" />
-        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.CreateTreatmentActivity" />
         <activity android:name=".activities.EditAccoutActivity" />
         <activity android:name=".activities.EditPasswordActivity" />
         <activity
@@ -64,7 +64,7 @@
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity android:name=".activities.PhotoViewActivity" />
         <activity android:name=".activities.ShowTreatmentHistoryActivity" />
-        <activity android:name=".activities.CreateTreatmentActivity">
+        <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.ExpandableListView;
 
 import com.dentalclinic.capstone.admin.R;
@@ -23,14 +24,21 @@ public class PatientPaymentActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_payment);
-        expandableListView = findViewById(R.id.eplv_list_payment);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.side_nav_bar));
         }
+        expandableListView = findViewById(R.id.eplv_list_payment);
+//        ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
         Intent i = getIntent();
         payments = (ArrayList<Payment>) i.getSerializableExtra(PatientDetailActivity.LIST_PAYMENT);
-        adapter = new PaymentAdapter(this, payments);
+        adapter = new PaymentAdapter(this, payments, expandableListView);
         expandableListView.setAdapter(adapter);
 
     }

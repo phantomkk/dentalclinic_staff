@@ -78,6 +78,11 @@ private BtnCheckoutListenter btnCheckOutClickListener;
         this.btnCheckOutClickListener = listener;
     }
 
+    public PaymentAdapter(Context context, List<Payment> listDataHeader, ExpandableListView listView) {
+        this.context = context;
+        this.listDataHeader = listDataHeader;
+        this.listView = listView;
+    }
 
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
@@ -172,8 +177,7 @@ private BtnCheckoutListenter btnCheckOutClickListener;
             viewHolder.txtNotPayYet = convertView.findViewById(R.id.txt_not_pay_yet);
             viewHolder.txtStatus = convertView.findViewById(R.id.txt_status);
             viewHolder.imgExpIcon = convertView.findViewById(R.id.img_expand_icon);
-            viewHolder.btnCheckOut = convertView.findViewById(R.id.btn_check_out_paypal);
-            viewHolder.lnPayPal = convertView.findViewById(R.id.ln_paypal);
+//            viewHolder.btnCheckOut = convertView.findViewById(R.id.btn_check_out_paypal);
             viewHolder.lnStatus = convertView.findViewById(R.id.ln_status);
             convertView.setTag(viewHolder);
         } else {
@@ -191,12 +195,12 @@ private BtnCheckoutListenter btnCheckOutClickListener;
             }
         });
 
-        viewHolder.btnCheckOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                btnCheckOutClickListener.onClick(view,payment);
-            }
-        });
+//        viewHolder.btnCheckOut.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                btnCheckOutClickListener.onClick(view,payment);
+//            }
+//        });
         if (isExpanded) {
             viewHolder.imgExpIcon.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
         } else {
@@ -223,11 +227,9 @@ private BtnCheckoutListenter btnCheckOutClickListener;
             viewHolder.txtNotPayYet.setText(Utils.formatMoney(payment.getTotalPrice()-payment.getPaid()) + context.getResources().getString(R.string.current_unit));
         }
         if (payment.isDone() == 1) {
-            viewHolder.lnStatus.setVisibility(View.VISIBLE);
             viewHolder.txtStatus.setText(context.getResources().getString(R.string.status_done));
             viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.color_green_500));
         } else {
-            viewHolder.lnPayPal.setVisibility(View.VISIBLE);
             viewHolder.txtStatus.setText(context.getResources().getString(R.string.status_not_done));
             viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.color_red_500));
         }
@@ -247,7 +249,7 @@ public interface BtnCheckoutListenter{
         TextView txtTreatmentName, txtTotal, txtPaid, txtNotPayYet, txtStatus;
         ImageView imgExpIcon;
         Button btnCheckOut;
-        LinearLayout lnPayPal, lnStatus;
+        LinearLayout lnStatus;
     }
 
 
