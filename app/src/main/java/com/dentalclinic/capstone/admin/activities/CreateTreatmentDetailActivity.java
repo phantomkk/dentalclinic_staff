@@ -7,8 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +21,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ajithvgiri.searchdialog.OnSearchItemSelected;
@@ -33,6 +33,7 @@ import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.requestobject.TreatmentHistoryRequest;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.api.services.ToothService;
+import com.dentalclinic.capstone.admin.api.services.TreatmentDetailService;
 import com.dentalclinic.capstone.admin.api.services.TreatmentHistoryService;
 import com.dentalclinic.capstone.admin.api.services.TreatmentService;
 import com.dentalclinic.capstone.admin.models.Medicine;
@@ -46,7 +47,6 @@ import com.dentalclinic.capstone.admin.models.TreatmentImage;
 import com.dentalclinic.capstone.admin.models.TreatmentStep;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
-import com.dentalclinic.capstone.admin.utils.Utils;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
@@ -68,15 +68,10 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.internal.Util;
 import retrofit2.Response;
 
-import static java.security.AccessController.getContext;
-
-public class CreateTreatmentActivity extends BaseActivity implements TextWatcher {
-    private AutoCompleteTextView actPrice;
+public class CreateTreatmentDetailActivity extends BaseActivity {
     private AutoCompleteTextView actTmDetailNote;
-    private AutoCompleteTextView actTmHistoryDescription;
     private TextView lblTooth;
     private TextView lblTreatment;
     private TextView lblTreatmentStep;
@@ -89,26 +84,29 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private List<TreatmentStep> crrTreatmentSteps;
     private List<MedicineQuantity> selectedMedicine;
     private List<MedicineQuantity> listMedicine;
-    private Button btnShowListTooth;
-    private Button btnShowListTreatment;
     private Button btnShowListTreatmentStep;
     private Button btnShowListMedicine;
     private Button btnImagePicker;
     private Button btnCreateTmHistory;
+    private int treatmentHistoryId = -1;
     private RecyclerView recyclerView;
     private Treatment currentTreatment;
+    private TreatmentHistory currentTreatmentHistory;
     private Tooth currentTooth;
     private Patient currentPatient;
     private SearchableDialog searchableDialogTreatment;
     private SearchableDialog searchableDialogTooth;
     private List<SearchListItem> listItemsTreatment;
     private List<SearchListItem> listItemsTooth;
-    private int treatmentHistoryId = -1;
+    public static final String TM_HISTORY_ID_BUNDLE = "PATIENT_BUNDLE";
+
     public static String LIST_STEP = "LIST_STEP";
     public static String LIST_MEDICINE = "LIST_MEDICINE";
     public static String CURRENT_STEP = "CURRENT_STEP";
     public static final String PATIENT_BUNDLE = "PATIENT_BUNDLE";
-    public static final String TM_HISTORY_ID_BUNDLE = "PATIENT_BUNDLE";
+    public static final String TOOTH_BUNDLE = "TOOTH_BUNDLE";
+    public static final String TREATMENT_BUNDLE = "TREATMENT_BUNDLE";
+    public static final String TREATMENT_HISTORY_BUNDLE = "TREATMENT_HISTORY_BUNDLE";
     public static String SELECTED_MEDICINE = "SELECTED_MEDICINE";
     public static final int REQUEST_CODE_STEP = 121;
     public static final int REQUEST_CODE_MEDICINE = 129;
@@ -116,7 +114,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_treatment);
+        setContentView(R.layout.activity_create_treatment_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -124,17 +122,12 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             actionBar.setDisplayHomeAsUpEnabled(true);
 //            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.side_nav_bar));
         }
-        actPrice = findViewById(R.id.tv_price);
-        actTmHistoryDescription = findViewById(R.id.act_content_tmhistory);
         actTmDetailNote = findViewById(R.id.act_note_tmdetail);
-        actPrice.addTextChangedListener(this);
         lblTooth = findViewById(R.id.lbl_tooth_slt);
         lblTreatment = findViewById(R.id.lbl_treatment_slt);
         lblTreatmentStep = findViewById(R.id.lbl_treatmentstep_slt);
         lblMedicineQuantity = findViewById(R.id.lbl_medicine_slt);
         listTooth = new ArrayList<>();
-        btnShowListTooth = findViewById(R.id.btn_list_tooth);
-        btnShowListTreatment = findViewById(R.id.btn_list_treatments);
         btnShowListTreatmentStep = findViewById(R.id.btn_list_treatmentstep);
         btnShowListMedicine = findViewById(R.id.btn_list_medicine);
         btnImagePicker = findViewById(R.id.btn_list_images);
@@ -146,61 +139,19 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         selectedMedicine = new ArrayList<>();
         adapter = new ToothSpinnerAdapter(this, android.R.layout.simple_spinner_item, listTooth);
         if (getIntent() != null) {
-//            currentPatient = (Patient) getIntent().getSerializableExtra(PATIENT_BUNDLE);
+            currentTreatmentHistory = (TreatmentHistory) getIntent().getSerializableExtra(TREATMENT_HISTORY_BUNDLE);
+            if (currentTreatmentHistory != null) {
+                currentTooth = currentTreatmentHistory.getTooth();
+                currentTreatment = currentTreatmentHistory.getTreatment();
+                crrTreatmentSteps = currentTreatmentHistory.getTreatment() != null ?
+                        currentTreatmentHistory.getTreatment().getTreatmentSteps() : null;
+                lblTreatment.setText(currentTreatment.getName());
+                lblTooth.setText(currentTooth.getToothName());
+            }
         }
-        listItemsTreatment = convertTreatmentList(listTreatment);
-        searchableDialogTreatment = new SearchableDialog(this, listItemsTreatment, "Chọn điều trị");
-        searchableDialogTreatment.setOnItemSelected(new OnSearchItemSelected() {
-            @Override
-            public void onClick(int i, SearchListItem searchListItem) {
-                int treatmentId = searchListItem.getId();
-                for (Treatment t : listTreatment) {
-                    if (t.getId() == treatmentId) {
-                        currentTreatment = t;
-//                        crrTreatmentSteps.clear();
-//                        crrTreatmentSteps.addAll(currentTreatment.getTreatmentSteps());
-                        lblTreatment.setText(currentTreatment.getName());
-//                        updateTreatmentStepLabel(crrTreatmentSteps);
-                        break;
-                    }
-                }
-            }
-        });
-        listItemsTooth = convertToothList(listTooth);
-        searchableDialogTooth = new SearchableDialog(this, listItemsTooth, "Chọn răng");
-        searchableDialogTooth.setOnItemSelected(new OnSearchItemSelected() {
-            @Override
-            public void onClick(int i, SearchListItem searchListItem) {
-                int toothId = searchListItem.getId();
-                for (Tooth t : listTooth) {
-                    if (t.getToothNumber() == toothId) {
-                        currentTooth = t;
-                        lblTooth.setText(currentTooth.getToothName());
-                        break;
-                    }
-                }
-            }
-        });
-
-        btnShowListTooth.setOnClickListener((v) -> {
-            if (searchableDialogTooth != null && listTooth != null && listTooth.size() > 0) {
-                searchableDialogTooth.show();
-            } else {
-                showMessage("Danh sách răng trống");
-            }
-
-        });
-        btnShowListTreatment.setOnClickListener((v) -> {
-            if (searchableDialogTreatment != null && listTreatment != null && listTreatment.size() > 0) {
-                searchableDialogTreatment.show();
-            } else {
-                showMessage("Danh sách điều trị trống");
-            }
-        });
-
         btnShowListTreatmentStep.setOnClickListener((v) -> {
             if (currentTreatment != null) {
-                Intent intent = new Intent(CreateTreatmentActivity.this, StepListActivity.class);
+                Intent intent = new Intent(CreateTreatmentDetailActivity.this, StepListActivity.class);
                 intent.putExtra(LIST_STEP, (ArrayList<TreatmentStep>) currentTreatment.getTreatmentSteps());
                 if (currentTreatment != null && currentTreatment.getTreatmentSteps() != null) {
                     intent.putExtra(CURRENT_STEP, (ArrayList<TreatmentStep>) crrTreatmentSteps);
@@ -214,7 +165,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             }
         });
         btnShowListMedicine.setOnClickListener((v) -> {
-            Intent intent = new Intent(CreateTreatmentActivity.this, MedicineListActivity.class);
+            Intent intent = new Intent(CreateTreatmentDetailActivity.this, MedicineListActivity.class);
             intent.putExtra(LIST_MEDICINE, (ArrayList<MedicineQuantity>) listMedicine);
             if (selectedMedicine != null) {
                 intent.putExtra(SELECTED_MEDICINE, (ArrayList<MedicineQuantity>) selectedMedicine);
@@ -228,15 +179,9 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         btnCreateTmHistory.setOnClickListener((v) -> {
             callApiTreatmentService();
         });
-        prepareData();
         prepareMedicineDummy();
-//        FirebaseMessaging.getInstance().subscribeToTopic("AAA");
-        // REST OF YOUR CODE
         IntentFilter filter = new IntentFilter("Hello Main");
         LocalBroadcastManager.getInstance(this).registerReceiver(onNotice, filter);
-//        logError("NOTHING", FirebaseInstanceId.getInstance().getToken());
-
-        //imagepicker
 
         btnImagePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,7 +194,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 new ImageFileAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(Image item, int position) {
-                        Intent intent = new Intent(CreateTreatmentActivity.this, PhotoViewActivity.class);
+                        Intent intent = new Intent(CreateTreatmentDetailActivity.this, PhotoViewActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(AppConst.IMAGE_OBJ, new TreatmentImage(images.get(position).getPath()));
                         intent.putExtra(AppConst.BUNDLE, bundle);
@@ -265,6 +210,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(imageAdapter);
     }
+
 
     private ArrayList<Image> images = new ArrayList<>();
 
@@ -373,7 +319,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
 
     @Override
     public String getMainTitle() {
-        return "Tạo điều trị";
+        return "Tạo điều trị chi tiết";
     }
 
     @Override
@@ -430,81 +376,6 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         }
     }
 
-    private void prepareData() {
-        showLoading();
-        Single<Response<List<Treatment>>> treatmentService = APIServiceManager.getService(TreatmentService.class)
-                .getAllTreatment().subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread());
-
-        Single<Response<List<Tooth>>> toothService = APIServiceManager.getService(ToothService.class)
-                .getAllTooth().subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread());
-        Single<CombineClass> combineClass = Single.zip(treatmentService, toothService,
-                new BiFunction<Response<List<Treatment>>, Response<List<Tooth>>, CombineClass>() {
-                    @Override
-                    public CombineClass apply(
-                            Response<List<Treatment>> listResponse,
-                            Response<List<Tooth>> listResponse2)
-                            throws Exception {
-                        return new CombineClass(listResponse, listResponse2);
-                    }
-                });
-        combineClass.subscribe(new SingleObserver<CombineClass>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onSuccess(CombineClass combineClass) {
-                Response<List<Tooth>> toothResponse = combineClass.listTooth;
-                hideLoading();
-                if (toothResponse.isSuccessful()) {
-                    if (toothResponse.body() != null) {
-                        listTooth.addAll(toothResponse.body());
-                        adapter.notifyDataSetChanged();
-                        listItemsTooth.addAll(convertToothList(listTooth));
-                    } else {
-                        logError("onSuccess", "list tooth null");
-                    }
-                } else if (toothResponse.code() == 500) {
-                    showFatalError(toothResponse.errorBody(), "prepareData");
-                } else if (toothResponse.code() == 401) {
-                    showErrorUnAuth();
-                } else if (toothResponse.code() == 400) {
-                    showBadRequestError(toothResponse.errorBody(), "prepareData");
-                } else {
-                    showDialog(getString(R.string.error_message_api));
-                }
-
-                Response<List<Treatment>> treatmentResponse = combineClass.listTreatment;
-                if (treatmentResponse.isSuccessful()) {
-                    if (treatmentResponse.body() != null) {
-                        listTreatment.clear();
-                        listTreatment.addAll(treatmentResponse.body());
-                        listItemsTreatment.addAll(convertTreatmentList(listTreatment));
-                    } else {
-                        logError("onSuccess", "list treatment null");
-                    }
-                } else if (treatmentResponse.code() == 500) {
-                    showFatalError(treatmentResponse.errorBody(), "prepareData");
-                } else if (treatmentResponse.code() == 401) {
-                    showErrorUnAuth();
-                } else if (treatmentResponse.code() == 400) {
-                    showBadRequestError(treatmentResponse.errorBody(), "prepareData");
-                } else {
-                    showDialog(getString(R.string.error_message_api));
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                hideLoading();
-                e.printStackTrace();
-                showErrorMessage("Không thể kết nối đến server");
-            }
-        });
-    }
 
     private void callApiTreatmentService() {
         TreatmentHistoryRequest requestObj = new TreatmentHistoryRequest();
@@ -525,31 +396,17 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
 //            showErrorMessage("Không tìm thấy bệnh nhân");
 //            return;
 //        }
-        String price = actPrice.getText().toString().replaceAll("[đ,.]", "").trim();
-        if (price.length() == 0 || price.equals("0")) {
-            showErrorMessage("Vui lòng nhập giá");
-            return;
-        }
-        String description = actTmHistoryDescription.getText().toString().trim();
-        if (description.length() == 0) {
-            showErrorMessage("Vui lòng nhập mô tả điều trị");
-            return;
-        }
-        String tmDetailNote = actTmDetailNote.getText().toString().trim();
-        if (tmDetailNote.length() == 0) {
-            showErrorMessage("Vui lòng nhập mô tả chi tiết điều trị");
-            return;
-        }
+//        String tmDetailNote = actTmDetailNote.getText().toString().trim();
+//        if (tmDetailNote.length() == 0) {
+//            showErrorMessage("Vui lòng nhập mô tả chi tiết điều trị");
+//            return;
+//        }
         MultipartBody.Builder builder = new MultipartBody.Builder();
         builder.setType(MultipartBody.FORM);
-        builder.addFormDataPart("treatment_id", currentTreatment.getId() + "");
         builder.addFormDataPart("treatment_history_id", treatmentHistoryId + "");
         builder.addFormDataPart("staff_id", "5");
         builder.addFormDataPart("patient_id", "1");
-        builder.addFormDataPart("description", actTmHistoryDescription.getText().toString().trim() + "");
-        builder.addFormDataPart("detail_note", actTmDetailNote.getText().toString() + "");
-        builder.addFormDataPart("tooth_number", currentTooth.getToothNumber() + "");
-        builder.addFormDataPart("price", actPrice.getText().toString().replaceAll("[đ,.]", ""));
+        builder.addFormDataPart("detail_note", actTmDetailNote.getText().toString() + " ");
         for (MedicineQuantity mq : selectedMedicine) {
             builder.addFormDataPart("medicine_id[]", mq.getMedicineId() + "");
             builder.addFormDataPart("medicine_quantity[]", mq.getQuantity() + "");
@@ -562,9 +419,9 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             builder.addFormDataPart("images[]", image.getName(), RequestBody.create(MediaType.parse("image/*"), f));
         }
         MultipartBody requestBody = builder.build();
-        TreatmentHistoryService service = APIServiceManager.getService(TreatmentHistoryService.class);
+        TreatmentDetailService service = APIServiceManager.getService(TreatmentDetailService.class);
         showLoading();
-        service.createTreatmentHistory(requestBody)
+        service.createTreatmentDetail(requestBody)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Response<SuccessResponse>>() {
@@ -600,73 +457,6 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                     }
                 });
     }
-
-    @Override
-    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//        current = charSequence.toString();
-    }
-
-    private String prePrice = "";
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        Log.d("DEBUG", "HEAD: ");
-
-        if (!s.toString().equals(prePrice)) {
-//if(current)
-            String cleanString = s.toString().replaceAll("[đ,.]", "");
-            Log.d("DEBUG", "BEFORE: " + cleanString);
-//            double parsed = Double.parseDouble(cleanString);
-            String formatted = formatVnCurrence(cleanString);
-            Log.d("DEBUG", "AFTER: " + formatted);
-            prePrice = formatted;
-            actPrice.setText(formatted);
-            actPrice.setSelection(formatted.length() > 1 ? formatted.length() - 1 : formatted.length());
-        }
-    }
-
-    public static String formatVnCurrence(String price) {
-
-
-        NumberFormat format =
-                new DecimalFormat("#,##0.00");// #,##0.00 ¤ (¤:// Currency symbol)
-        format.setCurrency(Currency.getInstance(Locale.US));//Or default locale
-
-        price = (!TextUtils.isEmpty(price)) ? price : "0";
-        price = price.trim();
-        price = format.format(Double.parseDouble(price));
-        price = price.replaceAll(",", "\\.");
-
-        if (price.endsWith(".00")) {
-            int centsIndex = price.lastIndexOf(".00");
-            if (centsIndex != -1) {
-                price = price.substring(0, centsIndex);
-            }
-        }
-        price = String.format("%sđ", price);
-        return price;
-    }
-
-    @Override
-    public void afterTextChanged(Editable editable) {
-//        current=editable.toString();
-//        current= current.replaceAll("[đ,. ]", "");
-    }
-
-//    @Override
-//    public void onItemClick(Image item, int position) {
-//        Intent intent = new Intent(CreateTreatmentActivity.this, PhotoViewActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable(AppConst.IMAGE_OBJ, new TreatmentImage(images.get(position).getPath()));
-//                intent.putExtra(AppConst.BUNDLE, bundle);
-//                startActivity(intent);
-//    }
-//
-//    @Override
-//    public void onItemDelete(Image item, int position) {
-//            images.remove(position);
-//            this.imageAdapter.notifyDataSetChanged();
-//    }
 
     private class CombineClass {
         private Response<List<Treatment>> listTreatment;

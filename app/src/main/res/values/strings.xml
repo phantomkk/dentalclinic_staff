@@ -103,7 +103,7 @@
     <string name="error_invalid_email2">Email không hợp lệ, bạn vui lòng thử lại</string>
     <string name="error_invalid_degree">Trình độ không hợp lệ, bạn vui lòng thử lại</string>
     <string name="error_invalid_address">Địa chỉ không hợp lệ, bạn vui lòng thử lại</string>
-    <string name="error_on_error_when_call_api">Hình như đã có lỗi trong đường truyền, vui lòng thử lại</string>
+    <string name="error_on_error_when_call_api">Lỗi đường truyền, vui lòng thử lại</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_news_detail">Tin Tức</string>
     <!-- Drawer Items -->
