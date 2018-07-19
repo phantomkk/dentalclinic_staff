@@ -1,5 +1,6 @@
 package com.dentalclinic.capstone.admin.activities;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +15,21 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.adapter.PatientAdapter;
 import com.dentalclinic.capstone.admin.adapter.TreatmentHistoryAdapter;
+import com.dentalclinic.capstone.admin.api.APIServiceManager;
+import com.dentalclinic.capstone.admin.api.services.TreatmentHistoryService;
+import com.dentalclinic.capstone.admin.api.services.TreatmentService;
 import com.dentalclinic.capstone.admin.models.Patient;
+import com.dentalclinic.capstone.admin.models.Treatment;
 import com.dentalclinic.capstone.admin.models.TreatmentHistory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 public class ShowTreatmentHistoryActivity extends BaseActivity{
     private List<TreatmentHistory> treatmentHistories = new ArrayList<>();
@@ -47,7 +58,17 @@ public class ShowTreatmentHistoryActivity extends BaseActivity{
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 showMessage(i+"");
+                TreatmentHistory selectedTreatment = treatmentHistories.get(i);
+                Intent intent = new Intent(ShowTreatmentHistoryActivity.this, CreateTreatmentDetailActivity.class);
+                intent.putExtra(CreateTreatmentDetailActivity.TREATMENT_HISTORY_BUNDLE, selectedTreatment);
+                ////////dummy request code
+                startActivityForResult(intent, 99);
             }
+        });
+
+        btnAddNew.setOnClickListener((v)->{
+            Intent intent = new Intent(ShowTreatmentHistoryActivity.this, CreateTreatmentActivity.class);
+            startActivityForResult(intent, 69);
         });
 
     }
@@ -63,11 +84,38 @@ public class ShowTreatmentHistoryActivity extends BaseActivity{
     }
 
     private void prepareData(){
-        treatmentHistories.add(new TreatmentHistory());
-        treatmentHistories.add(new TreatmentHistory());
-        treatmentHistories.add(new TreatmentHistory());
-        treatmentHistories.add(new TreatmentHistory());
-        treatmentHistories.add(new TreatmentHistory());
+        TreatmentHistoryService service = APIServiceManager.getService(TreatmentHistoryService.class);
+service.getByPatientId(1)
+        .subscribeOn(
+                Schedulers.newThread()
+        )
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new SingleObserver<Response<List<TreatmentHistory>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onSuccess(Response<List<TreatmentHistory>> listResponse) {
+                if (listResponse.isSuccessful()) {
+                    treatmentHistories.addAll(listResponse.body());
+                    mAdapter.notifyDataSetChanged();
+                }else{
+                    showMessage("Loi roi");
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        });
+//        treatmentHistories.add(new TreatmentHistory());
+//        treatmentHistories.add(new TreatmentHistory());
+//        treatmentHistories.add(new TreatmentHistory());
+//        treatmentHistories.add(new TreatmentHistory());
+//        treatmentHistories.add(new TreatmentHistory());
     }
 
     @Override

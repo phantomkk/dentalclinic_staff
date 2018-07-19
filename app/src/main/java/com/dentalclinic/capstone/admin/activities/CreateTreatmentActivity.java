@@ -103,10 +103,12 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private SearchableDialog searchableDialogTooth;
     private List<SearchListItem> listItemsTreatment;
     private List<SearchListItem> listItemsTooth;
+    private int treatmentHistoryId = -1;
     public static String LIST_STEP = "LIST_STEP";
     public static String LIST_MEDICINE = "LIST_MEDICINE";
     public static String CURRENT_STEP = "CURRENT_STEP";
     public static final String PATIENT_BUNDLE = "PATIENT_BUNDLE";
+    public static final String TM_HISTORY_ID_BUNDLE = "PATIENT_BUNDLE";
     public static String SELECTED_MEDICINE = "SELECTED_MEDICINE";
     public static final int REQUEST_CODE_STEP = 121;
     public static final int REQUEST_CODE_MEDICINE = 129;
@@ -144,7 +146,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         selectedMedicine = new ArrayList<>();
         adapter = new ToothSpinnerAdapter(this, android.R.layout.simple_spinner_item, listTooth);
         if (getIntent() != null) {
-            currentPatient = (Patient) getIntent().getSerializableExtra(PATIENT_BUNDLE);
+//            currentPatient = (Patient) getIntent().getSerializableExtra(PATIENT_BUNDLE);
         }
         listItemsTreatment = convertTreatmentList(listTreatment);
         searchableDialogTreatment = new SearchableDialog(this, listItemsTreatment, "Chọn điều trị");
@@ -371,7 +373,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
 
     @Override
     public String getMainTitle() {
-        return "Tạo liệu trình";
+        return "Tạo điều trị";
     }
 
     @Override
@@ -523,11 +525,27 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
 //            showErrorMessage("Không tìm thấy bệnh nhân");
 //            return;
 //        }
+        String price = actPrice.getText().toString().replaceAll("[đ,.]", "").trim();
+        if (price.length() == 0 || price.equals("0")) {
+            showErrorMessage("Vui lòng nhập giá");
+            return;
+        }
+        String description = actTmHistoryDescription.getText().toString().trim();
+        if (description.length() == 0) {
+            showErrorMessage("Vui lòng nhập mô tả điều trị");
+            return;
+        }
+        String tmDetailNote = actTmDetailNote.getText().toString().trim();
+        if (tmDetailNote.length() == 0) {
+            showErrorMessage("Vui lòng nhập mô tả chi tiết điều trị");
+            return;
+        }
         MultipartBody.Builder builder = new MultipartBody.Builder();
         builder.setType(MultipartBody.FORM);
-        builder.addFormDataPart("treatment_id", currentTreatment.getId() + ""); 
+        builder.addFormDataPart("treatment_id", currentTreatment.getId() + "");
+        builder.addFormDataPart("treatment_history_id", treatmentHistoryId + "");
         builder.addFormDataPart("staff_id", "5");
-        builder.addFormDataPart("patient_id",  "1");
+        builder.addFormDataPart("patient_id", "1");
         builder.addFormDataPart("description", actTmHistoryDescription.getText().toString().trim() + "");
         builder.addFormDataPart("detail_note", actTmDetailNote.getText().toString() + "");
         builder.addFormDataPart("tooth_number", currentTooth.getToothNumber() + "");
@@ -675,5 +693,11 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         public void setListTooth(Response<List<Tooth>> listTooth) {
             this.listTooth = listTooth;
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }
