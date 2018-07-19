@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
+import com.dentalclinic.capstone.admin.api.RetrofitClient;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.api.services.PatientService;
 import com.dentalclinic.capstone.admin.api.services.StaffService;
@@ -48,6 +49,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -64,6 +66,10 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Staff staff = CoreManager.getStaff(this);
+        if (staff != null) {
+            RetrofitClient.setAccessToken(staff.getAccessToken());
+        }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -214,7 +220,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public String getMainTitle() {
-        return "Dentail Clinic";
+        return "Quản lí phòng khám";
     }
 
     @Override
@@ -254,7 +260,9 @@ public class MainActivity extends BaseActivity
                 .setPositiveButton("Thêm thông tin", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        showMessage("Tạo mới bệnh nhân");
+//                        showMessage("Tạo mới bệnh nhân");
+                        Intent intent = new Intent(MainActivity.this, CreatePatientActivity.class);
+                        startActivity(intent);
                     }
                 });
         alertDialog.show();
