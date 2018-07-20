@@ -42,5 +42,7 @@ public interface StaffService {
 
     @GET("api/staff/getListRequestAbsent")
     Single<Response<List<RequestAbsent>>> getListRequestAbsent(@Query("staff_id")int staffid);
+    @POST("api/staff/requestAbsent")
+    Single<Response<SuccessResponse>> requestAbsent(@Query("staff_id")int staffid);
 }
 
