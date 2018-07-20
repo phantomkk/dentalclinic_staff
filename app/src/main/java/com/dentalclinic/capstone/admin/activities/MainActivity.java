@@ -169,7 +169,7 @@ public class MainActivity extends BaseActivity
                 });
     }
 
-    public void getPatienst(String phone){
+    public void getPatienst(String phone) {
         showLoading();
         PatientService patientService = APIServiceManager.getService(PatientService.class);
         patientService.getPatientsByPhone(phone)
@@ -184,17 +184,18 @@ public class MainActivity extends BaseActivity
                     @Override
                     public void onSuccess(Response<List<Patient>> response) {
                         if (response.isSuccessful()) {
-                            if(response.body().isEmpty()){
+                            if (response.body().isEmpty()) {
                                 showConfigCreateNewPatientDialog("Tạo thông tin bệnh nhân cho tài khoản này?");
-                                if(searchPatientFragment!=null){
+                                if (searchPatientFragment != null) {
                                     searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
                                     searchPatientFragment.enableAllButton();
                                     searchPatientFragment.removeButtonAppointment();
                                     searchPatientFragment.removeButtonPayment();
                                 }
-                            }else{
-                                if(searchPatientFragment!=null){
-                                    searchPatientFragment.setPatientsAndNotifiAdapter(response.body());                                    searchPatientFragment.enableAllButton();
+                            } else {
+                                if (searchPatientFragment != null) {
+                                    searchPatientFragment.setPatientsAndNotifiAdapter(response.body());
+                                    searchPatientFragment.enableAllButton();
                                     searchPatientFragment.enableAllButton();
 
                                 }
@@ -205,7 +206,7 @@ public class MainActivity extends BaseActivity
                             showErrorUnAuth();
                         } else if (response.code() == 400) {
                             showConfigCreateNewUserDialog("Tại tài khoản cho bệnh nhân?");
-                            if(searchPatientFragment!=null){
+                            if (searchPatientFragment != null) {
                                 searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
                                 searchPatientFragment.enableAllButton();
                                 searchPatientFragment.removeButtonAppointment();
@@ -375,17 +376,27 @@ public class MainActivity extends BaseActivity
                     }
 
                     @Override
-                    public void onSuccess(Response<SuccessResponse> successResponseResponse) {
-                        showWarningMessage("Đăng xuất");
-                        CoreManager.clearStaff(MainActivity.this);
-                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
+                    public void onSuccess(Response<SuccessResponse> successResponse) {
+                        if (successResponse.isSuccessful()) {
+                            logError("Logout on server", "Log out success");
+                            CoreManager.clearStaff(MainActivity.this);
+                        } else if (successResponse.code() == 500) {
+                            showFatalError(successResponse.errorBody(), "logoutOnServer");
+                        } else if (successResponse.code() == 401) {
+                            showErrorUnAuth();
+                        } else if (successResponse.code() == 400) {
+                            showBadRequestError(successResponse.errorBody(), "logoutOnServer");
+                        } else {
+                            showDialog(getString(R.string.error_message_api));
+                        }
+//                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//                        startActivity(intent);
+//                        finish();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
                     }
                 });
     }

@@ -42,7 +42,7 @@
                         android:layout_height="wrap_content"
                         android:drawablePadding="10dp"
                         android:drawableStart="@drawable/ic_phone_iphone_black_24dp"
-                        android:hint="@string/label_phone_quickbook"
+                        android:hint="@string/label_phone_book_appt"
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLines="1"

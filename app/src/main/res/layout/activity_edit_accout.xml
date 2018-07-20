@@ -223,7 +223,7 @@
                 android:layout_gravity="top|left"
                 android:drawableLeft="@drawable/ic_home_black_24dp"
                 android:drawablePadding="9dp"
-                android:hint="@string/label_address_quickbook"
+                android:hint="@string/label_address_book_appt"
                 android:imeOptions="actionNext"
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLength="2000"

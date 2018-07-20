@@ -4,6 +4,7 @@ import com.dentalclinic.capstone.admin.api.requestobject.PatientProfileRequest;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
+import com.dentalclinic.capstone.admin.models.RequestAbsent;
 import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
 
@@ -24,7 +25,7 @@ import retrofit2.http.Query;
 public interface StaffService {
     @FormUrlEncoded
     @POST("api/staff/login")
-    Single<Response<Staff>> login(@Field("phone") String phone, @Field("password")String password);
+    Single<Response<Staff>> login(@Field("phone") String phone, @Field("password") String password);
 
 
     @POST("api/staff/createPatient")
@@ -33,7 +34,13 @@ public interface StaffService {
     @GET("api/staff/getAppointmentByMonth")
     Single<Response<List<Appointment>>> getAppointments(@Query("dentist_id") int id, @Query("month") int month, @Query("year") int year);
 
+    @GET("api/staff/getAvailableDentist")
+    Single<Response<List<Staff>>> getAvailableDentist(@Query("date") String date);
+
     @GET("api/user/logout")
     Single<Response<SuccessResponse>> logout();
+
+    @GET("api/staff/getListRequestAbsent")
+    Single<Response<List<RequestAbsent>>> getListRequestAbsent(@Query("staff_id")int staffid);
 }
 

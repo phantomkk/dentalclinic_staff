@@ -51,34 +51,35 @@
     <string name="histrory_fragment_title">Lịch Sử Điều Trị</string>
     <string name="text_make_quickly_appointment">Đặt Lịch Khám</string>
     <!-- Quick register section -->
-    <string name="tv_quickbook">Đặt lịch nhanh</string>
+    <string name="tv_book_appt">Đặt lịch nhanh</string>
     <string name="tv_promt_fullname">Họ và tên</string>
     <string name="tv_email">Email</string>
     <string name="tv_degree">Trình Độ</string>
     <string name="tv_promt_phone">Số điện thoại</string>
     <string name="tv_promt_content">Nội dung</string>
-    <string name="btn_quickbook">Đặt Lịch</string>
+    <string name="btn_book_appt">Đặt Lịch</string>
     <!--Login-->
     <string name="label_password_promt">Nhập mật khẩu mới</string>
     <string name="label_current_password_promt">Nhập mật khẩu hiện tại</string>
     <string name="label_confirm_password_promt">Nhập lại mật khẩu</string>
     <string name="label_button_login">Đăng nhập</string>
     <string name="label_suggest_register">Bạn chưa có tài khoản? Đăng kí tại đây</string>
-    <string name="label_suggest_quickbook">Đặt lịch hẹn nhanh</string>
+    <string name="label_suggest_book_appt">Đặt lịch hẹn nhanh</string>
+    <string name="label_error_appnt_date">Ngày đặt không hợp lệ</string>
     <!--Book appointment-->
-    <string name="label_title_quickbook">Đặt lịch khám nhanh</string>
-    <string name="label_fullname_quickbook">Họ và tên</string>
-    <string name="label_phone_quickbook">Số điện thoại</string>
-    <string name="label_date_quickbook">Ngày đặt</string>
-    <string name="label_time_quickbook">Giờ đặt</string>
-    <string name="label_content_quickbook">Nội dung</string>
-    <string name="label_button_book_quickbook">Đặt lịch</string>
+    <string name="label_title_book_appt">Đặt lịch khám nhanh</string>
+    <string name="label_fullname_book_appt">Họ và tên</string>
+    <string name="label_phone_book_appt">Số điện thoại</string>
+    <string name="label_date_book_appt">Ngày đặt</string>
+    <string name="label_time_book_appt">Giờ đặt</string>
+    <string name="label_content_book_appt">Nội dung</string>
+    <string name="label_button_book_appt">Đặt lịch</string>
     <!--Register-->
 
-    <string name="label_birthday_quickbook">Ngày đặt</string>
+    <string name="label_birthday_book_appt">Ngày đặt</string>
     <string name="drawer_item_persistent_compact_header1">Ngày đặt</string>
     <string name="label_birthday_register">Ngày sinh</string>
-    <string name="label_address_quickbook">Địa chỉ</string>
+    <string name="label_address_book_appt">Địa chỉ</string>
     <string name="label_button_register">Đăng kí</string>
     <string name="label_button_update">Cập Nhật</string>
     <string name="label_button_change_password">Đổi mật khẩu</string>
