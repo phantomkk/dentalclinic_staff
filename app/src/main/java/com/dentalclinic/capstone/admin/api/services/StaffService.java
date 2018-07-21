@@ -1,6 +1,8 @@
 package com.dentalclinic.capstone.admin.api.services;
 
 import com.dentalclinic.capstone.admin.api.requestobject.PatientProfileRequest;
+import com.dentalclinic.capstone.admin.api.requestobject.ReqAbsentRequest;
+import com.dentalclinic.capstone.admin.api.requestobject.StaffProfileRequest;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
@@ -41,8 +43,12 @@ public interface StaffService {
     Single<Response<SuccessResponse>> logout();
 
     @GET("api/staff/getListRequestAbsent")
-    Single<Response<List<RequestAbsent>>> getListRequestAbsent(@Query("staff_id")int staffid);
+    Single<Response<List<RequestAbsent>>> getListRequestAbsent(@Query("staff_id") int staffid);
+
     @POST("api/staff/requestAbsent")
-    Single<Response<SuccessResponse>> requestAbsent(@Query("staff_id")int staffid);
+    Single<Response<SuccessResponse>> requestAbsent(@Body ReqAbsentRequest requestObj);
+
+    @POST("api/staff/updateStaffInfo")
+    Single<Response<SuccessResponse>> updateStaffInfo(@Body StaffProfileRequest requestObj);
 }
 
