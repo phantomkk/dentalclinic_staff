@@ -29,6 +29,7 @@ import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.api.services.PatientService;
 import com.dentalclinic.capstone.admin.api.services.StaffService;
 import com.dentalclinic.capstone.admin.api.services.UserService;
+import com.dentalclinic.capstone.admin.fragment.AbsentFragment;
 import com.dentalclinic.capstone.admin.fragment.AppointmentFragment;
 import com.dentalclinic.capstone.admin.fragment.BaseWeekViewFragment;
 import com.dentalclinic.capstone.admin.fragment.CalendarFragment;
@@ -36,6 +37,7 @@ import com.dentalclinic.capstone.admin.fragment.MyAccoutFragment;
 import com.dentalclinic.capstone.admin.fragment.SearchPatientFragment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Staff;
+import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.squareup.picasso.Picasso;
@@ -60,6 +62,7 @@ public class MainActivity extends BaseActivity
     private TextView mStaffName, mStaffPhone;
     Staff staff = new Staff();
     private NavigationView navigationView;
+    private String phone = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +115,8 @@ public class MainActivity extends BaseActivity
             public boolean onQueryTextSubmit(String query) {
                 getPatienst(query);
                 setTitle(query);
+                searchPatientFragment.setPhone(query);
+                phone= query;
                 return false;
             }
 
@@ -188,15 +193,20 @@ public class MainActivity extends BaseActivity
                                 showConfigCreateNewPatientDialog("Tạo thông tin bệnh nhân cho tài khoản này?");
                                 if (searchPatientFragment != null) {
                                     searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
-                                    searchPatientFragment.enableAllButton();
-                                    searchPatientFragment.removeButtonAppointment();
-                                    searchPatientFragment.removeButtonPayment();
+                                    searchPatientFragment.removeAllButton();
+//                                    searchPatientFragment.enableAllButton();
+//                                    searchPatientFragment.removeButtonAppointment();
+//                                    searchPatientFragment.removeButtonPayment();
+                                    searchPatientFragment.addButtonNewPatient();
                                 }
-                            } else {
-                                if (searchPatientFragment != null) {
-                                    searchPatientFragment.setPatientsAndNotifiAdapter(response.body());
-                                    searchPatientFragment.enableAllButton();
-                                    searchPatientFragment.enableAllButton();
+                            }else{
+                                if(searchPatientFragment!=null){
+                                    searchPatientFragment.setPatientsAndNotifiAdapter(response.body());                                    searchPatientFragment.enableAllButton();
+//                                    searchPatientFragment.enableAllButton();
+                                    searchPatientFragment.removeAllButton();
+                                    searchPatientFragment.addButtonNewPatient();
+                                    searchPatientFragment.addButtonPayment();
+                                    searchPatientFragment.addButtonAppointment();
 
                                 }
                             }
@@ -208,9 +218,11 @@ public class MainActivity extends BaseActivity
                             showConfigCreateNewUserDialog("Tại tài khoản cho bệnh nhân?");
                             if (searchPatientFragment != null) {
                                 searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
-                                searchPatientFragment.enableAllButton();
-                                searchPatientFragment.removeButtonAppointment();
-                                searchPatientFragment.removeButtonPayment();
+//                                searchPatientFragment.enableAllButton();
+//                                searchPatientFragment.removeButtonAppointment();
+//                                searchPatientFragment.removeButtonPayment();
+                                searchPatientFragment.removeAllButton();
+                                searchPatientFragment.addButtonNewPatient();
                             }
 //                            showBadRequestError(response.errorBody(), "callApiLogin");
                         } else {
@@ -250,8 +262,11 @@ public class MainActivity extends BaseActivity
                 .setPositiveButton("Tạo Mới", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        showMessage("Tạo mới bệnh nhân");
+//                        showMessage("Tạo mới bệnh nhân");
                         Intent intent = new Intent(MainActivity.this, CreatePatientActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(AppConst.PHONE, phone);
+                        intent.putExtra(AppConst.BUNDLE,bundle);
                         startActivity(intent);
                     }
                 });
@@ -273,6 +288,9 @@ public class MainActivity extends BaseActivity
                     public void onClick(DialogInterface dialogInterface, int i) {
 //                        showMessage("Tạo mới bệnh nhân");
                         Intent intent = new Intent(MainActivity.this, CreatePatientActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(AppConst.PHONE, phone);
+                        intent.putExtra(AppConst.BUNDLE,bundle);
                         startActivity(intent);
                     }
                 });
@@ -350,8 +368,9 @@ public class MainActivity extends BaseActivity
             fragmentManager.beginTransaction().replace(R.id.main_fragment, calendarFragment).commit();
         }
         else if (id == R.id.nav_request_absent) {
-//            AppointmentFragment calendarFragment = new AppointmentFragment();
-//            fragmentManager.beginTransaction().replace(R.id.main_fragment, calendarFragment).commit();
+//            startActivity(new Intent(MainActivity.this, DatePickerActivity.class));
+            AbsentFragment absentFragment = new AbsentFragment();
+            fragmentManager.beginTransaction().replace(R.id.main_fragment, absentFragment).commit();
         }
         else if (id == R.id.nav_my_accout) {
             MyAccoutFragment newFragment = new MyAccoutFragment();

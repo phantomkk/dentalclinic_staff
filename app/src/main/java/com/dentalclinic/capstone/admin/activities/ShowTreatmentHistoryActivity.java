@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.adapter.PatientAdapter;
 import com.dentalclinic.capstone.admin.adapter.TreatmentHistoryAdapter;
@@ -38,6 +37,7 @@ public class ShowTreatmentHistoryActivity extends BaseActivity{
     private ListView mListView;
     private TextView textView;
     private FloatingActionButton btnAddNew;
+    private Patient patient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +52,9 @@ public class ShowTreatmentHistoryActivity extends BaseActivity{
         prepareData();
 
         Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
-
+        if(bundle!=null){
+            patient = (Patient) bundle.getSerializable(AppConst.PATIENT_OBJ);
+        }
         textView = findViewById(R.id.txt_label_message);
         btnAddNew = findViewById(R.id.btn_actions);
         mListView = findViewById(R.id.listView);

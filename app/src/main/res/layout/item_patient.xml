@@ -11,6 +11,7 @@
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardUseCompatPadding="true">
@@ -50,7 +51,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:orientation="horizontal">
 
                     <TextView
@@ -68,30 +68,31 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
     </android.support.v7.widget.CardView>
-    <Button
-        android:id="@+id/btnTop"
-        android:layout_width="60dp"
-        android:layout_height="match_parent"
-        android:background="#d9dee4"
-        android:text="Xem"
-        android:textColor="@android:color/white"/>
+    <!--<Button-->
+        <!--android:id="@+id/btnTop"-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="#d9dee4"-->
+        <!--android:text="Xem"-->
+        <!--android:textColor="@android:color/white"/>-->
 
     <Button
-        android:id="@+id/btnUnRead"
-        android:layout_width="120dp"
+        android:id="@+id/btnTreatment"
+        android:layout_width="100dp"
         android:layout_height="match_parent"
-        android:background="#ecd50a"
+        android:background="@color/color_green_500"
         android:clickable="true"
-        android:text="Ẩn"
+        android:text="Khám"
         android:textColor="@android:color/white"/>
 
-    <Button
-        android:id="@+id/btnDelete"
-        android:layout_width="60dp"
-        android:layout_height="match_parent"
-        android:background="@color/color_red_500"
-        android:text="Delete"
-        android:textColor="@android:color/white"/>
+    <!--<Button-->
+        <!--android:id="@+id/btnDelete"-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/color_red_500"-->
+        <!--android:text="Delete"-->
+        <!--android:textColor="@android:color/white"/>-->
 
 </com.mcxtzhang.swipemenulib.SwipeMenuLayout>

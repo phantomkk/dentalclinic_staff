@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/input_margin_top">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_staff_avatar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/avatar"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/txt_staff_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/input_margin_top"
+                android:textColor="@color/color_blue_800"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:text="Vo Quoc Trịnh"/>
+            <TextView
+                android:id="@+id/txt_staff_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="01685149049"/>
+            <TextView
+                android:id="@+id/txt_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="mr.trinhvo1996@gmail.com"/>
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/input_margin_top"
+        android:layout_marginBottom="@dimen/input_margin_top"
+        android:background="@color/color_grey_200"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Trạng thái"/>
+    <TextView
+        android:id="@+id/txt_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/input_margin_top"
+        android:textColor="@color/color_green_500"
+        android:textAllCaps="true"
+        android:text="Xác nhận"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/input_margin_top"
+        android:layout_marginBottom="@dimen/input_margin_top"
+        android:background="@color/color_grey_200"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ghi chú"/>
+    <TextView
+        android:id="@+id/txt_message_from_staff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/input_margin_top"
+        android:textColor="@color/color_black"
+        android:text="Nghĩ vui vẻ"/>
+
+    <TextView
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textAlignment="textEnd"
+        android:textColor="@color/color_blue_800"
+        android:textAllCaps="true"
+        android:textSize="15dp"
+        android:text="Xác nhận"/>
+</LinearLayout>

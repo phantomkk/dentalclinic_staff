@@ -49,6 +49,14 @@ public class Appointment implements Serializable {
         this.status = status;
     }
 
+    public Appointment(String note, String name, int numericalOrder, int status, Patient patient) {
+        this.note = note;
+        this.name = name;
+        this.numericalOrder = numericalOrder;
+        this.status = status;
+        this.patient = patient;
+    }
+
     public int getStatus() {
         return status;
     }

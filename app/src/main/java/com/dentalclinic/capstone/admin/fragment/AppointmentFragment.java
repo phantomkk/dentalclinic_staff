@@ -17,11 +17,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.activities.PatientDetailActivity;
 import com.dentalclinic.capstone.admin.activities.ShowTreatmentHistoryActivity;
 import com.dentalclinic.capstone.admin.adapter.AppointmentAdapter;
 import com.dentalclinic.capstone.admin.adapter.AppointmentSwiftAdapter;
@@ -69,99 +66,55 @@ public class AppointmentFragment extends BaseFragment {
             }
         });
         prepareData();
-        mListView = view.findViewById(R.id.listView);
-//        mAdapter = new AppointmentAdapter(getContext(), appointments);
-//        mListView.setAdapter(mAdapter);
-//
-//        SwipeMenuCreator creator = new SwipeMenuCreator() {
-//
-//            @Override
-//            public void create(SwipeMenu menu) {
-//
-//                switch (menu.getViewType()) {
-//                    case 0:
-//                        createMenu1(menu);
-//                        break;
-//                    case 1:
-//                        createMenu2(menu);
-//                        break;
-//                }
-//
-//
-//            }
-//        };
-//        // set creator
-//        mListView.setMenuCreator(creator);
-//        mListView.setSmoothScrollbarEnabled(true);
-//        mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-////                ApplicationInfo item = mAppList.get(position);
-//                Appointment appointment = appointments.get(position);
-//                if(appointment!=null){
-//                    Patient patient = appointment.getPatient();
-//                    if(patient==null){
-//                        showMessage("Thông Tin Chưa Được Cập Nhật");
-//                    }else{
-//                        switch (index) {
-//                            case 0:
-//                                break;
-//                            case 1:
-//                                showMessage(1 + "");
-//                                break;
-//                            case 2:
-//                                showMessage(2 + "");
-//                                Intent intent = new Intent(getContext(), ShowTreatmentHistoryActivity.class);
-//                                Bundle bundle = new Bundle();
-//                                bundle.putSerializable(AppConst.PATIENT_OBJ, patient);
-//                                intent.putExtra(AppConst.BUNDLE,bundle);
-//                                startActivity(intent);
-//                                break;
-//                        }
-//                    }
-//                }
-//                return false;
-//            }
-//        });
-
+//        mListView = view.findViewById(R.id.listView);
         mListView= view.findViewById(R.id.listView);
         mAdapter = new AppointmentSwiftAdapter(getContext(), appointments);
+
         mAdapter.setOnDelListener(new AppointmentSwiftAdapter.onSwipeListener() {
             @Override
-            public void onDel(int pos) {
-                if (pos >= 0 && pos < appointments.size()) {
-//                    Toast.makeText(FullDelDemoActivity.this, "删除:" + pos, Toast.LENGTH_SHORT).show();
-                    appointments.remove(pos);
-                    mAdapter.notifyItemRemoved(pos);//推荐用这个
-                    //如果删除时，不使用mAdapter.notifyItemRemoved(pos)，则删除没有动画效果，
-                    //且如果想让侧滑菜单同时关闭，需要同时调用 ((SwipeMenuLayout) holder.itemView).quickClose();
-                    //mAdapter.notifyDataSetChanged();
-                    showMessage("delete");
+            public void onStartClick(int pos) {
+
+            }
+
+            @Override
+            public void onTreatmentClick(int pos) {
+                if(appointments.get(pos).getPatient()!=null) {
+                    Patient patient = appointments.get(pos).getPatient();
+                    if (patient != null) {
+                        Intent intent = new Intent(getContext(), ShowTreatmentHistoryActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(AppConst.PATIENT_OBJ, patient);
+                        intent.putExtra(AppConst.BUNDLE, bundle);
+                        startActivity(intent);
+                    }
+                }else{
+                    showDialog("Thông tin chưa được cập nhật");
                 }
             }
 
             @Override
-            public void onTop(int pos) {
-                if (pos > 0 && pos < appointments.size()) {
-//                    SwipeBean swipeBean = mDatas.get(pos);
-//                    mDatas.remove(swipeBean);
-//                    mAdapter.notifyItemInserted(0);
-//                    mDatas.add(0, swipeBean);
-//                    mAdapter.notifyItemRemoved(pos + 1);
-//                    if (mLayoutManager.findFirstVisibleItemPosition() == 0) {
-//                        mRv.scrollToPosition(0);
-//                    }
-                    //notifyItemRangeChanged(0,holder.getAdapterPosition()+1);
-                    showMessage("top");
+            public void onDoneClick(int pos) {
+
+            }
+
+            @Override
+            public void onItemClick(int pos) {
+                if(appointments.get(pos).getPatient()!=null) {
+                    Patient patient = appointments.get(pos).getPatient();
+                    if (patient != null) {
+                        Intent intent = new Intent(getContext(), PatientDetailActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(AppConst.PATIENT_OBJ, patient);
+                        intent.putExtra(AppConst.BUNDLE, bundle);
+                        startActivity(intent);
+                    }
+                }else{
+                    showDialog("Thông tin chưa được cập nhật");
                 }
             }
         });
         mListView.setAdapter(mAdapter);
         mListView.setLayoutManager(mLayoutManager = new GridLayoutManager(getContext(), 1));
-
-        //6 2016 10 21 add , 增加viewChache 的 get()方法，
-        // 可以用在：当点击外部空白处时，关闭正在展开的侧滑菜单。我个人觉得意义不大，
-//        mRv.setOnTouchListener();
         mListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -179,74 +132,74 @@ public class AppointmentFragment extends BaseFragment {
 
         return view;
     }
-
-    public void createMenu1(SwipeMenu menu){
-        // create "open" item
-        SwipeMenuItem editItem = new SwipeMenuItem(getContext());
-        editItem.setBackground(R.color.color_blue_500);
-        editItem.setWidth(dp2px(70));
-        editItem.setIcon(R.drawable.ic_edit_white_24dp);
-        editItem.setTitleSize(18);
-        editItem.setTitleColor(Color.WHITE);
-        // add to menu
-        menu.addMenuItem(editItem);
-
-        // create "delete" item
-        SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
-        // set item background
-        deleteItem.setBackground(R.color.color_red_500);
-        // set item width
-        deleteItem.setWidth(dp2px(70));
-        // set a icon
-        deleteItem.setIcon(R.drawable.ic_delete_white_24dp);
-        // add to menu
-        menu.addMenuItem(deleteItem);
-    }
-    public void createMenu2(SwipeMenu menu){
-        // create "open" item
-
-
-        SwipeMenuItem editItem = new SwipeMenuItem(getContext());
-        editItem.setBackground(R.color.color_blue_500);
-        editItem.setWidth(dp2px(70));
-        editItem.setIcon(R.drawable.ic_edit_white_24dp);
-        editItem.setTitleSize(18);
-        editItem.setTitleColor(Color.WHITE);
-        // add to menu
-        menu.addMenuItem(editItem);
-
-        // create "delete" item
-        SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
-        // set item background
-        deleteItem.setBackground(R.color.color_red_500);
-        // set item width
-        deleteItem.setWidth(dp2px(70));
-        // set a icon
-        deleteItem.setIcon(R.drawable.ic_delete_white_24dp);
-        // add to menu
-        menu.addMenuItem(deleteItem);
-
-
-        SwipeMenuItem skipItem = new SwipeMenuItem(getContext());
-        // set item background
-        // set item width
-        skipItem.setWidth(dp2px(70));
-        // set item title
-        // set item title fontsize
-        skipItem.setIcon(R.drawable.ic_done_white_24dp);
-        skipItem.setTitleSize(18);
-        // set item title font color
-        skipItem.setTitleColor(Color.WHITE);
-        //set backgroup
-        skipItem.setBackground(R.color.color_green_500);
-        // add to menu
-        menu.addMenuItem(skipItem);
-    }
+//
+//    public void createMenu1(SwipeMenu menu){
+//        // create "open" item
+//        SwipeMenuItem editItem = new SwipeMenuItem(getContext());
+//        editItem.setBackground(R.color.color_blue_500);
+//        editItem.setWidth(dp2px(70));
+//        editItem.setIcon(R.drawable.ic_edit_white_24dp);
+//        editItem.setTitleSize(18);
+//        editItem.setTitleColor(Color.WHITE);
+//        // add to menu
+//        menu.addMenuItem(editItem);
+//
+//        // create "delete" item
+//        SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
+//        // set item background
+//        deleteItem.setBackground(R.color.color_red_500);
+//        // set item width
+//        deleteItem.setWidth(dp2px(70));
+//        // set a icon
+//        deleteItem.setIcon(R.drawable.ic_delete_white_24dp);
+//        // add to menu
+//        menu.addMenuItem(deleteItem);
+//    }
+//    public void createMenu2(SwipeMenu menu){
+//        // create "open" item
+//
+//
+//        SwipeMenuItem editItem = new SwipeMenuItem(getContext());
+//        editItem.setBackground(R.color.color_blue_500);
+//        editItem.setWidth(dp2px(70));
+//        editItem.setIcon(R.drawable.ic_edit_white_24dp);
+//        editItem.setTitleSize(18);
+//        editItem.setTitleColor(Color.WHITE);
+//        // add to menu
+//        menu.addMenuItem(editItem);
+//
+//        // create "delete" item
+//        SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
+//        // set item background
+//        deleteItem.setBackground(R.color.color_red_500);
+//        // set item width
+//        deleteItem.setWidth(dp2px(70));
+//        // set a icon
+//        deleteItem.setIcon(R.drawable.ic_delete_white_24dp);
+//        // add to menu
+//        menu.addMenuItem(deleteItem);
+//
+//
+//        SwipeMenuItem skipItem = new SwipeMenuItem(getContext());
+//        // set item background
+//        // set item width
+//        skipItem.setWidth(dp2px(70));
+//        // set item title
+//        // set item title fontsize
+//        skipItem.setIcon(R.drawable.ic_done_white_24dp);
+//        skipItem.setTitleSize(18);
+//        // set item title font color
+//        skipItem.setTitleColor(Color.WHITE);
+//        //set backgroup
+//        skipItem.setBackground(R.color.color_green_500);
+//        // add to menu
+//        menu.addMenuItem(skipItem);
+//    }
     public void prepareData(){
         appointments= new ArrayList<>();
-        appointments.add(new Appointment("haha","vo quoc trinh",3,1));
-        appointments.add(new Appointment("haha","vo quoc trinh",3,0));
-        appointments.add(new Appointment("haha","vo quoc trinh",3,0));
+        appointments.add(new Appointment("haha","vo quoc trinh",3,1, new Patient()));
+        appointments.add(new Appointment("haha","vo quoc trinh",3,2, new Patient()));
+        appointments.add(new Appointment("haha","vo quoc trinh",3,3, new Patient()));
     }
 
     private int dp2px(int dp) {

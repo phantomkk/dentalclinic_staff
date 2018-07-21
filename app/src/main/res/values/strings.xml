@@ -195,6 +195,7 @@
     <string name="search_patient_title">Tìm Kiếm Bệnh Nhân</string>
     <string name="search_phone_hint">Nhập số điện thoại</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="label_date_picker">Lý do</string>
 
 
 </resources>

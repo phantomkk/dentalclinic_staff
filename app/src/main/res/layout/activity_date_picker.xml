@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".activities.DatePickerActivity">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.applandeo.materialcalendarview.CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:abbreviationsBarColor="@color/color_grey_50"
+                app:headerColor="@color/color_blue_800"
+                app:pagesColor="@color/color_grey_50"
+                app:selectionColor="@color/color_blue_800"
+                app:selectionLabelColor="@color/color_white"
+                app:todayLabelColor="@color/color_blue_800"
+                app:type="range_picker" />
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/input_margin_top">
+
+                <AutoCompleteTextView
+                    android:id="@+id/edt_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|left"
+                    android:drawablePadding="9dp"
+                    android:drawableStart="@drawable/ic_speaker_notes_black_24dp"
+                    android:hint="@string/label_date_picker"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLength="2000"
+                    android:maxLines="4"
+                    android:minLines="3"
+                    android:paddingEnd="2dp"
+                    android:paddingStart="6dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/input_size_normal" />
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/btn_cancle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hủy"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/color_blue_800"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/btn_submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="25dp"
+                    android:text="Gửi"
+                    android:textColor="@color/color_blue_800"
+                    android:textSize="18dp" />
+            </LinearLayout>
+        </LinearLayout>
+</ScrollView>

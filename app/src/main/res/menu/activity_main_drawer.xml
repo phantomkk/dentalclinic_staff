@@ -16,12 +16,11 @@
             android:id="@+id/nav_appointment_list"
             android:icon="@drawable/ic_date_range_black_24dp"
             android:title="@string/appointment_title" />
-
+        <item
+            android:id="@+id/nav_request_absent"
+            android:icon="@drawable/ic_clear_black_24dp"
+            android:title="@string/absent_title" />
     </group>
-    <item
-        android:id="@+id/nav_request_absent"
-        android:icon="@drawable/ic_clear_black_24dp"
-        android:title="@string/absent_title" />
     <item android:title="Tài khoản">
         <menu>
             <group android:checkableBehavior="single">

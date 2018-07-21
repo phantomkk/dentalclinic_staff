@@ -22,6 +22,7 @@ public class AppConst {
 
 
     public final static String USER_OBJ = "USER_OBJ";
+    public final static String PHONE = "PHONE";
     public final static String STAFF_OBJ = "STAFF_OBJ";
     public final static String IMAGE_OBJ = "IMAGE_OBJ";
     public final static String PATIENT_OBJ = "PATIENT_OBJ";

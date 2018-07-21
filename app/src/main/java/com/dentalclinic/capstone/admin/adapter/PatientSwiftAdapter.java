@@ -1,6 +1,7 @@
 package com.dentalclinic.capstone.admin.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,14 +69,14 @@ public class PatientSwiftAdapter extends RecyclerView.Adapter<PatientSwiftAdapte
 
 //        holder.btnUnRead.setVisibility(position % 3 == 0 ? View.GONE : View.VISIBLE);
 
-        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+        holder.btnTreatment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mOnSwipeListener) {
                     //如果删除时，不使用mAdapter.notifyItemRemoved(pos)，则删除没有动画效果，
                     //且如果想让侧滑菜单同时关闭，需要同时调用 ((CstSwipeDelMenu) holder.itemView).quickClose();
                     //((CstSwipeDelMenu) holder.itemView).quickClose();
-                    mOnSwipeListener.onDel(holder.getAdapterPosition());
+                    mOnSwipeListener.onTreatment(holder.getAdapterPosition());
                 }
             }
         });
@@ -88,11 +89,11 @@ public class PatientSwiftAdapter extends RecyclerView.Adapter<PatientSwiftAdapte
 //            }
 //        });
         //置顶：
-        holder.btnTop.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null!=mOnSwipeListener){
-                    mOnSwipeListener.onTop(holder.getAdapterPosition());
+                    mOnSwipeListener.onItemClick(holder.getAdapterPosition());
                 }
 
             }
@@ -108,8 +109,8 @@ public class PatientSwiftAdapter extends RecyclerView.Adapter<PatientSwiftAdapte
      * 和Activity通信的接口
      */
     public interface onSwipeListener {
-        void onDel(int pos);
-        void onTop(int pos);
+        void onTreatment(int pos);
+        void onItemClick(int pos);
     }
 
     private onSwipeListener mOnSwipeListener;
@@ -125,18 +126,16 @@ public class PatientSwiftAdapter extends RecyclerView.Adapter<PatientSwiftAdapte
     class FullDelDemoVH extends RecyclerView.ViewHolder {
         CircleImageView imgAvatar;
         TextView txtName, txtDateOfBirth, txtGender;
-        Button btnDelete;
-        Button btnUnRead;
-        Button btnTop;
+        Button btnTreatment;
+        CardView cardView;
         public FullDelDemoVH(View itemView) {
             super(itemView);
             imgAvatar =  itemView.findViewById(R.id.img_avatar_user);
             txtName = itemView.findViewById(R.id.txt_name);
             txtDateOfBirth =  itemView.findViewById(R.id.txt_date_of_birth);
             txtGender =  itemView.findViewById(R.id.txt_gender);
-            btnDelete =  itemView.findViewById(R.id.btnDelete);
-            btnUnRead =  itemView.findViewById(R.id.btnUnRead);
-            btnTop = itemView.findViewById(R.id.btnTop);
+            btnTreatment =  itemView.findViewById(R.id.btnTreatment);
+            cardView = itemView.findViewById(R.id.card_view);
         }
     }
 }

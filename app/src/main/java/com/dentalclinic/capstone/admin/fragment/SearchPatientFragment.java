@@ -27,11 +27,8 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.activities.CreatePatientActivity;
 import com.dentalclinic.capstone.admin.activities.LoginActivity;
 import com.dentalclinic.capstone.admin.activities.MainActivity;
 import com.dentalclinic.capstone.admin.activities.PatientDetailActivity;
@@ -66,12 +63,21 @@ public class SearchPatientFragment extends BaseFragment {
     private RecyclerView recyclerView;
     private TextView textView;
     private LinearLayoutManager mLayoutManager;
+    private String phone;
 
     public SearchPatientFragment() {
         // Required empty public constructor
     }
 
     private Toolbar toolbar;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,6 +97,11 @@ public class SearchPatientFragment extends BaseFragment {
             public void onClick(View v) {
 //                actionB.setVisibility(actionB.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
 //                showMessage("Thêm mới bệnh nhân");
+                Intent intent = new Intent(getContext(), CreatePatientActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(AppConst.PHONE, phone);
+                intent.putExtra(AppConst.BUNDLE, bundle);
+                startActivity(intent);
             }
         });
 
@@ -125,8 +136,10 @@ public class SearchPatientFragment extends BaseFragment {
         menuMultipleActions.addButton(btnNewAppointment);
         menuMultipleActions.addButton(btnNewPayment);
         menuMultipleActions.addButton(btnNewPatient);
-        prepareData();
-//        mListView = (SwipeMenuListView) view.findViewById(R.id.listView);
+        removeAllButton();
+//        prepareData();
+//        mListVi
+// ew = (SwipeMenuListView) view.findViewById(R.id.listView);
 //        mAdapter = new PatientAdapter(getContext(), patients);
 //        mListView.setAdapter(mAdapter);
 //        SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -210,7 +223,7 @@ public class SearchPatientFragment extends BaseFragment {
         mAdapter = new PatientSwiftAdapter(getContext(), patients);
         mAdapter.setOnDelListener(new PatientSwiftAdapter.onSwipeListener() {
             @Override
-            public void onDel(int pos) {
+            public void onTreatment(int pos) {
                 if (pos >= 0 && pos < patients.size()) {
 //                    Toast.makeText(FullDelDemoActivity.this, "删除:" + pos, Toast.LENGTH_SHORT).show();
                     patients.remove(pos);
@@ -223,8 +236,8 @@ public class SearchPatientFragment extends BaseFragment {
             }
 
             @Override
-            public void onTop(int pos) {
-                if (pos > 0 && pos < patients.size()) {
+            public void onItemClick(int pos) {
+                if (pos < patients.size()) {
 //                    SwipeBean swipeBean = mDatas.get(pos);
 //                    mDatas.remove(swipeBean);
 //                    mAdapter.notifyItemInserted(0);
@@ -234,7 +247,12 @@ public class SearchPatientFragment extends BaseFragment {
 //                        mRv.scrollToPosition(0);
 //                    }
                     //notifyItemRangeChanged(0,holder.getAdapterPosition()+1);
-                    showMessage("top");
+                Intent intent = new Intent(getContext(), PatientDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(AppConst.PATIENT_OBJ, patients.get(pos));
+                intent.putExtra(AppConst.BUNDLE, bundle);
+                startActivity(intent);
+
                 }
             }
         });
@@ -272,33 +290,33 @@ public class SearchPatientFragment extends BaseFragment {
     }
 
     public void removeAllButton(){
-//        menuMultipleActions.removeAllViews();
+        btnNewPatient.setVisibility(View.GONE);
+        btnNewPayment.setVisibility(View.GONE);
+        btnNewAppointment.setVisibility(View.GONE);
     }
     public void addButtonNewPatient(){
-        menuMultipleActions.addButton(btnNewPatient);
-        btnNewPatient.setEnabled(true);
+        btnNewPatient.setVisibility(View.VISIBLE);
     }
     public void removeButtonNewPatient(){
-        btnNewPatient.setEnabled(false);
+//        btnNewPatient.setEnabled(false);
+        btnNewPatient.setVisibility(View.GONE);
     }
 
     public void addButtonPayment(){
-        menuMultipleActions.addButton(btnNewPayment);
-        btnNewPayment.setEnabled(true);
+        btnNewPayment.setVisibility(View.VISIBLE);
+
     }
     public void removeButtonPayment(){
-//        menuMultipleActions.removeButton(btnNewPayment);
-        btnNewPayment.setEnabled(false);
+        btnNewPayment.setVisibility(View.GONE);
+
     }
 
     public void addButtonAppointment(){
-        menuMultipleActions.addButton(btnNewAppointment);
-        btnNewAppointment.setEnabled(true);
+        btnNewAppointment.setVisibility(View.VISIBLE);
     }
 
     public void removeButtonAppointment(){
-//        menuMultipleActions.removeButton(btnNewAppointment);
-        btnNewAppointment.setEnabled(false);
+        btnNewAppointment.setVisibility(View.GONE);
     }
 
     public void enableAllButton(){

@@ -1,6 +1,7 @@
 package com.dentalclinic.capstone.admin.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,17 +39,34 @@ public class AppointmentSwiftAdapter extends RecyclerView.Adapter<AppointmentSwi
         ((SwipeMenuLayout) holder.itemView).setIos(true);
 
         Appointment appointment = appointments.get(position);
-        if(appointment!=null){
-            if(appointment.getNumericalOrder()!=-1){
-                holder.txtNumber.setText(appointment.getNumericalOrder()+"");
+        if (appointment != null) {
+            if (appointment.getNumericalOrder() != -1) {
+                holder.txtNumber.setText(appointment.getNumericalOrder() + "");
             }
-            if(appointment.getName()!=null){
+            if (appointment.getName() != null) {
                 holder.txtName.setText(appointment.getName());
             }
-            if(appointment.getStatus()!=0){
+            if (appointment.getStatus() != 0) {
                 holder.txtStatus.setVisibility(View.VISIBLE);
+
             }
-            if(appointment.getNote()!=null){
+            switch (appointment.getStatus()) {
+                case 1:
+                    holder.txtStatus.setText("Sẵn Sàng");
+                    holder.btnStart.setVisibility(View.VISIBLE);
+                    break;
+                case 2:
+                    holder.txtStatus.setText("Đang Khám");
+                    holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_deep_orange_500));
+                    holder.btnTreatment.setVisibility(View.VISIBLE);
+                    holder.btnDone.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    break;
+
+            }
+
+            if (appointment.getNote() != null) {
                 holder.txtNote.setText(appointment.getNote());
             }
             holder.btnViewMore.setOnClickListener(new View.OnClickListener() {
@@ -63,17 +81,17 @@ public class AppointmentSwiftAdapter extends RecyclerView.Adapter<AppointmentSwi
 //                    //adding sliding effect
 //                    viewHolder.linearLayout.startAnimation(slideDown);
 
-                    if(!appointment.isExpand()){
+                    if (!appointment.isExpand()) {
                         //toggling visibility
                         holder.linearLayout.setVisibility(View.VISIBLE);
-
+                        holder.btnViewMore.setText("Ẩn");
                         //adding sliding effect
                         holder.linearLayout.startAnimation(slideDown);
                         appointment.setExpand(true);
-                    }else{
+                    } else {
                         //toggling visibility
                         holder.linearLayout.setVisibility(View.GONE);
-
+                        holder.btnViewMore.setText("Xem Thêm");
                         //adding sliding effect
                         holder.linearLayout.startAnimation(slideUp);
                         appointment.setExpand(false);
@@ -84,35 +102,48 @@ public class AppointmentSwiftAdapter extends RecyclerView.Adapter<AppointmentSwi
 
         }
 
-        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+        holder.btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mOnSwipeListener) {
                     //如果删除时，不使用mAdapter.notifyItemRemoved(pos)，则删除没有动画效果，
                     //且如果想让侧滑菜单同时关闭，需要同时调用 ((CstSwipeDelMenu) holder.itemView).quickClose();
                     //((CstSwipeDelMenu) holder.itemView).quickClose();
-                    mOnSwipeListener.onDel(holder.getAdapterPosition());
+                    mOnSwipeListener.onStartClick(holder.getAdapterPosition());
                 }
             }
         });
-        //注意事项，设置item点击，不能对整个holder.itemView设置咯，只能对第一个子View，即原来的content设置，这算是局限性吧。
-//        (holder.content).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                Toast.makeText(mContext, "onClick:" + mDatas.get(holder.getAdapterPosition()).name, Toast.LENGTH_SHORT).show();
-////                Log.d("TAG", "onClick() called with: v = [" + v + "]");
-//            }
-//        });
-        //置顶：
-        holder.btnTop.setOnClickListener(new View.OnClickListener() {
+
+
+        holder.btnTreatment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null!=mOnSwipeListener){
-                    mOnSwipeListener.onTop(holder.getAdapterPosition());
+                if (null != mOnSwipeListener) {
+                    mOnSwipeListener.onTreatmentClick(holder.getAdapterPosition());
                 }
 
             }
         });
+        holder.btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != mOnSwipeListener) {
+                    mOnSwipeListener.onDoneClick(holder.getAdapterPosition());
+                }
+
+            }
+        });
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != mOnSwipeListener) {
+                    mOnSwipeListener.onItemClick(holder.getAdapterPosition());
+                }
+
+            }
+        });
+
+
     }
 
     @Override
@@ -124,8 +155,13 @@ public class AppointmentSwiftAdapter extends RecyclerView.Adapter<AppointmentSwi
      * 和Activity通信的接口
      */
     public interface onSwipeListener {
-        void onDel(int pos);
-        void onTop(int pos);
+        void onStartClick(int pos);
+
+        void onTreatmentClick(int pos);
+
+        void onDoneClick(int pos);
+
+        void onItemClick(int pos);
     }
 
     private onSwipeListener mOnSwipeListener;
@@ -139,13 +175,15 @@ public class AppointmentSwiftAdapter extends RecyclerView.Adapter<AppointmentSwi
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-//        CircleImageView imgAvatar;
+        //        CircleImageView imgAvatar;
         TextView txtName, txtNumber, txtStatus, txtNote;
         LinearLayout linearLayout;
         TextView btnViewMore;
-        Button btnDelete;
-        Button btnUnRead;
-        Button btnTop;
+        Button btnStart;
+        Button btnTreatment;
+        Button btnDone;
+        CardView cardView;
+
         public ViewHolder(View itemView) {
             super(itemView);
 //            imgAvatar =  itemView.findViewById(R.id.img_avatar_user);
@@ -153,11 +191,12 @@ public class AppointmentSwiftAdapter extends RecyclerView.Adapter<AppointmentSwi
             txtNumber = itemView.findViewById(R.id.txt_appointment_number);
             txtStatus = itemView.findViewById(R.id.txt_appointment_status);
             txtNote = itemView.findViewById(R.id.txt_note);
+            cardView = itemView.findViewById(R.id.card_view);
             linearLayout = itemView.findViewById(R.id.linear_layout_note);
             btnViewMore = itemView.findViewById(R.id.btn_view_note);
-            btnDelete =  itemView.findViewById(R.id.btnDelete);
-            btnUnRead =  itemView.findViewById(R.id.btnUnRead);
-            btnTop = itemView.findViewById(R.id.btnTop);
+            btnStart = itemView.findViewById(R.id.btnStart);
+            btnTreatment = itemView.findViewById(R.id.btnTreatment);
+            btnDone = itemView.findViewById(R.id.btnDone);
         }
     }
 }

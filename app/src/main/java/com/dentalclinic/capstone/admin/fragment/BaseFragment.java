@@ -35,7 +35,7 @@ public class BaseFragment extends Fragment {
     public void showDialog(String message){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext())
                 .setMessage(message)
-                .setPositiveButton("Thử lại", (DialogInterface dialogInterface, int i) -> {
+                .setPositiveButton("Xong", (DialogInterface dialogInterface, int i) -> {
                 });
         alertDialog.show();
     }

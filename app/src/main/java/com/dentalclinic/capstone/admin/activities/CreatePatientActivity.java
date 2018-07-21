@@ -65,7 +65,7 @@ public class CreatePatientActivity extends BaseActivity {
     public static String PATIENT_ANAMNESIS = "PATIENT_ANAMNESIS";
     public static String PREVIOUS_ANAMNESIS = "PREVIOUS_ANAMNESIS";
     AddressService addressService = APIServiceManager.getService(AddressService.class);
-
+    private String phone = "";
     private ArrayList<AnamnesisCatalog> listAnamnesisCatalog;
     private ArrayList<AnamnesisCatalog> patientAnamnesis;
 
@@ -79,6 +79,11 @@ public class CreatePatientActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
 //            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.side_nav_bar));
+        }
+
+        Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
+        if(bundle!=null){
+            phone = bundle.getString(AppConst.PHONE);
         }
         edtFullname = findViewById(R.id.edt_fullname_register);
         edtPhone = findViewById(R.id.edt_phone_register);
@@ -94,6 +99,7 @@ public class CreatePatientActivity extends BaseActivity {
 //        if (actionBar != null) {
 //            actionBar.setDisplayHomeAsUpEnabled(true);
 //        }
+        edtPhone.setText(phone);
         btnRegister.setOnClickListener((view) -> {
             attemptRegister();
         });
