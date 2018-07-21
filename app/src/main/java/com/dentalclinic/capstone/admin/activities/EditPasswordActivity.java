@@ -8,16 +8,22 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.api.APIServiceManager;
+import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
+import com.dentalclinic.capstone.admin.api.services.StaffService;
 import com.dentalclinic.capstone.admin.models.Staff;
-import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.Validation;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 public class EditPasswordActivity extends BaseActivity implements View.OnClickListener {
     private EditText txtPassword, txtConfirmPassword, txtCurrentPassword;
-    private Staff user;
+    private Staff staff;
     private Button btnChangePassword;
 
     @Override
@@ -33,17 +39,15 @@ public class EditPasswordActivity extends BaseActivity implements View.OnClickLi
         }
         Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
         if (bundle.getSerializable(AppConst.STAFF_OBJ) != null) {
-            user = (Staff) bundle.getSerializable(AppConst.STAFF_OBJ);
+            staff = (Staff) bundle.getSerializable(AppConst.STAFF_OBJ);
         } else {
-            user = new Staff();
-            user.setPhone("00");
+            staff = new Staff();
         }
         txtPassword = findViewById(R.id.edt_password);
         txtCurrentPassword = findViewById(R.id.edt_current_password);
         txtConfirmPassword = findViewById(R.id.edt_confirm_password);
         btnChangePassword = findViewById(R.id.btn_update_password);
         btnChangePassword.setOnClickListener(this);
-
     }
 
     @Override
@@ -94,7 +98,7 @@ public class EditPasswordActivity extends BaseActivity implements View.OnClickLi
         switch (view.getId()) {
             case R.id.btn_update_password:
                 if (isValid()) {
-//                    callApiUpdate(patient.getPhone(), txtCurrentPassword.getText().toString().trim(), txtPassword.getText().toString().trim());
+                    callApiUpdate(staff.getPhone(), txtCurrentPassword.getText().toString().trim(), txtPassword.getText().toString().trim());
                 }
                 break;
         }
@@ -102,55 +106,47 @@ public class EditPasswordActivity extends BaseActivity implements View.OnClickLi
 
     private Disposable userServiceDisposable;
 
-//    public void callApiUpdate(String phone, String currentPassword, String newPassword) {
-//        showLoading();
-//        UserService userService = APIServiceManager.getService(UserService.class);
-//
-//        userService.changePassword(phone, currentPassword, newPassword)
-//                .subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new SingleObserver<Response<SuccessResponse>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                        userServiceDisposable = d;
-//                        hideLoading();
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(Response<SuccessResponse> response) {
-//                        if (response.isSuccessful()) {
-//
-//                            showMessage(getResources().getString(R.string.success_message_api));
-//                            finish();
-//                        } else {
-//                            try {
-//                                ErrorResponse errorResponse = Utils.parseJson(response.errorBody().string(), ErrorResponse.class);
-//                                showDialog(errorResponse.getErrorMessage());
-//                            } catch (IOException e) {
-//
-//                                showDialog(getResources().getString(R.string.error_message_api));
-//                            } catch (JsonSyntaxException e){
-////
-//                                showDialog(getResources().getString(R.string.error_message_api));
-//
-//                            }
-////                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditPasswordActivity.this)
-////                                    .setMessage(getResources().getString(R.string.error_message_api))
-////                                    .setPositiveButton("Thử lại", (DialogInterface dialogInterface, int i) -> {
-////                                    });
-////                            alertDialog.show();
-//                        }
-//                        hideLoading();
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        e.printStackTrace();
-//                        logError("CallApiRegister", e.getMessage());
-//                        hideLoading();
-//                    }
-//                });
-//    }
+    public void callApiUpdate(String phone, String currentPassword, String newPassword) {
+        showLoading();
+        StaffService staffService = APIServiceManager.getService(StaffService.class);
+
+        staffService.changePassword(phone, currentPassword, newPassword)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<SuccessResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        userServiceDisposable = d;
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onSuccess(Response<SuccessResponse> response) {
+                        if (response.isSuccessful()) {
+                            if (response.body() != null) {
+                                showMessage("Đổi mật khẩu thành công");
+                                finish();
+                            }
+                        } else if (response.code() == 500) {
+                            showFatalError(response.errorBody(), "callApiUpdate password");
+                        } else if (response.code() == 401) {
+                            showErrorUnAuth();
+                        } else if (response.code() == 400) {
+                            showBadRequestError(response.errorBody(), "callApiUpdate password");
+                        } else {
+                            showDialog(getString(R.string.error_message_api));
+                        }
+
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        hideLoading();
+                    }
+                });
+    }
 
 
 }

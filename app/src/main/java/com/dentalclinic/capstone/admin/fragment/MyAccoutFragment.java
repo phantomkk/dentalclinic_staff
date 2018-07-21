@@ -1,6 +1,8 @@
 package com.dentalclinic.capstone.admin.fragment;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,11 +22,10 @@ import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.activities.EditAccoutActivity;
 import com.dentalclinic.capstone.admin.activities.EditPasswordActivity;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
+import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
+import com.dentalclinic.capstone.admin.api.services.StaffService;
 import com.dentalclinic.capstone.admin.api.services.UserService;
-import com.dentalclinic.capstone.admin.models.City;
-import com.dentalclinic.capstone.admin.models.District;
 import com.dentalclinic.capstone.admin.models.Staff;
-import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
@@ -39,13 +40,21 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MyAccoutFragment extends BaseFragment implements View.OnClickListener {
     public static int REQUEST_CHANGE_PASSWORD = 10000;
+    public static int REQUEST_CHANGE_ACCOUNT = 10001;
     Button btnChangeAvatar, btnEdit, btnChangePhone, btnChangePassword;
     CircleImageView cvAvatar;
     TextView txtName, txtGender, txtPhone, txtAddress, txtDateOfBirth, txtEmail, txtDegree;
@@ -160,48 +169,48 @@ public class MyAccoutFragment extends BaseFragment implements View.OnClickListen
         return byteBuff.toByteArray();
     }
 
-    private UserService userService = APIServiceManager.getService(UserService.class);
+    private StaffService staffService = APIServiceManager.getService(StaffService.class);
     private Disposable userServiceDisposable;
 
     private void uploadImage(byte[] imageBytes) {
-//        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes);
-//        MultipartBody.Part image = MultipartBody.Part.createFormData("image", "image.jpg", requestFile);
-//        MultipartBody.Part id = MultipartBody.Part.createFormData("id", CoreManager.getCurrentPatient(getContext()).getId() + "");
-//        //cột username đang bị null hết chỉ có 2 record dc add vào: luc2, luc12345678
-//        userService.changeAvatar(image, id).subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new SingleObserver<Response<SuccessResponse>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                        userServiceDisposable = d;
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(Response<SuccessResponse> response) {
-//                        if (response.isSuccessful()) {
-//                            if (response.body() != null) {
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes);
+        MultipartBody.Part image = MultipartBody.Part.createFormData("image", "image.jpg", requestFile);
+        MultipartBody.Part id = MultipartBody.Part.createFormData("id", CoreManager.getStaff(getContext()).getId() + "");
+        //cột username đang bị null hết chỉ có 2 record dc add vào: luc2, luc12345678
+        staffService.changeAvatar(image, id).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<SuccessResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        userServiceDisposable = d;
+                    }
+
+                    @Override
+                    public void onSuccess(Response<SuccessResponse> response) {
+                        if (response.isSuccessful()) {
+                            if (response.body() != null) {
 //                                CoreManager.saveAvatar(getContext(), (String) response.body().getData());
 //                                MainActivity.resetHeader(getContext());
-//                                showMessage(getResources().getString(R.string.success_message_api));
-//                            }
-//                        } else {
-//                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity())
-//                                    .setMessage(getResources().getString(R.string.error_message_api))
-//                                    .setPositiveButton("Thử lại", (DialogInterface dialogInterface, int i) -> {
-//                                    });
-//                            alertDialog.show();
-//                        }
-//                        hideLoading();
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        hideLoading();
-//                        e.printStackTrace();
-//                        Toast.makeText(getContext(), getResources().getString(R.string.error_on_error_when_call_api), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//
+                                showMessage(getResources().getString(R.string.success_message_api));
+                            }
+                        } else {
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity())
+                                    .setMessage(getResources().getString(R.string.error_message_api))
+                                    .setPositiveButton("Thử lại", (DialogInterface dialogInterface, int i) -> {
+                                    });
+                            alertDialog.show();
+                        }
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        hideLoading();
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), getResources().getString(R.string.error_on_error_when_call_api), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 
 
@@ -221,7 +230,7 @@ public class MyAccoutFragment extends BaseFragment implements View.OnClickListen
 //                bundle.putSerializable(AppConst.USER_OBJ, CoreManager.getCurrentuser(getContext()));
                 bundle.putSerializable(AppConst.STAFF_OBJ, staff);
                 intent.putExtra(AppConst.BUNDLE, bundle);
-                startActivityForResult(intent, REQUEST_CHANGE_PASSWORD);
+                startActivityForResult(intent, REQUEST_CHANGE_ACCOUNT);
                 break;
             case R.id.ln_edit_password:
                 intent = new Intent(getActivity(), EditPasswordActivity.class);
@@ -258,7 +267,15 @@ public class MyAccoutFragment extends BaseFragment implements View.OnClickListen
             }
         } else if (requestCode == REQUEST_CHANGE_PASSWORD) {
             if (resultCode == getActivity().RESULT_OK) {
-//                setData(CoreManager.getCurrentuser(getContext()));
+                if (getContext() != null) {
+                    setData(CoreManager.getStaff(getContext()));
+                }
+            }
+        } else if (requestCode == REQUEST_CHANGE_ACCOUNT) {
+            if (resultCode == getActivity().RESULT_OK) {
+                if (getContext() != null) {
+                    setData(CoreManager.getStaff(getContext()));
+                }
             }
         }
     }

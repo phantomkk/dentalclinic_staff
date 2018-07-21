@@ -31,6 +31,8 @@ public class Staff implements Serializable {
     private String address;
     @SerializedName("district")
     private District district;
+    @SerializedName("district_id")
+    private District districtId;
     @SerializedName("city")
     private City city;
 
@@ -179,5 +181,13 @@ public class Staff implements Serializable {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public District getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(District districtId) {
+        this.districtId = districtId;
     }
 }

@@ -299,6 +299,9 @@ public class MainActivity extends BaseActivity
 
 
     private void setDataHeader(Staff staff){
+        if(staff==null){
+            return;
+        }
         if(staff.getAvatar()!=null){
             Picasso.get().load(staff.getAvatar()).into(mAvatar);
         }
@@ -377,6 +380,7 @@ public class MainActivity extends BaseActivity
             fragmentManager.beginTransaction().replace(R.id.main_fragment, newFragment).commit();
         } else if (id == R.id.nav_log_out) {
             logoutOnServer();
+            CoreManager.clearStaff(MainActivity.this);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -398,7 +402,6 @@ public class MainActivity extends BaseActivity
                     public void onSuccess(Response<SuccessResponse> successResponse) {
                         if (successResponse.isSuccessful()) {
                             logError("Logout on server", "Log out success");
-                            CoreManager.clearStaff(MainActivity.this);
                         } else if (successResponse.code() == 500) {
                             showFatalError(successResponse.errorBody(), "logoutOnServer");
                         } else if (successResponse.code() == 401) {

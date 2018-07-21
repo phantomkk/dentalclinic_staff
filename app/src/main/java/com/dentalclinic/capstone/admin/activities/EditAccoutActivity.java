@@ -18,18 +18,28 @@ import android.widget.TextView;
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.adapter.CitySpinnerAdapter;
 import com.dentalclinic.capstone.admin.adapter.DistrictSpinnerAdapter;
+import com.dentalclinic.capstone.admin.api.APIServiceManager;
+import com.dentalclinic.capstone.admin.api.requestobject.StaffProfileRequest;
 import com.dentalclinic.capstone.admin.api.requestobject.UpdateUserRequest;
+import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
+import com.dentalclinic.capstone.admin.api.services.StaffService;
 import com.dentalclinic.capstone.admin.databaseHelper.DatabaseHelper;
+import com.dentalclinic.capstone.admin.fragment.MyAccoutFragment;
 import com.dentalclinic.capstone.admin.models.City;
 import com.dentalclinic.capstone.admin.models.District;
 import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
+import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.Validation;
 
 import java.util.Calendar;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 public class EditAccoutActivity extends BaseActivity implements View.OnClickListener {
     EditText txtName;
@@ -47,6 +57,7 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
     private Disposable districtServiceDisposable;
     private DatabaseHelper cityDatabaseHelper = new DatabaseHelper(EditAccoutActivity.this);
     private DistrictSpinnerAdapter districtSpinnerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,13 +91,12 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
             setDataUser(staff);
         } else {
             staff = new Staff();
-            staff.setPhone("0");
         }
 
-        if(cityDatabaseHelper.getAllCity().isEmpty()){
+        if (cityDatabaseHelper.getAllCity().isEmpty()) {
             cityDatabaseHelper.insertDataCity();
         }
-        if(cityDatabaseHelper.getAllDistrict().isEmpty()){
+        if (cityDatabaseHelper.getAllDistrict().isEmpty()) {
             cityDatabaseHelper.insertDataDistrict();
         }
         spCity.setAdapter(new CitySpinnerAdapter(
@@ -98,18 +108,19 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
                 City city = (City) spCity.getSelectedItem();
                 if (city != null) {
                     spDistrict.setAdapter(new DistrictSpinnerAdapter(EditAccoutActivity.this,
-                            android.R.layout.simple_spinner_item,cityDatabaseHelper.getDistrictOfCity(city.getId())));
-                    if(staff.getDistrict()!=null) {
+                            android.R.layout.simple_spinner_item, cityDatabaseHelper.getDistrictOfCity(city.getId())));
+                    if (staff.getDistrict() != null) {
                         spDistrict.setSelection(cityDatabaseHelper.getPositionDistrictById(staff.getDistrict()));
                     }
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
-        if (staff.getCity()!=null) {
+        if (staff.getCity() != null) {
             spCity.setSelection(cityDatabaseHelper.getPositionCityById(staff.getCity().getId()));
         }
     }
@@ -199,8 +210,7 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
             cancel = true;
             txtDegree.setError(getString(R.string.error_invalid_degree));
             focusView = txtDegree;
-        }
-        else if (!Validation.isAddressValid(address)) {
+        } else if (!Validation.isAddressValid(address)) {
             cancel = true;
             txtAddress.setError(getString(R.string.error_invalid_address));
             focusView = txtAddress;
@@ -217,13 +227,16 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
         if (cancel) {
             focusView.requestFocus();
         } else {
-            UpdateUserRequest request = new UpdateUserRequest();
-            request.setPhone(staff.getPhone());
+            StaffProfileRequest request = new StaffProfileRequest();
+            request.setStaffId(staff.getId());
+            request.setEmail(email);
             request.setName(name);
             request.setAddress(address);
             request.setGender(gender);
+            request.setDegree(degree);
             request.setDistrictId(districtID);
             request.setBirthday(birthdayStr);
+            request.setDistrict(district);
             callApiUpdate(request);
 
         }
@@ -234,10 +247,10 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
             if (user.getName() != null) {
                 txtName.setText(user.getName());
             }
-            if(user.getEmail()!=null){
+            if (user.getEmail() != null) {
                 txtEmail.setText(user.getEmail());
             }
-            if(user.getDegree()!=null){
+            if (user.getDegree() != null) {
                 txtDegree.setText(user.getDegree());
             }
             if (user.getAddress() != null) {
@@ -285,57 +298,54 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
         return value;
     }
 
-    public void callApiUpdate(UpdateUserRequest requestObj) {
-//        showLoading();
-//        UserService userService = APIServiceManager.getService(UserService.class);
-//        userService.changePatientInfo(requestObj)
-//                .subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new SingleObserver<Response<SuccessResponse>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                        registerServiceDisposable = d;
-//                        hideLoading();
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(Response<SuccessResponse> response) {
-//                        if (response.isSuccessful()) {
-////                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditAccoutActivity.this)
-//////                                    .setMessage("Đăng kí tài khoản thành công")
-//////                                    .setPositiveButton("Đăng nhập", (DialogInterface dialogInterface, int i) -> {
-//////                                        Intent intent = new Intent(EditAccoutActivity.this, LoginActivity.class);
-//////                                        startActivity(intent);
-//////                                    });
-//////                            alertDialog.show();
-//                            CoreManager.savePatient(EditAccoutActivity.this,requestObj);
-//                            MainActivity.resetHeader(EditAccoutActivity.this);
-//                            showMessage(getResources().getString(R.string.success_message_api));
-//                            setResult(RESULT_OK);
-//                            finish();
-//                        } else {
-////                            String erroMsg = Utils.getErrorMsg(response.errorBody());
-//                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditAccoutActivity.this)
-//                                    .setMessage(getResources().getString(R.string.error_message_api))
-//                                    .setPositiveButton("Thử lại", (DialogInterface dialogInterface, int i) -> {
-//                                    });
-//                            alertDialog.show();
-////                            logError("CallApiRegister", "SuccessBut on Failed");
-//                        }
-//
-//                        hideLoading();
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        e.printStackTrace();
-//                        logError("CallApiRegister", e.getMessage());
-//                        hideLoading();
-//                    }
-//                });
+    public void callApiUpdate(StaffProfileRequest requestObj) {
+        showLoading();
+        StaffService userService = APIServiceManager.getService(StaffService.class);
+        userService.updateStaffInfo(requestObj)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<SuccessResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        registerServiceDisposable = d;
+                    }
+
+                    @Override
+                    public void onSuccess(Response<SuccessResponse> response) {
+                        if (response.isSuccessful()) {
+                            if (response.body() != null) {
+                                showMessage("Thay đổi thành công");
+                                staff.setEmail(requestObj.getEmail());
+                                staff.setAddress(requestObj.getAddress());
+                                staff.setName(requestObj.getName());
+                                staff.setDegree(requestObj.getDegree());
+                                staff.setGender(requestObj.getGender());
+                                staff.setDateOfBirth(requestObj.getBirthday());
+                                staff.setDistrict(requestObj.getDistrict());
+                                CoreManager.setStaff(EditAccoutActivity.this, staff);
+                                setResult(RESULT_OK);
+                                finish();
+                            }
+                        } else if (response.code() == 500) {
+                            showFatalError(response.errorBody(), "callApiUpdate");
+                        } else if (response.code() == 401) {
+                            showErrorUnAuth();
+                        } else if (response.code() == 400) {
+                            showBadRequestError(response.errorBody(), "callApiUpdate");
+                        } else {
+                            showDialog(getString(R.string.error_message_api));
+                        }
+
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        hideLoading();
+                    }
+                });
     }
-
-
 
 
 }
