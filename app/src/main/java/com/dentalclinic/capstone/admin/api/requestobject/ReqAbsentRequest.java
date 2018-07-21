@@ -2,13 +2,16 @@ package com.dentalclinic.capstone.admin.api.requestobject;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class ReqAbsentRequest {
     @SerializedName("staff_id")
     private int staffId;
     @SerializedName("start_date")
     private String startDate;
     @SerializedName("end_date")
-    private String listEndDate;
+    private String endDate;
+    @SerializedName("reason")
     private String reason;
 
     public int getStaffId() {
@@ -27,12 +30,12 @@ public class ReqAbsentRequest {
         this.startDate = startDate;
     }
 
-    public String getListEndDate() {
-        return listEndDate;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public void setListEndDate(String listEndDate) {
-        this.listEndDate = listEndDate;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     public String getReason() {

@@ -60,17 +60,12 @@ public class AbsentSwiftAdapter extends RecyclerView.Adapter<AbsentSwiftAdapter.
             } else {
                 holder.btnDelete.setVisibility(View.GONE);
                 holder.btnView.setVisibility(View.VISIBLE);
-                switch (absent.getStatus()) {
-                    case 0:
-                        holder.txtStatus.setText("Đã Hủy");
-                        holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_red_500));
-                        break;
-                    case 1:
-                        holder.txtStatus.setText("Xác Nhân");
-                        holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_green_500));
-                        break;
-                    default:
-                        break;
+                if (absent.isApproved()) {
+                    holder.txtStatus.setText("Xác Nhân");
+                    holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_green_500));
+                } else {
+                    holder.txtStatus.setText("Đã Hủy");
+                    holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_red_500));
                 }
             }
         }

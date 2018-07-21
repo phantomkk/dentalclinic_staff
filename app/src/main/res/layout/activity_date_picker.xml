@@ -59,22 +59,22 @@
 
                 <TextView
                     android:id="@+id/btn_cancle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="20dp"
                     android:text="Hủy"
                     android:textAlignment="textEnd"
                     android:textColor="@color/color_blue_800"
-                    android:textSize="18dp" />
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/btn_submit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_width="40dp"
+                    android:layout_height="20dp"
+                    android:textAlignment="textEnd"
                     android:layout_marginLeft="25dp"
                     android:text="Gửi"
                     android:textColor="@color/color_blue_800"
-                    android:textSize="18dp" />
+                    android:textSize="15dp" />
             </LinearLayout>
         </LinearLayout>
 </ScrollView>

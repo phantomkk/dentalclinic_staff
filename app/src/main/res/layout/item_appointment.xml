@@ -61,8 +61,8 @@
 
             <TextView
                 android:id="@+id/btn_view_note"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
                 android:layout_gravity="end"
                 android:layout_marginBottom="@dimen/input_margin_top"
                 android:background="@color/color_white"
