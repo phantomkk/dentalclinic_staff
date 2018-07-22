@@ -11,12 +11,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.api.requestobject.AbsentRequest;
 import com.dentalclinic.capstone.admin.api.requestobject.ReqAbsentRequest;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
 import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.muddzdev.styleabletoastlibrary.StyleableToast;
+
+import java.util.Calendar;
 
 public class DatePickerAbsentDialog extends Dialog {
 
@@ -52,22 +55,24 @@ public class DatePickerAbsentDialog extends Dialog {
         btnSubmit = findViewById(R.id.btn_submit);
         btnCancle = findViewById(R.id.btn_cancle);
         calendarView = findViewById(R.id.calendarView);
+        Calendar calendar = Calendar.getInstance();
+        calendarView.setSoundEffectsEnabled(true);
+        try {
+            calendarView.setDate(calendar);
+        } catch (OutOfDateRangeException e) {
+            e.printStackTrace();
+        }
         autoCompleteTextView = findViewById(R.id.edt_note);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (calendarView.getSelectedDates().isEmpty()) {
-
-                    StyleableToast.makeText(getContext(), "Vui lòng chọn ngày nghỉ", Toast.LENGTH_LONG, R.style.warningToast).show();
-
-                } else {
+                if (isValid()){
                     ReqAbsentRequest absentRequest = new ReqAbsentRequest();
                     absentRequest.setStartDate(DateUtils.getDate(calendarView.getSelectedDates().get(0).getTime(), DateTimeFormat.DATE_TIME_DB));
                     absentRequest.setEndDate(DateUtils.getDate(calendarView.getSelectedDates().get(calendarView.getSelectedDates().size() - 1).getTime(), DateTimeFormat.DATE_TIME_DB));
                     absentRequest.setReason(autoCompleteTextView.getText().toString());
                     onButtonClickListener.onSubmitClick(absentRequest);
                 }
-
             }
         });
         btnCancle.setOnClickListener(new View.OnClickListener() {
@@ -79,5 +84,30 @@ public class DatePickerAbsentDialog extends Dialog {
 
     }
 
+
+    private String errorMessage="Đã có lỗi xảy ra";
+    private boolean isValid(){
+        boolean rs = true;
+        if(calendarView.getSelectedDates().isEmpty()){
+            rs =false;
+            StyleableToast.makeText(getContext(), "Vui lòng chọn ngày nghỉ", Toast.LENGTH_LONG, R.style.warningToast).show();
+        }else if(calendarView.getSelectedDates().get(0).before(Calendar.getInstance())) {
+            rs =false;
+            StyleableToast.makeText(getContext(), "Vui lòng chọn ngày nghỉ trong tương lai", Toast.LENGTH_LONG, R.style.warningToast).show();
+        }else if(autoCompleteTextView.getText().toString().trim().isEmpty()){
+            rs = false;
+            autoCompleteTextView.setError("Vui lòng điền lý do xin nghĩ");
+            autoCompleteTextView.setFocusable(true);
+        }
+
+        return rs;
+    }
+    public boolean isSameDay(Calendar cal1, Calendar cal2) {
+        if (cal1 == null || cal2 == null)
+            return false;
+        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
+                && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
+    }
 
 }

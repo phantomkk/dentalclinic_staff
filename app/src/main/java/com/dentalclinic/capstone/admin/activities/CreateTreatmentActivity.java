@@ -286,7 +286,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private void updateTreatmentStepLabel(List<TreatmentStep> steps) {
         String stepsStr = "";
         for (TreatmentStep s : steps) {
-            stepsStr += s.getName() + "\n";
+            stepsStr += "- "+s.getName() + "\n";
         }
         lblTreatmentStep.setText(stepsStr);
     }
@@ -295,7 +295,8 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private void updateMedicineLabel(List<MedicineQuantity> medicines) {
         String mStr = "";
         for (MedicineQuantity s : medicines) {
-            mStr += s.getMedicine().getName() + " ___ " + s.getQuantity() + " viên" + "\n";
+            mStr+= Utils.getMedicineLine(s.getMedicine().getName(), s.getQuantity(), 40)+"\n";
+//            mStr += s.getMedicine().getName() + " ___ " + s.getQuantity() + " viên" + "\n";
         }
         lblMedicineQuantity.setText(mStr);
     }

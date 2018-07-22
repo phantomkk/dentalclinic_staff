@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.activities.BookAppointmentReceptActivity;
 import com.dentalclinic.capstone.admin.activities.CreatePatientActivity;
 import com.dentalclinic.capstone.admin.activities.LoginActivity;
 import com.dentalclinic.capstone.admin.activities.MainActivity;
@@ -114,7 +115,7 @@ public class SearchPatientFragment extends BaseFragment {
         btnNewAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                showMessage("Đặt lịch cho bệnh nhân");
+                startActivity(new Intent(getContext(), BookAppointmentReceptActivity.class));
             }
         });
 

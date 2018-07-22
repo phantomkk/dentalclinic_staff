@@ -7,14 +7,16 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/txt_label_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:text="Không có bệnh nhân"/>
+            android:text="Không có bệnh nhân"
+            android:textAlignment="center" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/listView"
             android:layout_width="match_parent"
@@ -44,22 +46,22 @@
             <!--app:fab_colorPressed="@color/white_pressed"/>-->
 
             <!--<com.getbase.floatingactionbutton.FloatingActionButton-->
-                <!--android:id="@+id/btn_new_appointment"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:fab_colorNormal="@color/color_green_500"-->
-                <!--app:fab_colorPressed="@color/color_green_800"-->
-                <!--app:fab_icon="@drawable/ic_schedule_white_24dp"-->
-                <!--app:fab_title="Đặt lịch cho bệnh nhân" />-->
+            <!--android:id="@+id/btn_new_appointment"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:fab_colorNormal="@color/color_green_500"-->
+            <!--app:fab_colorPressed="@color/color_green_800"-->
+            <!--app:fab_icon="@drawable/ic_schedule_white_24dp"-->
+            <!--app:fab_title="Đặt lịch cho bệnh nhân" />-->
 
             <!--<com.getbase.floatingactionbutton.FloatingActionButton-->
-                <!--android:id="@+id/btn_new_payment"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:fab_colorNormal="@color/color_yellow_600"-->
-                <!--app:fab_colorPressed="@color/color_yellow_800"-->
-                <!--app:fab_icon="@drawable/ic_payment_payment_24dp"-->
-                <!--app:fab_title="Thanh toán" />-->
+            <!--android:id="@+id/btn_new_payment"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:fab_colorNormal="@color/color_yellow_600"-->
+            <!--app:fab_colorPressed="@color/color_yellow_800"-->
+            <!--app:fab_icon="@drawable/ic_payment_payment_24dp"-->
+            <!--app:fab_title="Thanh toán" />-->
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
     </RelativeLayout>
 </FrameLayout>

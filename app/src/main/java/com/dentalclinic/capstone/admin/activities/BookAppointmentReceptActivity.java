@@ -9,9 +9,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -60,6 +65,10 @@ public class BookAppointmentReceptActivity extends BaseActivity {
     private List<Staff> listDentist;
     private SearchableDialog searchDentistDialog;
     private Staff currentDentist;
+    private RadioButton rbtDefault, rbtDoctor;
+    private LinearLayout linearLayout;
+    private Animation slideDown ;
+    private Animation slideUp ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +83,30 @@ public class BookAppointmentReceptActivity extends BaseActivity {
                     ContextCompat.getDrawable(BookAppointmentReceptActivity.this, R.drawable.side_nav_bar)
             );
         }
+        slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+        slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 //        ImageView img = findViewById(R.id.img_logo_quick_register);
+        rbtDefault = findViewById(R.id.rbt_default);
+        rbtDoctor = findViewById(R.id.rbt_doctor);
+        linearLayout = findViewById(R.id.linear_choose_doctor);
+        rbtDefault.setChecked(true);
+        rbtDefault.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                linearLayout.setVisibility(View.VISIBLE);
+                linearLayout.startAnimation(slideDown);
+            }
+        });
+
+        rbtDoctor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                linearLayout.setVisibility(View.GONE);
+                linearLayout.startAnimation(slideUp);
+            }
+        });
+
         tvFullname = findViewById(R.id.tv_fullname_book_appt);
         tvDate = findViewById(R.id.tv_date_book_appt);
         tvDentist = findViewById(R.id.lbl_dentist_slt);

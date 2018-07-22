@@ -5,27 +5,47 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".activities.StepListActivity">
 
-        <ListView
-            android:id="@+id/list_step_activity"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:scrollbarStyle="outsideOverlay"
-            android:padding="16dp"
-            android:layout_weight="1"
-            />
-        <Button
-            android:id="@+id/btn_select_done"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Chọn"
-            android:layout_marginTop="@dimen/input_margin_top"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            style="@style/custom_button_blue"
-            android:layout_weight="0"
+    <TextView
+        android:id="@+id/spinerTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chọn các bước"
+        android:textSize="17sp"
+        android:textStyle="bold" />
 
-            />
-    </LinearLayout>
+    <ListView
+        android:id="@+id/list_step_activity"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:scrollbarStyle="outsideOverlay" />
+
+    <TextView
+        android:id="@+id/btn_select_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:clickable="true"
+        android:padding="5dp"
+        android:text="@string/button_choose_dialog"
+        android:textAllCaps="true"
+        android:textColor="@color/color_blue_800"
+        android:textSize="15dp" />
+
+    <!--<Button-->
+        <!--android:id="@+id/btn_select_done"-->
+        <!--style="@style/custom_button_blue"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="16dp"-->
+        <!--android:layout_marginLeft="16dp"-->
+        <!--android:layout_marginRight="16dp"-->
+        <!--android:layout_marginTop="@dimen/input_margin_top"-->
+        <!--android:layout_weight="0"-->
+        <!--android:text="Chọn"-->
+        <!--/>-->
+</LinearLayout>

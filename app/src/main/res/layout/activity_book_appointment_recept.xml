@@ -57,50 +57,116 @@
                         android:textSize="@dimen/input_size_normal" />
 
                 </android.support.design.widget.TextInputLayout>
-
-                <RelativeLayout
+                <RadioGroup
+                    android:id="@+id/rg_gender_register"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:paddingStart="10dp">
+                    android:layout_marginTop="@dimen/input_margin_top"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
 
-                    <TextView
-                        android:id="@+id/lbl_dentist_slt0"
-                        android:layout_width="90dp"
+                    <RadioButton
+                        android:id="@+id/rbt_default"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:text="Nha sĩ: " />
+                        android:layout_weight="5"
+                        android:text="Mặc Định" />
+
+                    <RadioButton
+                        android:id="@+id/rbt_doctor"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:text="Chọn Bác Sĩ" />
+                </RadioGroup>
+
+                <LinearLayout
+                    android:id="@+id/linear_choose_doctor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/input_margin_top"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/ic_person_black_24dp"/>
+                        <TextView
+                            android:id="@+id/lbl_tooth_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_gravity="center_vertical"
+                            android:text="Nha sĩ" />
+
+                        <Button
+                            android:id="@+id/btn_list_dentist"
+                            style="@style/custom_button_blue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:text="Chọn" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/lbl_dentist_slt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_toLeftOf="@id/btn_list_dentist"
-                        android:layout_toRightOf="@id/lbl_dentist_slt0"
-                        android:paddingRight="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="@dimen/input_margin_top"
                         android:text=""
                         android:textColor="@color/color_black" />
+                </LinearLayout>
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="15dp"-->
+                    <!--android:paddingStart="10dp">-->
 
-                    <Button
-                        android:id="@+id/btn_list_dentist"
-                        style="@style/custom_button_blue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:minHeight="30dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:text="Chọn" />
-                </RelativeLayout>
+                    <!--<TextView-->
+                        <!--android:id="@+id/lbl_dentist_slt0"-->
+                        <!--android:layout_width="90dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentStart="true"-->
+                        <!--android:layout_alignParentTop="true"-->
+                        <!--android:text="Nha sĩ: " />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/lbl_dentist_slt"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentTop="true"-->
+                        <!--android:layout_toLeftOf="@id/btn_list_dentist"-->
+                        <!--android:layout_toRightOf="@id/lbl_dentist_slt0"-->
+                        <!--android:paddingRight="5dp"-->
+                        <!--android:text=""-->
+                        <!--android:textColor="@color/color_black" />-->
+
+                    <!--<Button-->
+                        <!--android:id="@+id/btn_list_dentist"-->
+                        <!--style="@style/custom_button_blue"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentEnd="true"-->
+                        <!--android:minHeight="30dp"-->
+                        <!--android:paddingLeft="10dp"-->
+                        <!--android:paddingRight="10dp"-->
+                        <!--android:text="Chọn" />-->
+                <!--</RelativeLayout>-->
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginEnd="3dp"
                     android:layout_marginStart="3dp"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="5dp"
                     android:background="@color/color_grey_600" />
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -164,7 +230,7 @@
                     android:layout_height="1dp"
                     android:layout_marginEnd="3dp"
                     android:layout_marginStart="3dp"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="5dp"
                     android:background="@color/color_grey_600" />
 
                 <android.support.design.widget.TextInputLayout

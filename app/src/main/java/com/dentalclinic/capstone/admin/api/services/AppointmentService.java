@@ -19,4 +19,7 @@ public interface AppointmentService {
     @POST("api/appointment/book")
     Single<Response<List<Appointment>>> bookAppointment(@Body AppointmentRequest appointmentRequest);
 
+//    @GET("api/patient/getPatient")
+//    Single<Response<List<Appointment>>> getAppointment(@Query("dentist_id") int id, @Query("month") int month, @Query("year") int year);
+
 }

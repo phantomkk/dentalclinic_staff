@@ -61,6 +61,7 @@
             android:clickable="true"
             android:textColor="@color/color_blue_800"
             android:padding="5dp"
+            android:textSize="15dp"
             android:text="@string/close"
             android:textAllCaps="true" />
 

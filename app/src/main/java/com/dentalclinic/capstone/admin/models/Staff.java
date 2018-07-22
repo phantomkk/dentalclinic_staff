@@ -32,7 +32,7 @@ public class Staff implements Serializable {
     @SerializedName("district")
     private District district;
     @SerializedName("district_id")
-    private District districtId;
+    private int districtId;
     @SerializedName("city")
     private City city;
 
@@ -190,11 +190,4 @@ public class Staff implements Serializable {
         this.refreshToken = refreshToken;
     }
 
-    public District getDistrictId() {
-        return districtId;
-    }
-
-    public void setDistrictId(District districtId) {
-        this.districtId = districtId;
-    }
 }

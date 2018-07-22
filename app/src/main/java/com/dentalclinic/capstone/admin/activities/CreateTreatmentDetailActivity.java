@@ -47,6 +47,7 @@ import com.dentalclinic.capstone.admin.models.TreatmentImage;
 import com.dentalclinic.capstone.admin.models.TreatmentStep;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
+import com.dentalclinic.capstone.admin.utils.Utils;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
@@ -241,7 +242,8 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
     private void updateMedicineLabel(List<MedicineQuantity> medicines) {
         String mStr = "";
         for (MedicineQuantity s : medicines) {
-            mStr += s.getMedicine().getName() + " ___ " + s.getQuantity() + " viên" + "\n";
+            mStr+= Utils.getMedicineLine(s.getMedicine().getName(), s.getQuantity(), 40)+"\n";
+//            mStr += s.getMedicine().getName() + " ___ " + s.getQuantity() + " viên" + "\n";
         }
         lblMedicineQuantity.setText(mStr);
     }

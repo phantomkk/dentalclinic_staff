@@ -20,7 +20,7 @@ public class Absent implements Serializable {
     @SerializedName("created_time")
     private String createdTime;
     @SerializedName("is_approved")
-    private boolean isApproved;
+    private int isApproved;
 
     public Absent() {
     }
@@ -90,12 +90,12 @@ public class Absent implements Serializable {
         this.messageFromStaff = messageFromStaff;
     }
 
-    public boolean isApproved() {
+    public int getIsApproved() {
         return isApproved;
     }
 
-    public void setApproved(boolean approved) {
-        isApproved = approved;
+    public void setIsApproved(int isApproved) {
+        this.isApproved = isApproved;
     }
 
     public String getCreatedTime() {

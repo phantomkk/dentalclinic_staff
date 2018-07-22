@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.adapter.AnamnesisCalatalogAdapter;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedicineListActivity extends Activity {
-    private Button btnSelectDone;
+    private TextView btnSelectDone;
     private ListView listView;
     private ArrayAdapter<MedicineQuantity> adapter;
     private EditText edtSearch;

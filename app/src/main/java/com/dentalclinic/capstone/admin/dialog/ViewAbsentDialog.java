@@ -64,13 +64,26 @@ public class ViewAbsentDialog extends Dialog {
             if (absent.getMessageFromStaff() != null) {
                 txtMessage.setText(absent.getMessageFromStaff());
             }
-            if(absent.isApproved()){
-                txtStatus.setText("xác nhận");
-                txtStatus.setTextColor(getContext().getResources().getColor(R.color.color_green_500));
-            }else {
-                txtStatus.setText("hủy");
-                txtStatus.setTextColor(getContext().getResources().getColor(R.color.color_red_500));
+            switch (absent.getIsApproved()){
+                case 0:
+                    txtStatus.setText("Đã Hủy");
+                    txtStatus.setTextColor(getContext().getResources().getColor(R.color.color_red_500));
+                    break;
+                case 1:
+                    txtStatus.setText("Xác Nhân");
+                    txtStatus.setTextColor(getContext().getResources().getColor(R.color.color_green_500));
+                    break;
+                default:
+                    break;
             }
+
+//            if(absent.isApproved()){
+//                txtStatus.setText("xác nhận");
+//                txtStatus.setTextColor(getContext().getResources().getColor(R.color.color_green_500));
+//            }else {
+//                txtStatus.setText("hủy");
+//                txtStatus.setTextColor(getContext().getResources().getColor(R.color.color_red_500));
+//            }
             if(absent.getCreatedTime()!=null){
                 txtCreatedDate.setText(DateUtils.changeDateFormat(absent.getCreatedTime(), DateTimeFormat.DATE_TIME_DB, DateTimeFormat.DATE_FOTMAT));
             }

@@ -50,9 +50,10 @@ import retrofit2.Response;
 public class AbsentFragment extends BaseFragment {
     FloatingActionButton button;
     TextView txtMonthPicker;
+    TextView txtLabel;
     RecyclerView recyclerView;
     private AbsentSwiftAdapter mAdapter;
-    private List<Absent> absents;
+    private List<Absent> absents = new ArrayList<>();
     private LinearLayoutManager mLayoutManager;
     private DatePickerAbsentDialog dialog;
     public AbsentFragment() {
@@ -70,10 +71,11 @@ public class AbsentFragment extends BaseFragment {
         button = view.findViewById(R.id.btn_request);
         txtMonthPicker = view.findViewById(R.id.txt_date_picker);
         recyclerView = view.findViewById(R.id.recyclerView);
+        txtLabel = view.findViewById(R.id.txt_label_message);
         Calendar calendar = Calendar.getInstance();
         yearSelected = calendar.get(Calendar.YEAR);
         monthSelected = calendar.get(Calendar.MONTH);
-        String value = "Tháng " + (monthSelected + 1) + " năm " + yearSelected;
+        String value = "Tháng " + (monthSelected +1) + " năm " + yearSelected;
         txtMonthPicker.setText(value);
         txtMonthPicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +91,7 @@ public class AbsentFragment extends BaseFragment {
                         monthSelected = month;
                         yearSelected = year;
                         txtMonthPicker.setText(value);
+                        prepateData(month +1, year);
                     }
                 });
                 dialogFragment.show(getFragmentManager(), null);
@@ -112,22 +115,22 @@ public class AbsentFragment extends BaseFragment {
 
             }
         });
-        prepateData();
+        prepateData(monthSelected +1 , yearSelected);
         mAdapter = new AbsentSwiftAdapter(getContext(), absents);
         mAdapter.setOnDelListener(new AbsentSwiftAdapter.onSwipeListener() {
             @Override
             public void onViewClick(int pos) {
                 Absent absent = absents.get(pos);
-                absent.setStaffApprove(new Staff("Vo Quoc Trinh","mr.trinhvo1996@gmail.com","01685149049","https://cdn2.vectorstock.com/i/1000x1000/01/66/businesswoman-character-avatar-icon-vector-12800166.jpg"));
-                absent.setMessageFromStaff("nghi vui ve");
+//                absent.setStaffApprove(new Staff("Vo Quoc Trinh","mr.trinhvo1996@gmail.com","01685149049","https://cdn2.vectorstock.com/i/1000x1000/01/66/businesswoman-character-avatar-icon-vector-12800166.jpg"));
+//                absent.setMessageFromStaff("nghi vui ve");
                 ViewAbsentDialog dialog = new ViewAbsentDialog(getActivity(), absent);
-
                 dialog.show();
             }
 
             @Override
             public void onDelete(int pos) {
-                showMessage("delete");
+//                showMessage("delete");
+                deleteRequestAbsent(absents.get(pos).getId());
             }
         });
         recyclerView.setAdapter(mAdapter);
@@ -144,11 +147,30 @@ public class AbsentFragment extends BaseFragment {
                 return false;
             }
         });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+//                if (dy > 0 ||dy<0 && button.isShown())
+//                    button.hide();
+                if (dy<0 && !button.isShown())
+                    button.show();
+                else if(dy>0 && button.isShown())
+                    button.hide();
+            }
 
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//
+//                if (newState == RecyclerView.SCROLL_STATE_IDLE){
+//                    button.show();
+//                }
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
         return view;
     }
 
-    private void prepateData() {
+    private void prepateData(int month, int year) {
 //        absents = new ArrayList<>();
 //        Absent absent = new Absent("2018-07-10 23:02:56", "2018-07-10 23:02:56", "xin nghĩ");
 //        absents.add(absent);
@@ -165,7 +187,7 @@ public class AbsentFragment extends BaseFragment {
 
         showLoading();
         StaffService service = APIServiceManager.getService(StaffService.class);
-        service.getListRequestAbsent(CoreManager.getStaff(getContext()).getId(), monthSelected, yearSelected)
+        service.getListRequestAbsent(CoreManager.getStaff(getContext()).getId(), month, year)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<Response<List<Absent>>>() {
             @Override
@@ -179,6 +201,11 @@ public class AbsentFragment extends BaseFragment {
                     absents.clear();
                     absents.addAll(response.body());
                     mAdapter.notifyDataSetChanged();
+                    if(absents.isEmpty()){
+                        txtLabel.setVisibility(View.VISIBLE);
+                    }else{
+                        txtLabel.setVisibility(View.GONE);
+                    }
                 } else if (response.code() == 500) {
                     showFatalError(response.errorBody(), "logoutOnServer");
                 } else if (response.code() == 401) {
@@ -201,6 +228,54 @@ public class AbsentFragment extends BaseFragment {
     }
 
 
+
+
+    private void deleteRequestAbsent(int id){
+        showLoading();
+        StaffService service = APIServiceManager.getService(StaffService.class);
+        service.deleteRequestAbsent(id).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<Response<SuccessResponse>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onSuccess(Response<SuccessResponse> successResponseResponse) {
+                if(successResponseResponse.isSuccessful()){
+                    showSuccessMessage("Xóa thành công");
+                    for (int  i =0 ; i<absents.size();i++){
+                        if(absents.get(i).getId() == id){
+                            absents.remove(i);
+                            mAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                    if(absents.isEmpty()){
+                        txtLabel.setVisibility(View.VISIBLE);
+                    }else{
+                        txtLabel.setVisibility(View.GONE);
+                    }
+                } else if (successResponseResponse.code() == 500) {
+                    showFatalError(successResponseResponse.errorBody(), "logoutOnServer");
+                } else if (successResponseResponse.code() == 401) {
+                    showErrorUnAuth();
+                } else if (successResponseResponse.code() == 400) {
+                    showBadRequestError(successResponseResponse.errorBody(), "logoutOnServer");
+                } else {
+                    showDialog(getString(R.string.error_message_api));
+                }
+                hideLoading();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                hideLoading();
+            }
+        });
+    }
+
     private void createNewRequestAbsent(ReqAbsentRequest request){
         showLoading();
         StaffService service = APIServiceManager.getService(StaffService.class);
@@ -218,6 +293,11 @@ public class AbsentFragment extends BaseFragment {
                     showSuccessMessage("Gửi Yêu Cầu Thành Công");
                     absents.add(response.body());
                     mAdapter.notifyDataSetChanged();
+                    if(absents.isEmpty()){
+                        txtLabel.setVisibility(View.VISIBLE);
+                    }else{
+                        txtLabel.setVisibility(View.GONE);
+                    }
                 } else if (response.code() == 500) {
                     showFatalError(response.errorBody(), "logoutOnServer");
                 } else if (response.code() == 401) {

@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:layout_margin="16dp"
     android:minHeight="400dp"
+    android:orientation="vertical"
     tools:context=".activities.MedicineListActivity">
+
     <TextView
         android:id="@+id/spinerTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tìm kiếm"
+        android:text="Nhập đơn thuốc"
         android:textSize="17sp"
         android:textStyle="bold" />
 
@@ -37,22 +38,35 @@
             android:inputType="text" />
 
     </LinearLayout>
-        <ListView
-            android:id="@+id/list_medicine_activity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="400dp"
-            android:scrollbarStyle="outsideOverlay"
-            android:layout_weight="1"
-            />
-        <Button
-            android:id="@+id/btn_select_done"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Chọn"
-            style="@style/custom_button_blue"
-            android:layout_weight="0"
 
-            />
-    </LinearLayout>
+    <ListView
+        android:id="@+id/list_medicine_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:minHeight="400dp"
+        android:scrollbarStyle="outsideOverlay" />
+
+    <TextView
+        android:id="@+id/btn_select_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:clickable="true"
+        android:padding="5dp"
+        android:layout_marginTop="@dimen/input_margin_top"
+        android:text="@string/button_choose_dialog"
+        android:textAllCaps="true"
+        android:textColor="@color/color_blue_800"
+        android:textSize="15dp" />
+
+    <!--<Button-->
+        <!--android:id="@+id/btn_select_done"-->
+        <!--style="@style/custom_button_blue"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_weight="0"-->
+        <!--android:text="Chọn"-->
+        <!--/>-->
+</LinearLayout>

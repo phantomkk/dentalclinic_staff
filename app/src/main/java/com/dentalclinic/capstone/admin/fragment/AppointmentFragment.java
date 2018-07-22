@@ -200,6 +200,7 @@ public class AppointmentFragment extends BaseFragment {
         appointments.add(new Appointment("haha","vo quoc trinh",3,1, new Patient()));
         appointments.add(new Appointment("haha","vo quoc trinh",3,2, new Patient()));
         appointments.add(new Appointment("haha","vo quoc trinh",3,3, new Patient()));
+
     }
 
     private int dp2px(int dp) {

@@ -2,6 +2,7 @@ package com.dentalclinic.capstone.admin.api.services;
 
 import com.dentalclinic.capstone.admin.api.requestobject.PatientProfileRequest;
 import com.dentalclinic.capstone.admin.api.requestobject.ReqAbsentRequest;
+import com.dentalclinic.capstone.admin.api.requestobject.StaffProfileRequest;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.models.Absent;
 import com.dentalclinic.capstone.admin.models.Appointment;
@@ -25,6 +26,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface StaffService {
@@ -63,12 +65,14 @@ public interface StaffService {
             @Query("month") int month,
             @Query("year") int year);
 
-    @GET("api/requestAbsent/delete")
-    Single<Response<List<SuccessResponse>>> deleteRequestAbsent(
-            @Query("staff_id") int staffid,
-            @Query("month") int month,
-            @Query("year") int year);
+//    @GET("api/requestAbsent/delete")
+//    Single<Response<List<SuccessResponse>>> deleteRequestAbsent(
+//            @Query("staff_id") int staffid,
+//            @Query("month") int month,
+//            @Query("year") int year);
 
+    @POST("api/requestAbsent/changeStatusDelete/{id}")
+    Single<Response<SuccessResponse>> deleteRequestAbsent(@Path("id") int reqAbsentId);
 
     @GET("api/staff/getListRequestAbsent")
     Single<Response<List<RequestAbsent>>> getListRequestAbsent(@Query("staff_id") int staffid);
@@ -76,7 +80,7 @@ public interface StaffService {
     @POST("api/staff/requestAbsent")
     Single<Response<Absent>> requestAbsent(@Body ReqAbsentRequest requestObj);
 
-//    @POST("api/staff/updateStaffInfo")
-//    Single<Response<SuccessResponse>> updateStaffInfo(@Body StaffProfileRequest requestObj);
+    @POST("api/staff/updateStaffInfo")
+    Single<Response<SuccessResponse>> updateStaffInfo(@Body StaffProfileRequest requestObj);
 }
 

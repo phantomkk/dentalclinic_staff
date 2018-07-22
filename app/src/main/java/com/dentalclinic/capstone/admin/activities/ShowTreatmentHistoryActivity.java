@@ -31,13 +31,15 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 
-public class ShowTreatmentHistoryActivity extends BaseActivity{
+public class ShowTreatmentHistoryActivity extends BaseActivity {
     private List<TreatmentHistory> treatmentHistories = new ArrayList<>();
     private TreatmentHistoryAdapter mAdapter;
     private ListView mListView;
     private TextView textView;
     private FloatingActionButton btnAddNew;
     private Patient patient;
+    private TextView labelMessage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,10 +54,11 @@ public class ShowTreatmentHistoryActivity extends BaseActivity{
         prepareData();
 
         Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
-        if(bundle!=null){
+        if (bundle != null) {
             patient = (Patient) bundle.getSerializable(AppConst.PATIENT_OBJ);
         }
         textView = findViewById(R.id.txt_label_message);
+        labelMessage = findViewById(R.id.txt_label_message);
         btnAddNew = findViewById(R.id.btn_actions);
         mListView = findViewById(R.id.listView);
         mAdapter = new TreatmentHistoryAdapter(this, treatmentHistories);
@@ -63,7 +66,7 @@ public class ShowTreatmentHistoryActivity extends BaseActivity{
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                showMessage(i+"");
+                showMessage(i + "");
                 TreatmentHistory selectedTreatment = treatmentHistories.get(i);
                 Intent intent = new Intent(ShowTreatmentHistoryActivity.this, CreateTreatmentDetailActivity.class);
                 intent.putExtra(CreateTreatmentDetailActivity.TREATMENT_HISTORY_BUNDLE, selectedTreatment);
@@ -72,7 +75,7 @@ public class ShowTreatmentHistoryActivity extends BaseActivity{
             }
         });
 
-        btnAddNew.setOnClickListener((v)->{
+        btnAddNew.setOnClickListener((v) -> {
             Intent intent = new Intent(ShowTreatmentHistoryActivity.this, CreateTreatmentActivity.class);
             startActivityForResult(intent, 69);
         });
@@ -89,34 +92,39 @@ public class ShowTreatmentHistoryActivity extends BaseActivity{
 
     }
 
-    private void prepareData(){
+    private void prepareData() {
         TreatmentHistoryService service = APIServiceManager.getService(TreatmentHistoryService.class);
-service.getByPatientId(1)
-        .subscribeOn(
-                Schedulers.newThread()
-        )
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new SingleObserver<Response<List<TreatmentHistory>>>() {
-            @Override
-            public void onSubscribe(Disposable d) {
+        service.getByPatientId(1)
+                .subscribeOn(
+                        Schedulers.newThread()
+                )
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<List<TreatmentHistory>>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            }
+                    }
 
-            @Override
-            public void onSuccess(Response<List<TreatmentHistory>> listResponse) {
-                if (listResponse.isSuccessful()) {
-                    treatmentHistories.addAll(listResponse.body());
-                    mAdapter.notifyDataSetChanged();
-                }else{
-                    showMessage("Loi roi");
-                }
-            }
+                    @Override
+                    public void onSuccess(Response<List<TreatmentHistory>> listResponse) {
+                        if (listResponse.isSuccessful()) {
+                            treatmentHistories.addAll(listResponse.body());
+                            mAdapter.notifyDataSetChanged();
+                            if(treatmentHistories.isEmpty()){
+                                labelMessage.setVisibility(View.VISIBLE);
+                            }else{
+                                labelMessage.setVisibility(View.GONE);
+                            }
+                        } else {
+                            showMessage("Loi roi");
+                        }
+                    }
 
-            @Override
-            public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-            }
-        });
+                    }
+                });
 //        treatmentHistories.add(new TreatmentHistory());
 //        treatmentHistories.add(new TreatmentHistory());
 //        treatmentHistories.add(new TreatmentHistory());

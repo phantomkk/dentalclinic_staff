@@ -197,5 +197,6 @@
     <string name="title_activity_test">TestActivity</string>
     <string name="label_date_picker">Lý do</string>
 
+    <string name="button_choose_dialog">Chọn</string>
 
 </resources>

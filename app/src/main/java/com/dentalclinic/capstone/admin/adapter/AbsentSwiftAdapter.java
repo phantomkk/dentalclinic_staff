@@ -47,7 +47,7 @@ public class AbsentSwiftAdapter extends RecyclerView.Adapter<AbsentSwiftAdapter.
                 holder.txtStartDate.setText(DateUtils.changeDateFormat(absent.getStartDate(), DateTimeFormat.DATE_TIME_DB, DateTimeFormat.DATE_FOTMAT));
             }
             if (absent.getEndDate() != null) {
-                holder.txtStartDate.setText(DateUtils.changeDateFormat(absent.getEndDate(), DateTimeFormat.DATE_TIME_DB, DateTimeFormat.DATE_FOTMAT));
+                holder.txtEndDate.setText(DateUtils.changeDateFormat(absent.getEndDate(), DateTimeFormat.DATE_TIME_DB, DateTimeFormat.DATE_FOTMAT));
             }
             if (absent.getReason() != null) {
                 holder.txtReason.setText(absent.getReason());
@@ -60,12 +60,17 @@ public class AbsentSwiftAdapter extends RecyclerView.Adapter<AbsentSwiftAdapter.
             } else {
                 holder.btnDelete.setVisibility(View.GONE);
                 holder.btnView.setVisibility(View.VISIBLE);
-                if (absent.isApproved()) {
-                    holder.txtStatus.setText("Xác Nhân");
-                    holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_green_500));
-                } else {
-                    holder.txtStatus.setText("Đã Hủy");
-                    holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_red_500));
+                switch (absent.getIsApproved()){
+                    case 0:
+                        holder.txtStatus.setText("Đã Hủy");
+                        holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_red_500));
+                        break;
+                    case 1:
+                        holder.txtStatus.setText("Xác Nhân");
+                        holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_green_500));
+                        break;
+                        default:
+                            break;
                 }
             }
         }
