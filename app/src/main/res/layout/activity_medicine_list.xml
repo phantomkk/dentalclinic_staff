@@ -49,7 +49,8 @@
             android:id="@+id/btn_select_done"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trở về"
+            android:layout_marginTop="10dp"
+            android:text="Chọn"
             style="@style/custom_button_blue"
             android:layout_weight="0"
 

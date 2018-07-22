@@ -17,14 +17,20 @@ public class Absent implements Serializable {
     private Staff staffApprove;
     @SerializedName("message_from_staff")
     private String messageFromStaff;
-    @SerializedName("status")
-    private int status=-1;
+    @SerializedName("created_time")
+    private String createdTime;
+    @SerializedName("is_approved")
+    private boolean isApproved;
+
+    public Absent() {
+    }
 
     public Absent(String startDate, String endDate, String reason) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reason = reason;
     }
+
 
     private boolean isExpand=false;
 
@@ -84,11 +90,19 @@ public class Absent implements Serializable {
         this.messageFromStaff = messageFromStaff;
     }
 
-    public int getStatus() {
-        return status;
+    public boolean isApproved() {
+        return isApproved;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setApproved(boolean approved) {
+        isApproved = approved;
+    }
+
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
     }
 }
