@@ -174,7 +174,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/lbl_treatmentstep_slt"
+                    android:id="@+id/lbl_treatmentstep"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"

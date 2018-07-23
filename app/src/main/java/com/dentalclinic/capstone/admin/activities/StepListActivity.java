@@ -22,7 +22,7 @@ public class StepListActivity extends Activity {
     private ListView listView;
     private ArrayAdapter<TreatmentStep> stepAdapter;
 
-    private List<TreatmentStep> treatmentSteps;
+    private ArrayList<TreatmentStep> treatmentSteps;
     private ArrayList<TreatmentStep> currentStep;
 
     @Override
@@ -38,16 +38,19 @@ public class StepListActivity extends Activity {
         if(currentStep ==null){
             currentStep = new ArrayList<>();
         }
-        stepAdapter = new TreatmentStepAdapter(
-                this,
-                treatmentSteps,
-                currentStep
-                );
+        stepAdapter = new TreatmentStepAdapter(this, treatmentSteps, new TreatmentStepAdapter.OnItemClickListener() {
+            @Override
+            public void onCheck(int position, boolean isCheck) {
+                treatmentSteps.get(position).setCheck(isCheck);
+            }
+        });
+
+
         listView.setAdapter(stepAdapter);
 
         btnSelectDone.setOnClickListener((v) -> {
             Intent intent = new Intent();
-            intent.putExtra(CreateTreatmentActivity.CURRENT_STEP, currentStep);
+            intent.putExtra(CreateTreatmentActivity.CURRENT_STEP, treatmentSteps);
             setResult(RESULT_OK, intent);
             finish();
         });

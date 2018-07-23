@@ -66,7 +66,6 @@ public class ShowTreatmentHistoryActivity extends BaseActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                showMessage(i + "");
                 TreatmentHistory selectedTreatment = treatmentHistories.get(i);
                 Intent intent = new Intent(ShowTreatmentHistoryActivity.this, CreateTreatmentDetailActivity.class);
                 intent.putExtra(CreateTreatmentDetailActivity.TREATMENT_HISTORY_BUNDLE, selectedTreatment);

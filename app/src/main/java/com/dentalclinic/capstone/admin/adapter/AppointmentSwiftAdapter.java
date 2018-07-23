@@ -60,6 +60,14 @@ public class AppointmentSwiftAdapter extends RecyclerView.Adapter<AppointmentSwi
                     holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_deep_orange_500));
                     holder.btnTreatment.setVisibility(View.VISIBLE);
                     holder.btnDone.setVisibility(View.VISIBLE);
+                    holder.btnStart.setVisibility(View.GONE);
+                    break;
+                case 3:
+                    holder.txtStatus.setText("Hoàn Thành");
+                    holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_green_500));
+                    holder.btnStart.setVisibility(View.GONE);
+                    holder.btnDone.setVisibility(View.GONE);
+                    holder.btnTreatment.setVisibility(View.GONE);
                     break;
                 default:
                     break;

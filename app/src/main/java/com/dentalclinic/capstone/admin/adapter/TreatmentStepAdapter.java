@@ -8,18 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.dentalclinic.capstone.admin.R;
-import com.dentalclinic.capstone.admin.models.Treatment;
 import com.dentalclinic.capstone.admin.models.TreatmentStep;
+import com.nguyenhoanglam.imagepicker.model.Image;
 
 import java.util.List;
 
 public class TreatmentStepAdapter extends ArrayAdapter<TreatmentStep> {
-    List<TreatmentStep> list;
+    private List<TreatmentStep> list;
 
     private List<TreatmentStep> listCurrentStep;
+
+    public OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onCheck(int position, boolean isCheck);
+    }
 
     private static class ViewHolder {
         public CheckBox chkStep;
@@ -28,13 +35,28 @@ public class TreatmentStepAdapter extends ArrayAdapter<TreatmentStep> {
 
     }
 
+    public void setListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public OnItemClickListener getListener() {
+        return listener;
+    }
+
+    public TreatmentStepAdapter(@NonNull Context context, List<TreatmentStep> list, OnItemClickListener listener) {
+        super(context, 0, list);
+        this.list = list;
+        this.listener = listener;
+    }
+
     public TreatmentStepAdapter(@NonNull Context context,
                                 List<TreatmentStep> list,
-                                List<TreatmentStep> listCurrentStep
-    ) {
+                                List<TreatmentStep> listCurrentStep,
+                                OnItemClickListener listener) {
         super(context, 0, list);
         this.list = list;
         this.listCurrentStep = listCurrentStep;
+        this.listener = listener;
     }
 
     @NonNull
@@ -48,6 +70,8 @@ public class TreatmentStepAdapter extends ArrayAdapter<TreatmentStep> {
             viewHolder.chkStep = convertView.findViewById(R.id.chk_step);
             viewHolder.txtStep = convertView.findViewById(R.id.txt_name_step);
             convertView.setTag(viewHolder);
+
+
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
@@ -55,23 +79,56 @@ public class TreatmentStepAdapter extends ArrayAdapter<TreatmentStep> {
         TreatmentStep step = list.get(position);
         if (step != null) {
 
-            viewHolder.txtStep.setText((step.getName()));
-            if (isInPreviousList(step)) {
+            if (step.getName() != null) {
+                viewHolder.txtStep.setText((step.getName()));
+            }
+            if (step.isCheck()) {
                 viewHolder.chkStep.setChecked(true);
                 viewHolder.checked = true;
-            }else{
+            } else {
                 viewHolder.chkStep.setChecked(false);
                 viewHolder.checked = false;
             }
-            convertView.setOnClickListener((View view) -> {
-                viewHolder.checked = !viewHolder.checked;
-                viewHolder.chkStep.setChecked(viewHolder.checked);
-                if (viewHolder.checked) {
-                    listCurrentStep.add(step);
-                } else {
-                    deleteStep(step );
+//            if (isInPreviousList(step)) {
+//                viewHolder.chkStep.setChecked(true);
+//                viewHolder.checked = true;
+//            }else{
+//                viewHolder.chkStep.setChecked(false);
+//                viewHolder.checked = false;
+//            }
+//
+            viewHolder.chkStep.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onCheck(position, !step.isCheck());
                 }
             });
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (step.isCheck()) {
+                        viewHolder.chkStep.setChecked(false);
+                        viewHolder.checked = false;
+//                        step.setCheck(false);
+                    } else {
+
+                        viewHolder.chkStep.setChecked(true);
+                        viewHolder.checked = true;
+//                        step.setCheck(true);
+                    }
+                    listener.onCheck(position, !step.isCheck());
+                }
+            });
+
+//            convertView.setOnClickListener((View view) -> {
+//                viewHolder.checked = !viewHolder.checked;
+//                viewHolder.chkStep.setChecked(viewHolder.checked);
+//                if (viewHolder.checked) {
+//                    listCurrentStep.add(step);
+//                } else {
+//                    deleteStep(step );
+//                }
+//            });
         }
         return convertView;
 
@@ -85,10 +142,11 @@ public class TreatmentStepAdapter extends ArrayAdapter<TreatmentStep> {
                 break;
             }
         }
-        if (listCurrentStep != null && tmp!=null) {
+        if (listCurrentStep != null && tmp != null) {
             listCurrentStep.remove(tmp);
         }
     }
+
     private boolean isInPreviousList(TreatmentStep a) {
         if (listCurrentStep == null) {
             return false;

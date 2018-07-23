@@ -130,7 +130,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         actPrice.addTextChangedListener(this);
         lblTooth = findViewById(R.id.lbl_tooth_slt);
         lblTreatment = findViewById(R.id.lbl_treatment_slt);
-        lblTreatmentStep = findViewById(R.id.lbl_treatmentstep_slt);
+        lblTreatmentStep = findViewById(R.id.lbl_treatmentstep);
         lblMedicineQuantity = findViewById(R.id.lbl_medicine_slt);
         listTooth = new ArrayList<>();
         btnShowListTooth = findViewById(R.id.btn_list_tooth);
@@ -157,10 +157,11 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 for (Treatment t : listTreatment) {
                     if (t.getId() == treatmentId) {
                         currentTreatment = t;
-//                        crrTreatmentSteps.clear();
-//                        crrTreatmentSteps.addAll(currentTreatment.getTreatmentSteps());
+                        crrTreatmentSteps.clear();
+                        crrTreatmentSteps.addAll(currentTreatment.getTreatmentSteps());
                         lblTreatment.setText(currentTreatment.getName());
 //                        updateTreatmentStepLabel(crrTreatmentSteps);
+//                        crrTreatmentSteps = t.getTreatmentSteps();
                         break;
                     }
                 }
@@ -201,13 +202,12 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         btnShowListTreatmentStep.setOnClickListener((v) -> {
             if (currentTreatment != null) {
                 Intent intent = new Intent(CreateTreatmentActivity.this, StepListActivity.class);
-                intent.putExtra(LIST_STEP, (ArrayList<TreatmentStep>) currentTreatment.getTreatmentSteps());
+                intent.putExtra(LIST_STEP, (ArrayList<TreatmentStep>) crrTreatmentSteps);
                 if (currentTreatment != null && currentTreatment.getTreatmentSteps() != null) {
                     intent.putExtra(CURRENT_STEP, (ArrayList<TreatmentStep>) crrTreatmentSteps);
                 } else {
                     logError("btnShowTreatmentStep", "currentTreatment!=null && currentTreatment.getTreatmentSteps()!=null else");
                 }
-
                 startActivityForResult(intent, REQUEST_CODE_STEP);
             } else {
                 showMessage("Vui lòng chọn loại điều trị");
@@ -286,7 +286,9 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private void updateTreatmentStepLabel(List<TreatmentStep> steps) {
         String stepsStr = "";
         for (TreatmentStep s : steps) {
-            stepsStr += "- "+s.getName() + "\n";
+            if (s.isCheck()) {
+                stepsStr += "- " + s.getName() + "\n";
+            }
         }
         lblTreatmentStep.setText(stepsStr);
     }
@@ -295,7 +297,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private void updateMedicineLabel(List<MedicineQuantity> medicines) {
         String mStr = "";
         for (MedicineQuantity s : medicines) {
-            mStr+= Utils.getMedicineLine(s.getMedicine().getName(), s.getQuantity(), 40)+"\n";
+            mStr += Utils.getMedicineLine(s.getMedicine().getName(), s.getQuantity(), 40) + "\n";
 //            mStr += s.getMedicine().getName() + " ___ " + s.getQuantity() + " viên" + "\n";
         }
         lblMedicineQuantity.setText(mStr);
@@ -316,6 +318,9 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                         crrTreatmentSteps.addAll(list);
                         updateTreatmentStepLabel(crrTreatmentSteps);
                     }
+//                    updateTreatmentStepLabel(crrTreatmentSteps);
+
+
                 }
             } else if (requestCode == REQUEST_CODE_MEDICINE) {
                 if (b != null) {
@@ -556,7 +561,9 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             builder.addFormDataPart("medicine_quantity[]", mq.getQuantity() + "");
         }
         for (TreatmentStep st : crrTreatmentSteps) {
-            builder.addFormDataPart("step_id[]", st.getStepId() + "");
+            if(st.isCheck()) {
+                builder.addFormDataPart("step_id[]", st.getStepId() + "");
+            }
         }
         for (Image image : images) {
             File f = new File(image.getPath());

@@ -15,6 +15,8 @@ public class TreatmentStep implements Serializable {
     @SerializedName("description")
     private String description;
 
+    private boolean isCheck = false;
+
     public TreatmentStep(String name) {
         this.name = name;
     }
@@ -59,5 +61,13 @@ public class TreatmentStep implements Serializable {
 
     public void setTreatmentId(int treatmentId) {
         this.treatmentId = treatmentId;
+    }
+
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
     }
 }
