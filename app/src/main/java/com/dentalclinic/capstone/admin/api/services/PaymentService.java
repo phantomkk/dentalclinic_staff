@@ -1,5 +1,6 @@
 package com.dentalclinic.capstone.admin.api.services;
 
+import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.models.Payment;
 
 import java.util.List;
@@ -24,6 +25,13 @@ public interface PaymentService {
             @Field("payment_client_json") String paymentClientJson
     );
 
+    @FormUrlEncoded
+    @POST("api/payment/updatePaymentPrice")
+    Single<Response<SuccessResponse>> updatePayment(
+            @Field("staff_id") int staffId,
+            @Field("amount") float amount,
+            @Field("payment_id") int paymentId
+    );
 
 
 }

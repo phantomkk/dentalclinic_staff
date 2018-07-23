@@ -3,6 +3,7 @@ package com.dentalclinic.capstone.admin.api.services;
 import com.dentalclinic.capstone.admin.api.requestobject.LoginRequest;
 import com.dentalclinic.capstone.admin.api.requestobject.UpdateUserRequest;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
+import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.User;
 
 import java.util.List;
@@ -48,5 +49,9 @@ public interface UserService {
 
     @GET("api/user/searchListPhone")
     Single<Response<List<String>>> getAllPhone(@Query("keyword") String query);
+
+
+    @GET("api/staff/getAppointmentByMonth")
+    Single<Response<List<Appointment>>> getAppointments(@Query("phone") String phone, String date);
 
 }
