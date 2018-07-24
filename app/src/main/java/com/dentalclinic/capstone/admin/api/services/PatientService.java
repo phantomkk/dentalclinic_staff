@@ -19,6 +19,7 @@ public interface PatientService {
     @GET("api/patient/getByPhone")
     Single<Response<List<Patient>>> getPatientsByPhone(@Query("phone") String phone);
 
+    @FormUrlEncoded
     @POST("api/patient/receive")
     Single<Response<SuccessResponse>> beginTreatment(@Field("patient_id") int patientId);
 }

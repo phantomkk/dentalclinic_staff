@@ -27,11 +27,10 @@ public interface PaymentService {
 
     @FormUrlEncoded
     @POST("api/payment/updatePaymentPrice")
-    Single<Response<SuccessResponse>> updatePayment(
+    Single<Response<List<Payment>>> updatePayment(
+            @Field("patient_phone") String patitentPhone,
             @Field("staff_id") int staffId,
             @Field("amount") float amount,
             @Field("payment_id") int paymentId
     );
-
-
 }
