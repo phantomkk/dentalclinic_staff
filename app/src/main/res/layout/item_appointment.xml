@@ -38,7 +38,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="20"
+                    android:text=""
                     android:textColor="@color/color_black"
                     android:textSize="25dp" />
 
@@ -47,7 +47,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="6"
-                    android:text="Huynh Vo Thien Phuc" />
+                    android:text="\" />
 
                 <TextView
                     android:id="@+id/txt_appointment_status"

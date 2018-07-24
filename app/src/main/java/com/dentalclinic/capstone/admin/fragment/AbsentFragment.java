@@ -48,7 +48,7 @@ import retrofit2.Response;
  * A simple {@link Fragment} subclass.
  */
 public class AbsentFragment extends BaseFragment {
-    FloatingActionButton button;
+    private FloatingActionButton button;
     TextView txtMonthPicker;
     TextView txtLabel;
     RecyclerView recyclerView;

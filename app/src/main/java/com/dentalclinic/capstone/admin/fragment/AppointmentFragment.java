@@ -159,7 +159,7 @@ public class AppointmentFragment extends BaseFragment {
 
     public void prepareData(String dateFormat){
         AppointmentService service = APIServiceManager.getService(AppointmentService.class);
-        service.getApppointmentByDate(CoreManager.getStaff(getContext()).getPhone(), dateFormat)
+        service.getApppointmentByDate(CoreManager.getStaff(getContext()).getId(), dateFormat)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Response<List<Appointment>>>() {
@@ -208,7 +208,7 @@ public class AppointmentFragment extends BaseFragment {
 
     public void callSwifData(String dateFormat){
         AppointmentService service = APIServiceManager.getService(AppointmentService.class);
-        service.getApppointmentByDate(CoreManager.getStaff(getContext()).getPhone(), dateFormat)
+        service.getApppointmentByDate(CoreManager.getStaff(getContext()).getId(), dateFormat)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Response<List<Appointment>>>() {

@@ -198,5 +198,6 @@
     <string name="label_date_picker">Lý do</string>
 
     <string name="button_choose_dialog">Chọn</string>
+    <string name="label_money">Số tiền</string>
 
 </resources>

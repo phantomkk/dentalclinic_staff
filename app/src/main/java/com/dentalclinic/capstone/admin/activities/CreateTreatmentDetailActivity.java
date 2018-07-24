@@ -153,7 +153,7 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
         btnShowListTreatmentStep.setOnClickListener((v) -> {
             if (currentTreatment != null) {
                 Intent intent = new Intent(CreateTreatmentDetailActivity.this, StepListActivity.class);
-                intent.putExtra(LIST_STEP, (ArrayList<TreatmentStep>) currentTreatment.getTreatmentSteps());
+                intent.putExtra(LIST_STEP, (ArrayList<TreatmentStep>) crrTreatmentSteps);
                 if (currentTreatment != null && currentTreatment.getTreatmentSteps() != null) {
                     intent.putExtra(CURRENT_STEP, (ArrayList<TreatmentStep>) crrTreatmentSteps);
                 } else {
@@ -233,7 +233,9 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
     private void updateTreatmentStepLabel(List<TreatmentStep> steps) {
         String stepsStr = "";
         for (TreatmentStep s : steps) {
-            stepsStr += s.getName() + "\n";
+            if (s.isCheck()) {
+                stepsStr += "- " + s.getName() + "\n";
+            }
         }
         lblTreatmentStep.setText(stepsStr);
     }
@@ -414,7 +416,9 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
             builder.addFormDataPart("medicine_quantity[]", mq.getQuantity() + "");
         }
         for (TreatmentStep st : crrTreatmentSteps) {
-            builder.addFormDataPart("step_id[]", st.getStepId() + "");
+            if(st.isCheck()) {
+                builder.addFormDataPart("step_id[]", st.getStepId() + "");
+            }
         }
         for (Image image : images) {
             File f = new File(image.getPath());

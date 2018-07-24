@@ -170,6 +170,7 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
                                 if (list != null) {
                                     Intent intent = new Intent(PatientDetailActivity.this, PatientPaymentActivity.class);
                                     intent.putExtra(LIST_PAYMENT, list);
+                                    intent.putExtra(AppConst.PHONE, txtPhone.getText());
                                     startActivity(intent);
                                 } else if (listResponse.code() == 500) {
                                     showFatalError(listResponse.errorBody(), "prepareData");
