@@ -16,6 +16,6 @@ public interface HistoryTreatmentService {
     @GET("api/treatmentHistory/{phone}")
     Single<Response<List<TreatmentHistory>>> getHistoryTreatmentByPhone(@Path("phone") String phone);
 
-    @GET("api/treatmentHistory/getById/{id}")
+    @GET("api/treatmentHistory/getByPatientId/{id}")
     Single<Response<List<TreatmentHistory>>> getHistoryTreatmentById(@Path("id") int id);
 }
