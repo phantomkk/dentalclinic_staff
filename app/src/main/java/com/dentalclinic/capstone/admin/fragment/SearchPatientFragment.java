@@ -36,6 +36,8 @@ import com.dentalclinic.capstone.admin.activities.PatientDetailActivity;
 import com.dentalclinic.capstone.admin.adapter.PatientAdapter;
 import com.dentalclinic.capstone.admin.adapter.PatientSwiftAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
+import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
+import com.dentalclinic.capstone.admin.api.services.PatientService;
 import com.dentalclinic.capstone.admin.api.services.UserService;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.utils.AppConst;
@@ -121,7 +123,7 @@ public class SearchPatientFragment extends BaseFragment {
 
 
         //button payment
-        btnNewPayment =  new FloatingActionButton(getContext());
+        btnNewPayment = new FloatingActionButton(getContext());
         btnNewPayment.setTitle("Thanh Toán");
         btnNewPayment.setIconDrawable(getResources().getDrawable(R.drawable.ic_payment_payment_24dp));
         btnNewPayment.setColorNormal(getResources().getColor(R.color.color_yellow_600));
@@ -133,7 +135,7 @@ public class SearchPatientFragment extends BaseFragment {
             }
         });
 
-        menuMultipleActions =view.findViewById(R.id.multiple_actions);
+        menuMultipleActions = view.findViewById(R.id.multiple_actions);
         menuMultipleActions.addButton(btnNewAppointment);
         menuMultipleActions.addButton(btnNewPayment);
         menuMultipleActions.addButton(btnNewPatient);
@@ -220,19 +222,58 @@ public class SearchPatientFragment extends BaseFragment {
 //            }
 //        });
 
-        recyclerView= view.findViewById(R.id.listView);
+        recyclerView = view.findViewById(R.id.listView);
         mAdapter = new PatientSwiftAdapter(getContext(), patients);
         mAdapter.setOnDelListener(new PatientSwiftAdapter.onSwipeListener() {
             @Override
             public void onTreatment(int pos) {
+
                 if (pos >= 0 && pos < patients.size()) {
 //                    Toast.makeText(FullDelDemoActivity.this, "删除:" + pos, Toast.LENGTH_SHORT).show();
-                    patients.remove(pos);
-                    mAdapter.notifyItemRemoved(pos);//推荐用这个
+//                    patients.remove(pos);
+//                    mAdapter.notifyItemRemoved(pos);//推荐用这个
                     //如果删除时，不使用mAdapter.notifyItemRemoved(pos)，则删除没有动画效果，
                     //且如果想让侧滑菜单同时关闭，需要同时调用 ((SwipeMenuLayout) holder.itemView).quickClose();
                     //mAdapter.notifyDataSetChanged();
-                    showMessage("delete");
+//                    showMessage("delete");
+//                }
+                    showLoading();
+                    PatientService service = APIServiceManager.getService(PatientService.class);
+                    service.beginTreatment(patients.get(pos).getId())
+                            .subscribeOn(Schedulers.newThread())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<Response<SuccessResponse>>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(Response<SuccessResponse> response) {
+                                    if (response.isSuccessful()) {
+                                        if(response.body()!=null){
+                                            logError("ABC","CCC");
+                                            showSuccessMessage(response.body().getMessage());
+                                        }
+                                    } else if (response.code() == 500) {
+                                        showFatalError(response.errorBody(), "mAdapter.setOnDelListener");
+                                    } else if (response.code() == 401) {
+                                        showErrorUnAuth();
+                                    } else if (response.code() == 400) {
+                                        showBadRequestError(response.errorBody(), "mAdapter.setOnDelListener");
+                                    } else {
+                                        showDialog(getString(R.string.error_message_api));
+                                    }
+                                    hideLoading();
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    e.printStackTrace();
+                                    showErrorMessage(getString(R.string.error_message_api));
+                                    hideLoading();
+                                }
+                            });
                 }
             }
 
@@ -248,11 +289,11 @@ public class SearchPatientFragment extends BaseFragment {
 //                        mRv.scrollToPosition(0);
 //                    }
                     //notifyItemRangeChanged(0,holder.getAdapterPosition()+1);
-                Intent intent = new Intent(getContext(), PatientDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(AppConst.PATIENT_OBJ, patients.get(pos));
-                intent.putExtra(AppConst.BUNDLE, bundle);
-                startActivity(intent);
+                    Intent intent = new Intent(getContext(), PatientDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(AppConst.PATIENT_OBJ, patients.get(pos));
+                    intent.putExtra(AppConst.BUNDLE, bundle);
+                    startActivity(intent);
 
                 }
             }
@@ -277,7 +318,6 @@ public class SearchPatientFragment extends BaseFragment {
         });
 
 
-
         return view;
     }
 
@@ -290,37 +330,40 @@ public class SearchPatientFragment extends BaseFragment {
 
     }
 
-    public void removeAllButton(){
+    public void removeAllButton() {
         btnNewPatient.setVisibility(View.GONE);
         btnNewPayment.setVisibility(View.GONE);
         btnNewAppointment.setVisibility(View.GONE);
     }
-    public void addButtonNewPatient(){
+
+    public void addButtonNewPatient() {
         btnNewPatient.setVisibility(View.VISIBLE);
     }
-    public void removeButtonNewPatient(){
+
+    public void removeButtonNewPatient() {
 //        btnNewPatient.setEnabled(false);
         btnNewPatient.setVisibility(View.GONE);
     }
 
-    public void addButtonPayment(){
+    public void addButtonPayment() {
         btnNewPayment.setVisibility(View.VISIBLE);
 
     }
-    public void removeButtonPayment(){
+
+    public void removeButtonPayment() {
         btnNewPayment.setVisibility(View.GONE);
 
     }
 
-    public void addButtonAppointment(){
+    public void addButtonAppointment() {
         btnNewAppointment.setVisibility(View.VISIBLE);
     }
 
-    public void removeButtonAppointment(){
+    public void removeButtonAppointment() {
         btnNewAppointment.setVisibility(View.GONE);
     }
 
-    public void enableAllButton(){
+    public void enableAllButton() {
         btnNewPatient.setEnabled(true);
         btnNewPayment.setEnabled(true);
         btnNewAppointment.setEnabled(true);
@@ -334,10 +377,10 @@ public class SearchPatientFragment extends BaseFragment {
         patients.add(new Patient("Vo Quoc Trinh", "1996-10-01", "OTHER"));
     }
 
-    public void setPatientsAndNotifiAdapter(List<Patient> patientList){
-        if(patientList.isEmpty()){
+    public void setPatientsAndNotifiAdapter(List<Patient> patientList) {
+        if (patientList.isEmpty()) {
             textView.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             textView.setVisibility(View.GONE);
         }
         patients.clear();
