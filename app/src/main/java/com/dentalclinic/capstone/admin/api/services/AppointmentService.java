@@ -23,7 +23,7 @@ public interface AppointmentService {
     Single<Response<List<Appointment>>> bookAppointment(@Body AppointmentRequest appointmentRequest);
 
     @GET("api/staff/getPatientAppointmentByDate")
-    Single<Response<List<Appointment>>> getApppointmentByDate(@Query("phone") String phone, @Query("date") String date);
+    Single<Response<List<Appointment>>> getApppointmentByDate(@Query("staff_id") int staffId, @Query("date") String date);
 
     @FormUrlEncoded
     @POST("api/appointment/updateStatus")

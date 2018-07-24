@@ -379,7 +379,7 @@ public class MainActivity extends BaseActivity
             MyAccoutFragment newFragment = new MyAccoutFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, newFragment).commit();
         } else if (id == R.id.nav_log_out) {
-            logoutOnServer();
+//            logoutOnServer();
             CoreManager.clearStaff(MainActivity.this);
         }
 
