@@ -42,8 +42,8 @@ public class Staff implements Serializable {
     private String accessToken;
     @SerializedName("refresh_token")
     private String refreshToken;
-    @SerializedName("expiration_date")
-    private String expirationDate;
+    @SerializedName("token_created_date")
+    private String tokenCreatedDate;
 
 
     public Staff() {
@@ -201,11 +201,12 @@ public class Staff implements Serializable {
         this.districtId = districtId;
     }
 
-    public String getExpirationDate() {
-        return expirationDate;
+
+    public String getTokenCreatedDate() {
+        return tokenCreatedDate;
     }
 
-    public void setExpirationDate(String expirationDate) {
-        this.expirationDate = expirationDate;
+    public void setTokenCreatedDate(String tokenCreatedDate) {
+        this.tokenCreatedDate = tokenCreatedDate;
     }
 }
