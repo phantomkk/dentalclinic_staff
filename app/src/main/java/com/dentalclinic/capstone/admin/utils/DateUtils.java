@@ -1,5 +1,7 @@
 package com.dentalclinic.capstone.admin.utils;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -15,6 +17,10 @@ public class DateUtils {
      */
     public static String changeDateFormat(String source, DateTimeFormat srcFormat, DateTimeFormat targetFormat){
         try {
+            if (source == null || source.trim().length() == 0) {
+                Log.d("DEBUG_TAG", "DateUtils.changeDateFormat() source is null");
+                return "";
+            }
             SimpleDateFormat smpSrc = new SimpleDateFormat(srcFormat.toString(), Locale.US);
             Date srcDate = smpSrc.parse(source);
             SimpleDateFormat smpTarget = new SimpleDateFormat(targetFormat.toString(), Locale.US);

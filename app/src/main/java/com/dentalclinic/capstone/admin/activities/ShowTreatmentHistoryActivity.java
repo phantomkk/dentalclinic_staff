@@ -69,6 +69,7 @@ public class ShowTreatmentHistoryActivity extends BaseActivity {
                 TreatmentHistory selectedTreatment = treatmentHistories.get(i);
                 Intent intent = new Intent(ShowTreatmentHistoryActivity.this, CreateTreatmentDetailActivity.class);
                 intent.putExtra(CreateTreatmentDetailActivity.TREATMENT_HISTORY_BUNDLE, selectedTreatment);
+                intent.putExtra("PATIENT_BUNDLE", patient);
                 ////////dummy request code
                 startActivityForResult(intent, 99);
             }
@@ -76,6 +77,8 @@ public class ShowTreatmentHistoryActivity extends BaseActivity {
 
         btnAddNew.setOnClickListener((v) -> {
             Intent intent = new Intent(ShowTreatmentHistoryActivity.this, CreateTreatmentActivity.class);
+
+            intent.putExtra("PATIENT_BUNDLE", patient);
             startActivityForResult(intent, 69);
         });
 

@@ -31,8 +31,10 @@ public class TreatmentDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_treatment_detail);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.side_nav_bar));
+        if(getSupportActionBar()!=null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.side_nav_bar));
+        }
 //        prepareData();
         Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
         if(bundle!=null){

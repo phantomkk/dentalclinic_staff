@@ -14,8 +14,10 @@ public class AppointmentRequest implements Serializable {
     private String note;
     @SerializedName("name")
     private String fullname;
-    @SerializedName("staff_id")
-    private String staffId;
+    @SerializedName("dentist_id")
+    private String staffId = null;
+    @SerializedName("patient_id")
+    private String patientId = null;
     @SerializedName("estimated_time")
     private String estimatedTime;
 
@@ -68,5 +70,13 @@ public class AppointmentRequest implements Serializable {
 
     public void setEstimatedTime(String estimatedTime) {
         this.estimatedTime = estimatedTime;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
     }
 }

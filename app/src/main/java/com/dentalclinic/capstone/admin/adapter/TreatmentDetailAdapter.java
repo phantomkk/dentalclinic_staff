@@ -79,7 +79,8 @@ public class TreatmentDetailAdapter extends ArrayAdapter<TreatmentDetail> {
                 viewHolder.mDentistName.setText(treatmentDetail.getDentist().getName());
                 Picasso.get().load(treatmentDetail.getDentist().getAvatar()).into(viewHolder.imgDentistAvatar);
             }
-            viewHolder.mDate.setText(DateUtils.changeDateFormat(treatmentDetail.getCreatedDate(), DateTimeFormat.DATE_TIME_DB, DateTimeFormat.DATE_FOTMAT));
+            viewHolder.mDate.setText(
+                    DateUtils.changeDateFormat(treatmentDetail.getCreatedDate(), DateTimeFormat.DATE_TIME_DB, DateTimeFormat.DATE_FOTMAT));
             String step = "";
             if (treatmentDetail.getSteps() != null) {
                 if (treatmentDetail.getSteps().isEmpty()) {

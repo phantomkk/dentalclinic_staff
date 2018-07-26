@@ -1,6 +1,7 @@
 package com.dentalclinic.capstone.admin.fragment;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ajithvgiri.searchdialog.SearchableDialog;
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.activities.BookAppointmentReceptActivity;
 import com.dentalclinic.capstone.admin.activities.CreatePatientActivity;
@@ -40,7 +43,9 @@ import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.api.services.PatientService;
 import com.dentalclinic.capstone.admin.api.services.UserService;
 import com.dentalclinic.capstone.admin.models.Patient;
+import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.utils.AppConst;
+import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
@@ -62,11 +67,14 @@ public class SearchPatientFragment extends BaseFragment {
     private FloatingActionsMenu menuMultipleActions;
     private FloatingActionButton btnNewPatient, btnNewAppointment, btnNewPayment;
     private List<Patient> patients = new ArrayList<>();
+    private Staff currentStaff;
     private PatientSwiftAdapter mAdapter;
     private RecyclerView recyclerView;
     private TextView textView;
     private LinearLayoutManager mLayoutManager;
     private String phone;
+    public static final String PATIENT_INFO = "PATIENT_INFO";
+    public static final String STAFF_INFO = "STAFF_INFO";
 
     public SearchPatientFragment() {
         // Required empty public constructor
@@ -140,6 +148,9 @@ public class SearchPatientFragment extends BaseFragment {
         menuMultipleActions.addButton(btnNewPayment);
         menuMultipleActions.addButton(btnNewPatient);
         removeAllButton();
+        if (getContext() != null) {
+            currentStaff = CoreManager.getStaff(getContext());
+        }
 //        prepareData();
 //        mListVi
 // ew = (SwipeMenuListView) view.findViewById(R.id.listView);
@@ -238,6 +249,7 @@ public class SearchPatientFragment extends BaseFragment {
 //                    showMessage("delete");
 //                }
                     showLoading();
+                    Patient crrPatient = patients.get(pos);
                     PatientService service = APIServiceManager.getService(PatientService.class);
                     service.beginTreatment(patients.get(pos).getId())
                             .subscribeOn(Schedulers.newThread())
@@ -251,10 +263,22 @@ public class SearchPatientFragment extends BaseFragment {
                                 @Override
                                 public void onSuccess(Response<SuccessResponse> response) {
                                     if (response.isSuccessful()) {
-                                        if(response.body()!=null){
-                                            logError("ABC","CCC");
+                                        if (response.body() != null) {
+                                            logError("ABC", "CCC");
                                             showSuccessMessage(response.body().getMessage());
                                         }
+                                    } else if (response.code() == 417) {
+                                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext())
+                                                .setMessage("Bạn có muốn tạo lịch hẹn")
+                                                .setPositiveButton("Tạo", (DialogInterface dialogInterface, int i) -> {
+                                                    Intent intent = new Intent(getContext(), BookAppointmentReceptActivity.class);
+                                                    intent.putExtra(SearchPatientFragment.PATIENT_INFO, crrPatient);
+                                                    if (currentStaff != null) {
+                                                        intent.putExtra(SearchPatientFragment.STAFF_INFO, currentStaff);
+                                                    }
+                                                    startActivity(intent);
+                                                });
+                                        alertDialog.show();
                                     } else if (response.code() == 500) {
                                         showFatalError(response.errorBody(), "mAdapter.setOnDelListener");
                                     } else if (response.code() == 401) {

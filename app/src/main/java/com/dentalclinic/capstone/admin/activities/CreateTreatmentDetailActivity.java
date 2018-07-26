@@ -140,10 +140,12 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
         selectedMedicine = new ArrayList<>();
         adapter = new ToothSpinnerAdapter(this, android.R.layout.simple_spinner_item, listTooth);
         if (getIntent() != null) {
+                currentPatient = (Patient) getIntent().getSerializableExtra(PATIENT_BUNDLE);
             currentTreatmentHistory = (TreatmentHistory) getIntent().getSerializableExtra(TREATMENT_HISTORY_BUNDLE);
             if (currentTreatmentHistory != null) {
                 currentTooth = currentTreatmentHistory.getTooth();
                 currentTreatment = currentTreatmentHistory.getTreatment();
+                treatmentHistoryId = currentTreatmentHistory.getId();
                 crrTreatmentSteps = currentTreatmentHistory.getTreatment() != null ?
                         currentTreatmentHistory.getTreatment().getTreatmentSteps() : null;
                 lblTreatment.setText(currentTreatment.getName());
@@ -408,8 +410,8 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
         MultipartBody.Builder builder = new MultipartBody.Builder();
         builder.setType(MultipartBody.FORM);
         builder.addFormDataPart("treatment_history_id", treatmentHistoryId + "");
-        builder.addFormDataPart("staff_id", "5");
-        builder.addFormDataPart("patient_id", "1");
+        builder.addFormDataPart("staff_id", s.getId() + "");
+        builder.addFormDataPart("patient_id", currentPatient.getId()+"");
         builder.addFormDataPart("detail_note", actTmDetailNote.getText().toString() + " ");
         for (MedicineQuantity mq : selectedMedicine) {
             builder.addFormDataPart("medicine_id[]", mq.getMedicineId() + "");

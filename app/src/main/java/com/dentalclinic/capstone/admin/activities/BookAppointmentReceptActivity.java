@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -28,6 +29,7 @@ import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.requestobject.AppointmentRequest;
 import com.dentalclinic.capstone.admin.api.services.AppointmentService;
 import com.dentalclinic.capstone.admin.api.services.StaffService;
+import com.dentalclinic.capstone.admin.fragment.SearchPatientFragment;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Staff;
@@ -67,8 +69,8 @@ public class BookAppointmentReceptActivity extends BaseActivity {
     private Staff currentDentist;
     private RadioButton rbtDefault, rbtDoctor;
     private LinearLayout linearLayout;
-    private Animation slideDown ;
-    private Animation slideUp ;
+    private Animation slideDown;
+    private Animation slideUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,11 @@ public class BookAppointmentReceptActivity extends BaseActivity {
             getSupportActionBar().setBackgroundDrawable(
                     ContextCompat.getDrawable(BookAppointmentReceptActivity.this, R.drawable.side_nav_bar)
             );
+        }
+        Intent i = getIntent();
+        if (i != null) {
+            patient = (Patient) i.getSerializableExtra(SearchPatientFragment.PATIENT_INFO);
+            currentDentist = (Staff) i.getSerializableExtra(SearchPatientFragment.STAFF_INFO);
         }
         slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
         slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
@@ -117,6 +124,10 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         btnShowListDentist = findViewById(R.id.btn_list_dentist);
         comtvNote = findViewById(R.id.comtv_content_book_appt);
         tvPhone.clearFocus();
+        if (patient != null) {
+            tvFullname.setText(patient.getName());
+            tvPhone.setText(patient.getPhone());
+        }
         if (listDentist == null) {
             listDentist = new ArrayList<>();
         }
@@ -211,16 +222,19 @@ public class BookAppointmentReceptActivity extends BaseActivity {
                 DateTimeFormat.DATE_APP,
                 DateTimeFormat.DATE_TIME_DB);
         int estimatedTime = Integer.parseInt(tvEstimatedTime.getText().toString());
-        logError("LOG_ABC",estimatedTime +"");
+        logError("LOG_ABC", estimatedTime + "");
         String time = getTimeInStr(estimatedTime);
         AppointmentRequest request = new AppointmentRequest();
         request.setDate(bookingDate);
         request.setNote(note);
         request.setFullname(name);
         request.setPhone(phone);
+        if (patient != null) {
+            request.setPatientId(patient.getId() + "");
+            logError("METHOD", "PATINET ko null" );
+        }
         if (currentDentist != null) {
-            int dentistId = currentDentist.getId();
-            request.setStaffId(dentistId + "");
+            request.setStaffId(currentDentist.getId() + "");
         }
         request.setEstimatedTime(time);
         return request;
@@ -233,13 +247,13 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         int minute = number % 60;
         if (hour < 10) {
             hoursInStr = "0" + hour;
-        }else{
+        } else {
             hoursInStr = hour + "";
         }
         if (minute < 10) {
             minInStr = "0" + minute;
-        }else{
-            minInStr = minute +"";
+        } else {
+            minInStr = minute + "";
         }
         return hoursInStr + ":" + minInStr + ":00";
     }

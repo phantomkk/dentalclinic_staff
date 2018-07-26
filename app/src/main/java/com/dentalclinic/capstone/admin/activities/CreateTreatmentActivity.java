@@ -146,7 +146,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         selectedMedicine = new ArrayList<>();
         adapter = new ToothSpinnerAdapter(this, android.R.layout.simple_spinner_item, listTooth);
         if (getIntent() != null) {
-//            currentPatient = (Patient) getIntent().getSerializableExtra(PATIENT_BUNDLE);
+            currentPatient = (Patient) getIntent().getSerializableExtra(PATIENT_BUNDLE);
         }
         listItemsTreatment = convertTreatmentList(listTreatment);
         searchableDialogTreatment = new SearchableDialog(this, listItemsTreatment, "Chọn điều trị");
@@ -157,6 +157,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 for (Treatment t : listTreatment) {
                     if (t.getId() == treatmentId) {
                         currentTreatment = t;
+                        treatmentHistoryId = currentTreatment.getId();
                         crrTreatmentSteps.clear();
                         crrTreatmentSteps.addAll(currentTreatment.getTreatmentSteps());
                         lblTreatment.setText(currentTreatment.getName());
@@ -523,14 +524,14 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
 //            showErrorMessage("Vui lòng chọn loại răng");
 //            return;
 //        }
-//        if (s == null) {
-//            showErrorMessage("Không tìm thấy thông tin đăng nhập");
-//            return;
-//        }
-//        if (currentPatient == null) {
-//            showErrorMessage("Không tìm thấy bệnh nhân");
-//            return;
-//        }
+        if (s == null) {
+            showErrorMessage("Không tìm thấy thông tin đăng nhập");
+            return;
+        }
+        if (currentPatient == null) {
+            showErrorMessage("Không tìm thấy bệnh nhân");
+            return;
+        }
         String price = actPrice.getText().toString().replaceAll("[đ,.]", "").trim();
         if (price.length() == 0 || price.equals("0")) {
             showErrorMessage("Vui lòng nhập giá");
@@ -550,8 +551,8 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         builder.setType(MultipartBody.FORM);
         builder.addFormDataPart("treatment_id", currentTreatment.getId() + "");
         builder.addFormDataPart("treatment_history_id", treatmentHistoryId + "");
-        builder.addFormDataPart("staff_id", "5");
-        builder.addFormDataPart("patient_id", "1");
+        builder.addFormDataPart("staff_id", s.getId()+"");
+        builder.addFormDataPart("patient_id", currentPatient.getId()+"");
         builder.addFormDataPart("description", actTmHistoryDescription.getText().toString().trim() + "");
         builder.addFormDataPart("detail_note", actTmDetailNote.getText().toString() + "");
         builder.addFormDataPart("tooth_number", currentTooth.getToothNumber() + "");

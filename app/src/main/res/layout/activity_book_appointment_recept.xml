@@ -77,7 +77,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
-                        android:text="Chọn Bác Sĩ" />
+                        android:text="Chọn nha Sĩ" />
                 </RadioGroup>
 
                 <LinearLayout
