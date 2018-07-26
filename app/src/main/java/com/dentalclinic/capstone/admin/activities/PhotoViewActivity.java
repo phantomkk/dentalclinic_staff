@@ -29,6 +29,7 @@ public class PhotoViewActivity extends AppCompatActivity {
         }
         Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
         TreatmentImage image = (TreatmentImage) bundle.getSerializable(AppConst.IMAGE_OBJ);
+
         if(image!=null){
             PhotoView photoView = findViewById(R.id.iv_photo);
             Glide.with(this)

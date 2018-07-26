@@ -24,25 +24,39 @@ import java.util.List;
 public class ImageFileAdapter extends RecyclerView.Adapter<ImageFileAdapter.ImageViewHolder> {
 
     private Context context;
-    private List<Image> images;
+//    private List<Image> images;
+    private List<String> images;
     private LayoutInflater inflater;
     private List<TreatmentImage> treatmentImages;
     private final OnItemClickListener listener;
 
+//    public interface OnItemClickListener {
+//        void onItemClick(Image item, int position);
+//        void onItemDelete(Image item, int position);
+//    }
     public interface OnItemClickListener {
-        void onItemClick(Image item, int position);
-        void onItemDelete(Image item, int position);
+        void onItemClick(String item, int position);
+        void onItemDelete(String item, int position);
     }
 
-
-    public ImageFileAdapter(Context context, ArrayList<Image> images, OnItemClickListener listener) {
+//
+//    public ImageFileAdapter(Context context, ArrayList<Image> images, OnItemClickListener listener) {
+//        this.context = context;
+//        inflater = LayoutInflater.from(context);
+//        this.images = images;
+//        this.listener = listener;
+//    }
+    public ImageFileAdapter(Context context, ArrayList<String> images, OnItemClickListener listener) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.images = images;
         this.listener = listener;
     }
 
-//    public ImageFileAdapter(Context context, List<TreatmentImage> treatmentImages, OnItemClickListener listener) {
+
+
+
+    //    public ImageFileAdapter(Context context, List<TreatmentImage> treatmentImages, OnItemClickListener listener) {
 //        this.context = context;
 //        inflater = LayoutInflater.from(context);
 //        this.treatmentImages = treatmentImages;
@@ -62,9 +76,9 @@ public class ImageFileAdapter extends RecyclerView.Adapter<ImageFileAdapter.Imag
 
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
-        final Image image = images.get(position);
+        final String image = images.get(position);
         Glide.with(context)
-                .load(image.getPath())
+                .load(image)
                 .apply(new RequestOptions().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder))
                 .into(holder.imageView);
         holder.button.setOnClickListener(new View.OnClickListener() {
@@ -89,8 +103,15 @@ public class ImageFileAdapter extends RecyclerView.Adapter<ImageFileAdapter.Imag
     public int getItemCount() {
         return images.size();
     }
-
-    public void setData(List<Image> images) {
+//
+//    public void setData(List<Image> images) {
+//        this.images.clear();
+//        if (images != null) {
+//            this.images.addAll(images);
+//        }
+//        notifyDataSetChanged();
+//    }
+    public void setData(List<String> images) {
         this.images.clear();
         if (images != null) {
             this.images.addAll(images);
@@ -108,7 +129,7 @@ public class ImageFileAdapter extends RecyclerView.Adapter<ImageFileAdapter.Imag
             button = itemView.findViewById(R.id.btn_delete_image);
         }
 
-        public void bind(final Image item,int position, final OnItemClickListener listener) {
+        public void bind(final String item,int position, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     listener.onItemClick(item, position);

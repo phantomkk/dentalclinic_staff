@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ajithvgiri.searchdialog.OnSearchItemSelected;
 import com.ajithvgiri.searchdialog.SearchListItem;
@@ -47,6 +50,8 @@ import com.dentalclinic.capstone.admin.models.TreatmentStep;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.Utils;
+import com.fxn.pix.Pix;
+import com.fxn.utility.PermUtil;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
@@ -242,23 +247,25 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         btnImagePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                start();
+//                start();
+                Pix.start(CreateTreatmentActivity.this, 100, 5);
+
             }
         });
 
         imageAdapter = new ImageFileAdapter(this, images,
                 new ImageFileAdapter.OnItemClickListener() {
                     @Override
-                    public void onItemClick(Image item, int position) {
+                    public void onItemClick(String item, int position) {
                         Intent intent = new Intent(CreateTreatmentActivity.this, PhotoViewActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(AppConst.IMAGE_OBJ, new TreatmentImage(images.get(position).getPath()));
+                        bundle.putSerializable(AppConst.IMAGE_OBJ, new TreatmentImage(item));
                         intent.putExtra(AppConst.BUNDLE, bundle);
                         startActivity(intent);
                     }
 
                     @Override
-                    public void onItemDelete(Image item, int position) {
+                    public void onItemDelete(String item, int position) {
                         imageAdapter.deleteItem(position);
                     }
                 });
@@ -267,17 +274,17 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         recyclerView.setAdapter(imageAdapter);
     }
 
-    private ArrayList<Image> images = new ArrayList<>();
+    private ArrayList<String> images = new ArrayList<>();
 
     private void start() {
-
-        ImagePicker.with(this)
-                .setFolderMode(false)
-                .setCameraOnly(false)
-                .setMultipleMode(true)
-                .setSelectedImages(images)
-                .setMaxSize(10)
-                .start();
+//
+//        ImagePicker.with(this)
+//                .setFolderMode(false)
+//                .setCameraOnly(false)
+//                .setMultipleMode(true)
+//                .setSelectedImages(images)
+//                .setMaxSize(10)
+//                .start();
     }
 
     private void clearTreatmentStepLabel() {
@@ -335,10 +342,22 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 }
             }
         }
+//
+//        if (requestCode == Config.RC_PICK_IMAGES && resultCode == Activity.RESULT_OK && data != null) {
+//            images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
+//            imageAdapter.setData(images);
+//        }
 
-        if (requestCode == Config.RC_PICK_IMAGES && resultCode == Activity.RESULT_OK && data != null) {
-            images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
-            imageAdapter.setData(images);
+        if (requestCode == 100) {
+            if (resultCode == Activity.RESULT_OK) {
+                ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+                imageAdapter.setData(returnValue);
+//                for (String s : returnValue) {
+//                    Log.e("val", " ->  " + s);
+//                }*
+//                images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
+//                imageAdapter.setData(images);
+            }
         }
     }
 
@@ -562,14 +581,14 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             builder.addFormDataPart("medicine_quantity[]", mq.getQuantity() + "");
         }
         for (TreatmentStep st : crrTreatmentSteps) {
-            if(st.isCheck()) {
+            if (st.isCheck()) {
                 builder.addFormDataPart("step_id[]", st.getStepId() + "");
             }
         }
-        for (Image image : images) {
-            File f = new File(image.getPath());
-            builder.addFormDataPart("images[]", image.getName(), RequestBody.create(MediaType.parse("image/*"), f));
-        }
+//        for (Image image : images) {
+//            File f = new File(image.getPath());
+//            builder.addFormDataPart("images[]", image.getName(), RequestBody.create(MediaType.parse("image/*"), f));
+//        }
         MultipartBody requestBody = builder.build();
         TreatmentHistoryService service = APIServiceManager.getService(TreatmentHistoryService.class);
         showLoading();
@@ -708,5 +727,21 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Pix.start(CreateTreatmentActivity.this, 100, 5);
+                } else {
+                    Toast.makeText(CreateTreatmentActivity.this, "Vui lòng xác nhận quyền truy cập để chọn ảnh", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
     }
 }

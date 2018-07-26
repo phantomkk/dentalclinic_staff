@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Pix</string>
+    <string name="selection_limiter_pix">Không thể chọn thêm %d ảnh.</string>
+    <string name="message_to_drag_up">Trượt ảnh để chọn thư viện</string>
+    <string name="pix_ok">Chọn</string>
+    <string name="pix_tap_to_select">Chạm ảnh để chọn</string>
+    <string name="pix_selected">Chọn</string>
+    <string name="pix_recent">Vừa xảy ra</string>
+    <string name="pix_last_month">Tháng trước</string>
+    <string name="pix_last_week">Tuần trước</string>
+</resources>

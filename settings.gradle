@@ -1,1 +1,1 @@
-include ':app', ':searchdialog'
+include ':app', ':searchdialog', ':pix'
