@@ -41,13 +41,17 @@ public class DateUtils {
      * @return
      */
     public static Date getDate(String source, DateTimeFormat srcFormat){
-        try {
-            SimpleDateFormat smpSrc = new SimpleDateFormat(srcFormat.toString(), Locale.US);
-            Date targetDate = smpSrc.parse(source);
-            return targetDate;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
+        if(source == null){
+            return new Date();
+        }else {
+            try {
+                SimpleDateFormat smpSrc = new SimpleDateFormat(srcFormat.toString(), Locale.US);
+                Date targetDate = smpSrc.parse(source);
+                return targetDate;
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 
