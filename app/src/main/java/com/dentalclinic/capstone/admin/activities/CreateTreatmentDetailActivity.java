@@ -436,10 +436,10 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
                 builder.addFormDataPart("step_id[]", st.getStepId() + "");
             }
         }
-//        for (Image image : images) {
-//            File f = new File(image.getPath());
-//            builder.addFormDataPart("images[]", image.getName(), RequestBody.create(MediaType.parse("image/*"), f));
-//        }
+        for (String image : images) {
+            File f = new File(image);
+            builder.addFormDataPart("images[]", f.getName(), RequestBody.create(MediaType.parse("image/*"), f));
+        }
         MultipartBody requestBody = builder.build();
         TreatmentDetailService service = APIServiceManager.getService(TreatmentDetailService.class);
         showLoading();

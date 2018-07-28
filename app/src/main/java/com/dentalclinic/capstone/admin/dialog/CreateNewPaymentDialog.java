@@ -3,9 +3,14 @@ package com.dentalclinic.capstone.admin.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -15,13 +20,18 @@ import com.dentalclinic.capstone.admin.models.Payment;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.Utils;
 
-public class CreateNewPaymentDialog extends Dialog {
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Currency;
+import java.util.Locale;
+
+public class CreateNewPaymentDialog extends Dialog{
     public Activity c;
     public Dialog d;
     public TextView btnSave;
     private Payment payment;
     private TextView txtTreatment, txtTotal, txtNotPayYet;
-    private EditText edtMoney;
+    private AutoCompleteTextView edtMoney;
     private OnButtonClickListener listener;
     public CreateNewPaymentDialog(Activity a, Payment payment) {
         super(a);
@@ -40,6 +50,7 @@ public class CreateNewPaymentDialog extends Dialog {
         this.listener = listener;
     }
 
+    private String prePrice = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +62,32 @@ public class CreateNewPaymentDialog extends Dialog {
         txtNotPayYet = findViewById(R.id.txt_not_pay_yet);
         edtMoney = findViewById(R.id.edt_money);
 
+        edtMoney.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().equals(prePrice)) {
+//if(current)
+                    String cleanString = charSequence.toString().replaceAll("[đ,.]", "");
+                    Log.d("DEBUG", "BEFORE: " + cleanString);
+//            double parsed = Double.parseDouble(cleanString);
+                    String formatted = formatVnCurrence(cleanString);
+                    Log.d("DEBUG", "AFTER: " + formatted);
+                    prePrice = formatted;
+                    edtMoney.setText(formatted);
+                    edtMoney.setSelection(formatted.length() > 1 ? formatted.length() - 1 : formatted.length());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         btnSave = findViewById(R.id.btn_save);
 
@@ -76,13 +113,34 @@ public class CreateNewPaymentDialog extends Dialog {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onSave(Float.parseFloat(edtMoney.getText().toString()), payment);
+                String price = edtMoney.getText().toString().replaceAll("[đ,.]", "").trim();
+                listener.onSave(Float.parseFloat(price), payment);
             }
         });
 
     }
 
+    public static String formatVnCurrence(String price) {
 
+
+        NumberFormat format =
+                new DecimalFormat("#,##0.00");// #,##0.00 ¤ (¤:// Currency symbol)
+        format.setCurrency(Currency.getInstance(Locale.US));//Or default locale
+
+        price = (!TextUtils.isEmpty(price)) ? price : "0";
+        price = price.trim();
+        price = format.format(Double.parseDouble(price));
+        price = price.replaceAll(",", "\\.");
+
+        if (price.endsWith(".00")) {
+            int centsIndex = price.lastIndexOf(".00");
+            if (centsIndex != -1) {
+                price = price.substring(0, centsIndex);
+            }
+        }
+        price = String.format("%sđ", price);
+        return price;
+    }
 
 }
 
