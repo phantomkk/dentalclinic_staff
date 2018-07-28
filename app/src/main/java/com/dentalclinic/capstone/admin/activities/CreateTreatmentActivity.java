@@ -569,7 +569,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         MultipartBody.Builder builder = new MultipartBody.Builder();
         builder.setType(MultipartBody.FORM);
         builder.addFormDataPart("treatment_id", currentTreatment.getId() + "");
-        builder.addFormDataPart("treatment_history_id", treatmentHistoryId + "");
+        builder.addFormDataPart("treatment_hi-;story_id", treatmentHistoryId + "");
         builder.addFormDataPart("staff_id", s.getId()+"");
         builder.addFormDataPart("patient_id", currentPatient.getId()+"");
         builder.addFormDataPart("description", actTmHistoryDescription.getText().toString().trim() + "");

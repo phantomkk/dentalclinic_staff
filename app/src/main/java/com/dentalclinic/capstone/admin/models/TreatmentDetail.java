@@ -14,7 +14,7 @@ public class TreatmentDetail implements Serializable {
     private String note;
     @SerializedName("dentist")
     private Staff dentist;
-    @SerializedName("create_date")
+    @SerializedName("created_date")
     private String createdDate;
     @SerializedName("payment")
     private Payment payment;

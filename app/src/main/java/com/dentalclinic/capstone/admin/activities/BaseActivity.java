@@ -2,6 +2,7 @@ package com.dentalclinic.capstone.admin.activities;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.api.responseobject.ErrorResponse;
 import com.dentalclinic.capstone.admin.utils.AppConst;
+import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.Utils;
 import com.muddzdev.styleabletoastlibrary.StyleableToast;
 
@@ -140,7 +142,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void showErrorUnAuth() {
-        showErrorMessage("401 Unauthentication");
+        CoreManager.clearStaff(this);
+//        showErrorMessage("401 Unauthentication");
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     public void showBadRequestError(ResponseBody errorBody, String method) {

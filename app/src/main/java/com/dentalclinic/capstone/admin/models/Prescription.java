@@ -13,7 +13,7 @@ public class Prescription implements Serializable {
     private Medicine medicine;
     @SerializedName("treatment_detail")
     private TreatmentDetail treatm;
-    @SerializedName("qualtity")
+    @SerializedName("quantity")
     private int qualtity;
 
     public Prescription(Medicine medicine) {
