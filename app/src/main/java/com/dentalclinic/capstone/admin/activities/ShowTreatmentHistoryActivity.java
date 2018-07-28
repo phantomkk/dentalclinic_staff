@@ -39,6 +39,9 @@ public class ShowTreatmentHistoryActivity extends BaseActivity {
     private FloatingActionButton btnAddNew;
     private Patient patient;
     private TextView labelMessage;
+    private final int REQUEST_CREATE_NEW_HISTORY = 99;
+    private final int REQUEST_CREATE_NEW_DETAIL = 69;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +54,13 @@ public class ShowTreatmentHistoryActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
 //            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.side_nav_bar));
         }
-        prepareData();
 
         Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
         if (bundle != null) {
             patient = (Patient) bundle.getSerializable(AppConst.PATIENT_OBJ);
         }
+        prepareData();
+
         textView = findViewById(R.id.txt_label_message);
         labelMessage = findViewById(R.id.txt_label_message);
         btnAddNew = findViewById(R.id.btn_actions);
@@ -71,7 +75,7 @@ public class ShowTreatmentHistoryActivity extends BaseActivity {
                 intent.putExtra(CreateTreatmentDetailActivity.TREATMENT_HISTORY_BUNDLE, selectedTreatment);
                 intent.putExtra("PATIENT_BUNDLE", patient);
                 ////////dummy request code
-                startActivityForResult(intent, 99);
+                startActivityForResult(intent, REQUEST_CREATE_NEW_HISTORY);
             }
         });
 
@@ -79,7 +83,7 @@ public class ShowTreatmentHistoryActivity extends BaseActivity {
             Intent intent = new Intent(ShowTreatmentHistoryActivity.this, CreateTreatmentActivity.class);
 
             intent.putExtra("PATIENT_BUNDLE", patient);
-            startActivityForResult(intent, 69);
+            startActivityForResult(intent, REQUEST_CREATE_NEW_HISTORY);
         });
 
     }
@@ -96,7 +100,7 @@ public class ShowTreatmentHistoryActivity extends BaseActivity {
 
     private void prepareData() {
         TreatmentHistoryService service = APIServiceManager.getService(TreatmentHistoryService.class);
-        service.getByPatientId(1)
+        service.getByPatientId(patient.getId())
                 .subscribeOn(
                         Schedulers.newThread()
                 )
@@ -138,5 +142,19 @@ public class ShowTreatmentHistoryActivity extends BaseActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CREATE_NEW_HISTORY){
+            if(resultCode == RESULT_OK){
+                prepareData();
+            }
+        }else if(requestCode==REQUEST_CREATE_NEW_DETAIL){
+            if(resultCode == RESULT_OK){
+
+            }
+        }
     }
 }

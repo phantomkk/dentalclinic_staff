@@ -21,9 +21,14 @@ import com.dentalclinic.capstone.admin.model.FingerAuthObj;
 import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
+import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
+import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.marcoscg.fingerauth.FingerAuth;
 import com.marcoscg.fingerauth.FingerAuthDialog;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -68,9 +73,13 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         Staff staff = CoreManager.getStaff(this);
         if (staff != null) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            Calendar  currentTime = Calendar.getInstance();
+            Date tokenTime = DateUtils.getDate(staff.getTokenCreatedDate(), DateTimeFormat.DATE_TIME_DB);
+            if(currentTime.getTime().before(tokenTime)){
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }else{
             final boolean hasFingerprintSupport = FingerAuth.hasFingerprintSupport(this);
             if (hasFingerprintSupport && CoreManager.getFingerAuthObj(LoginActivity.this)!=null) {

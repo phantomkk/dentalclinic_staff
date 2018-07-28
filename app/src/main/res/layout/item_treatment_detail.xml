@@ -155,14 +155,14 @@
                     android:layout_marginTop="@dimen/input_margin_top" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_edit_accout"
-                style="@style/custom_button_green"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:text="@string/my_acc_edit_treatment_detail" />
+            <!--<Button-->
+                <!--android:id="@+id/btn_edit_accout"-->
+                <!--style="@style/custom_button_green"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:text="@string/my_acc_edit_treatment_detail" />-->
         </LinearLayout>
     </ScrollView>
 </android.support.v7.widget.CardView>

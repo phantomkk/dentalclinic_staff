@@ -459,6 +459,8 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
                             if (successResponse.body() != null) {
                                 SuccessResponse response = successResponse.body();
                                 showSuccessMessage(response != null ? response.getMessage() : "");
+                                setResult(RESULT_OK);
+                                finish();
                             }
                         } else if (successResponse.code() == 500) {
                             showFatalError(successResponse.errorBody(), "callApiTreatmentService");

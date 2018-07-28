@@ -63,6 +63,7 @@ public class MainActivity extends BaseActivity
     Staff staff = new Staff();
     private NavigationView navigationView;
     private String phone = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,7 +117,7 @@ public class MainActivity extends BaseActivity
                 getPatienst(query);
                 setTitle(query);
                 searchPatientFragment.setPhone(query);
-                phone= query;
+                phone = query;
                 return false;
             }
 
@@ -130,11 +131,13 @@ public class MainActivity extends BaseActivity
         fragmentManager.beginTransaction().replace(R.id.main_fragment, searchPatientFragment).commit();
         navigationView.getMenu().getItem(0).setChecked(true);
     }
+
     private Disposable disposable;
 
     public MaterialSearchView getSearchView() {
         return searchView;
     }
+
     public void getAllPhone() {
         showLoading();
         UserService userService = APIServiceManager.getService(UserService.class);
@@ -150,7 +153,7 @@ public class MainActivity extends BaseActivity
                     @Override
                     public void onSuccess(Response<List<String>> userResponse) {
                         if (userResponse.isSuccessful()) {
-                            strings =userResponse.body();
+                            strings = userResponse.body();
                             String[] stockArr = new String[strings.size()];
                             stockArr = strings.toArray(stockArr);
                             searchView.setSuggestions(stockArr);
@@ -199,9 +202,10 @@ public class MainActivity extends BaseActivity
 //                                    searchPatientFragment.removeButtonPayment();
                                     searchPatientFragment.addButtonNewPatient();
                                 }
-                            }else{
-                                if(searchPatientFragment!=null){
-                                    searchPatientFragment.setPatientsAndNotifiAdapter(response.body());                                    searchPatientFragment.enableAllButton();
+                            } else {
+                                if (searchPatientFragment != null) {
+                                    searchPatientFragment.setPatientsAndNotifiAdapter(response.body());
+                                    searchPatientFragment.enableAllButton();
 //                                    searchPatientFragment.enableAllButton();
                                     searchPatientFragment.removeAllButton();
                                     searchPatientFragment.addButtonNewPatient();
@@ -266,7 +270,7 @@ public class MainActivity extends BaseActivity
                         Intent intent = new Intent(MainActivity.this, CreatePatientActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putString(AppConst.PHONE, phone);
-                        intent.putExtra(AppConst.BUNDLE,bundle);
+                        intent.putExtra(AppConst.BUNDLE, bundle);
                         startActivity(intent);
                     }
                 });
@@ -290,7 +294,7 @@ public class MainActivity extends BaseActivity
                         Intent intent = new Intent(MainActivity.this, CreatePatientActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putString(AppConst.PHONE, phone);
-                        intent.putExtra(AppConst.BUNDLE,bundle);
+                        intent.putExtra(AppConst.BUNDLE, bundle);
                         startActivity(intent);
                     }
                 });
@@ -298,17 +302,17 @@ public class MainActivity extends BaseActivity
     }
 
 
-    private void setDataHeader(Staff staff){
-        if(staff==null){
+    private void setDataHeader(Staff staff) {
+        if (staff == null) {
             return;
         }
-        if(staff.getAvatar()!=null){
+        if (staff.getAvatar() != null) {
             Picasso.get().load(staff.getAvatar()).into(mAvatar);
         }
-        if(staff.getName()!=null){
+        if (staff.getName() != null) {
             mStaffName.setText(staff.getName());
         }
-        if(staff.getPhone()!=null){
+        if (staff.getPhone() != null) {
             mStaffPhone.setText(staff.getPhone());
         }
     }
@@ -350,7 +354,9 @@ public class MainActivity extends BaseActivity
 
         return super.onOptionsItemSelected(item);
     }
+
     private SearchPatientFragment searchPatientFragment;
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -365,22 +371,22 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_history) {
             BaseWeekViewFragment calendarFragment = new BaseWeekViewFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, calendarFragment).commit();
-        }
-        else if (id == R.id.nav_appointment_list) {
+        } else if (id == R.id.nav_appointment_list) {
             AppointmentFragment calendarFragment = new AppointmentFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, calendarFragment).commit();
-        }
-        else if (id == R.id.nav_request_absent) {
+        } else if (id == R.id.nav_request_absent) {
 //            startActivity(new Intent(MainActivity.this, DatePickerActivity.class));
             AbsentFragment absentFragment = new AbsentFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, absentFragment).commit();
-        }
-        else if (id == R.id.nav_my_accout) {
+        } else if (id == R.id.nav_my_accout) {
             MyAccoutFragment newFragment = new MyAccoutFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, newFragment).commit();
         } else if (id == R.id.nav_log_out) {
 //            logoutOnServer();
             CoreManager.clearStaff(MainActivity.this);
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -414,6 +420,7 @@ public class MainActivity extends BaseActivity
 //                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 //                        startActivity(intent);
 //                        finish();
+
                     }
 
                     @Override
