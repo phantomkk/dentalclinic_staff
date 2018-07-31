@@ -322,21 +322,22 @@ public class CreatePatientActivity extends BaseActivity {
                 .subscribe(new SingleObserver<Response<Patient>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
                         createServiceDisposable = d;
                     }
 
                     @Override
                     public void onSuccess(Response<Patient> patientResponse) {
                         if (patientResponse.isSuccessful()) {
-                            Toast.makeText(CreatePatientActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(CreatePatientActivity.this)
-                                    .setMessage("Đăng kí tài khoản thành công")
-                                    .setPositiveButton("Đăng nhập", (DialogInterface dialogInterface, int i) -> {
-//                                        Intent intent = new Intent(CreatePatientActivity.this, LoginActivity.class);
-//                                        startActivity(intent);
-                                    });
-                            alertDialog.show();
+//                            Toast.makeText(CreatePatientActivity.this, "Success", Toast.LENGTH_SHORT).show();
+//                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(CreatePatientActivity.this)
+//                                    .setMessage("Đăng kí tài khoản thành công")
+//                                    .setPositiveButton("Đăng nhập", (DialogInterface dialogInterface, int i) -> {
+////                                        Intent intent = new Intent(CreatePatientActivity.this, LoginActivity.class);
+////                                        startActivity(intent);
+//                                    });
+//                            alertDialog.show();
+                            setResult(RESULT_OK);
+                            finish();
                         } else if (patientResponse.code() == 500) {
                             showFatalError(patientResponse.errorBody(), "createPatientAPI");
                         } else if (patientResponse.code() == 401) {

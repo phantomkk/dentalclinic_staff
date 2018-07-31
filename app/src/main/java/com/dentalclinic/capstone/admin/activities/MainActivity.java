@@ -35,8 +35,10 @@ import com.dentalclinic.capstone.admin.fragment.BaseWeekViewFragment;
 import com.dentalclinic.capstone.admin.fragment.CalendarFragment;
 import com.dentalclinic.capstone.admin.fragment.MyAccoutFragment;
 import com.dentalclinic.capstone.admin.fragment.SearchPatientFragment;
+import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Staff;
+import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -63,6 +65,7 @@ public class MainActivity extends BaseActivity
     Staff staff = new Staff();
     private NavigationView navigationView;
     private String phone = "";
+    private final int REQUEST_CREATE_PATIENT = 109;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,19 +186,20 @@ public class MainActivity extends BaseActivity
         patientService.getPatientsByPhone(phone)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<List<Patient>>>() {
+                .subscribe(new SingleObserver<Response<User>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         disposable = d;
                     }
 
                     @Override
-                    public void onSuccess(Response<List<Patient>> response) {
+                    public void onSuccess(Response<User> response) {
                         if (response.isSuccessful()) {
-                            if (response.body().isEmpty()) {
+                            if (response.body().getPatients().isEmpty()) {
                                 showConfigCreateNewPatientDialog("Tạo thông tin bệnh nhân cho tài khoản này?");
                                 if (searchPatientFragment != null) {
                                     searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
+                                    searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
                                     searchPatientFragment.removeAllButton();
 //                                    searchPatientFragment.enableAllButton();
 //                                    searchPatientFragment.removeButtonAppointment();
@@ -204,9 +208,11 @@ public class MainActivity extends BaseActivity
                                 }
                             } else {
                                 if (searchPatientFragment != null) {
-                                    searchPatientFragment.setPatientsAndNotifiAdapter(response.body());
+                                    searchPatientFragment.setPatientsAndNotifiAdapter(response.body().getPatients());
+                                    if(response.body().getAppointments()!=null){
+                                        searchPatientFragment.setAppointmentAndNotifiAdapter(response.body().getAppointments());
+                                    }
                                     searchPatientFragment.enableAllButton();
-//                                    searchPatientFragment.enableAllButton();
                                     searchPatientFragment.removeAllButton();
                                     searchPatientFragment.addButtonNewPatient();
                                     searchPatientFragment.addButtonPayment();
@@ -222,6 +228,7 @@ public class MainActivity extends BaseActivity
                             showConfigCreateNewUserDialog("Tạo tài khoản cho bệnh nhân?");
                             if (searchPatientFragment != null) {
                                 searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
+                                searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
 //                                searchPatientFragment.enableAllButton();
 //                                searchPatientFragment.removeButtonAppointment();
 //                                searchPatientFragment.removeButtonPayment();
@@ -270,7 +277,7 @@ public class MainActivity extends BaseActivity
                         Bundle bundle = new Bundle();
                         bundle.putString(AppConst.PHONE, phone);
                         intent.putExtra(AppConst.BUNDLE, bundle);
-                        startActivity(intent);
+                        startActivityForResult(intent,REQUEST_CREATE_PATIENT);
                     }
                 }).setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     @Override
@@ -298,7 +305,7 @@ public class MainActivity extends BaseActivity
                         Bundle bundle = new Bundle();
                         bundle.putString(AppConst.PHONE, phone);
                         intent.putExtra(AppConst.BUNDLE, bundle);
-                        startActivity(intent);
+                        startActivityForResult(intent,REQUEST_CREATE_PATIENT);
                     }
                 });
         alertDialog.show();
@@ -446,6 +453,10 @@ public class MainActivity extends BaseActivity
             }
 
             return;
+        }else if(requestCode == REQUEST_CREATE_PATIENT){
+            if(requestCode == RESULT_OK){
+                getPatienst(phone);
+            }
         }
     }
 }

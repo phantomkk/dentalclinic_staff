@@ -3,6 +3,7 @@ package com.dentalclinic.capstone.admin.api.services;
 import com.dentalclinic.capstone.admin.api.requestobject.PatientProfileRequest;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.models.Patient;
+import com.dentalclinic.capstone.admin.models.User;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import retrofit2.http.Query;
 
 public interface PatientService {
     @GET("api/patient/getByPhone")
-    Single<Response<List<Patient>>> getPatientsByPhone(@Query("phone") String phone);
+    Single<Response<User>> getPatientsByPhone(@Query("phone") String phone);
 
     @FormUrlEncoded
     @POST("api/patient/receive")

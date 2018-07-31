@@ -143,9 +143,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void showErrorUnAuth() {
         CoreManager.clearStaff(this);
-//        showErrorMessage("401 Unauthentication");
+        showErrorMessage("Phiên đăng nhập hết hạn, vui lòng đăng nhập lại");
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void showBadRequestError(ResponseBody errorBody, String method) {

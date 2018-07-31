@@ -36,12 +36,14 @@ import com.dentalclinic.capstone.admin.activities.CreatePatientActivity;
 import com.dentalclinic.capstone.admin.activities.LoginActivity;
 import com.dentalclinic.capstone.admin.activities.MainActivity;
 import com.dentalclinic.capstone.admin.activities.PatientDetailActivity;
+import com.dentalclinic.capstone.admin.adapter.AppointmentSwift2Adapter;
 import com.dentalclinic.capstone.admin.adapter.PatientAdapter;
 import com.dentalclinic.capstone.admin.adapter.PatientSwiftAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.api.services.PatientService;
 import com.dentalclinic.capstone.admin.api.services.UserService;
+import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.utils.AppConst;
@@ -67,10 +69,13 @@ public class SearchPatientFragment extends BaseFragment {
     private FloatingActionsMenu menuMultipleActions;
     private FloatingActionButton btnNewPatient, btnNewAppointment, btnNewPayment;
     private List<Patient> patients = new ArrayList<>();
+    private List<Appointment> appointments = new ArrayList<>();
     private Staff currentStaff;
     private PatientSwiftAdapter mAdapter;
+    private AppointmentSwift2Adapter mAdapter2;
     private RecyclerView recyclerView;
-    private TextView textView;
+    private RecyclerView appointmentRecyclerView;
+    private TextView textView,txtLabelAppointment;
     private LinearLayoutManager mLayoutManager;
     private String phone;
     public static final String PATIENT_INFO = "PATIENT_INFO";
@@ -98,7 +103,9 @@ public class SearchPatientFragment extends BaseFragment {
         getActivity().setTitle("Tìm kiếm bệnh nhân");
         View view = inflater.inflate(R.layout.fragment_search_patient, container, false);
         textView = view.findViewById(R.id.txt_label_message);
-
+        txtLabelAppointment = view.findViewById(R.id.txt_label_appointment);
+        int number = 2;
+        txtLabelAppointment.setText(getResources().getString(R.string.label_patient_apppointment, number));
         //button newPatient
         btnNewPatient = new FloatingActionButton(getContext());
         btnNewPatient.setTitle("Thêm mới bệnh nhân");
@@ -151,7 +158,8 @@ public class SearchPatientFragment extends BaseFragment {
         if (getContext() != null) {
             currentStaff = CoreManager.getStaff(getContext());
         }
-//        prepareData();
+        prepareData();
+        prepareData2();
 //        mListVi
 // ew = (SwipeMenuListView) view.findViewById(R.id.listView);
 //        mAdapter = new PatientAdapter(getContext(), patients);
@@ -345,6 +353,46 @@ public class SearchPatientFragment extends BaseFragment {
             }
         });
 
+        recyclerView.setNestedScrollingEnabled(true);
+        appointmentRecyclerView = view.findViewById(R.id.list_appointment);
+        appointmentRecyclerView.setNestedScrollingEnabled(true);
+        mAdapter2 = new AppointmentSwift2Adapter(getContext(), appointments);
+        mAdapter2.setOnDelListener(new AppointmentSwift2Adapter.onSwipeListener() {
+            @Override
+            public void onChangeDoctorClick(int pos) {
+                showMessage("Change Doctor");
+            }
+
+            @Override
+            public void onCancleClick(int pos) {
+                showMessage("Cancle Appointment");
+            }
+
+            @Override
+            public void onItemClick(int pos) {
+                showMessage("show dialog");
+            }
+        });
+        appointmentRecyclerView.setAdapter(mAdapter2);
+        appointmentRecyclerView.setLayoutManager(mLayoutManager = new GridLayoutManager(getContext(), 1));
+
+        //6 2016 10 21 add , 增加viewChache 的 get()方法，
+        // 可以用在：当点击外部空白处时，关闭正在展开的侧滑菜单。我个人觉得意义不大，
+//        mRv.setOnTouchListener();
+        appointmentRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    SwipeMenuLayout viewCache = SwipeMenuLayout.getViewCache();
+                    if (null != viewCache) {
+                        viewCache.smoothClose();
+                    }
+                }
+                return false;
+            }
+        });
+
+
 
         return view;
     }
@@ -402,7 +450,11 @@ public class SearchPatientFragment extends BaseFragment {
 //        patients = new ArrayList<>();
         patients.add(new Patient("Vo Quoc Trinh", "1996-10-01", "MALE"));
         patients.add(new Patient("Vo Quoc Trinh", "1996-10-01", "FEMALE"));
-        patients.add(new Patient("Vo Quoc Trinh", "1996-10-01", "OTHER"));
+    }
+
+    private void prepareData2() {
+        appointments.add(new Appointment("haha","vo quoc trinh",3,1));
+        appointments.add(new Appointment("haha","vo quoc trinh",3,3));
     }
 
     public void setPatientsAndNotifiAdapter(List<Patient> patientList) {
@@ -416,6 +468,16 @@ public class SearchPatientFragment extends BaseFragment {
         mAdapter.notifyDataSetChanged();
     }
 
+    public void setAppointmentAndNotifiAdapter(List<Appointment> appointmentList) {
+//        if (appointmentList.isEmpty()) {
+//            textView.setVisibility(View.VISIBLE);
+//        } else {
+//            textView.setVisibility(View.GONE);
+//        }
+        appointments.clear();
+        appointments.addAll(appointmentList);
+        mAdapter2.notifyDataSetChanged();
+    }
 
     private int dp2px(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,

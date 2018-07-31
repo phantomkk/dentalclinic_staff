@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:paddingBottom="1dp"
+    app:ios="false"
+    app:leftSwipe="true"
+    app:swipeEnable="true">
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:weightSum="10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:id="@+id/txt_appointment_number"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="01"
+                    android:textColor="@color/color_black"
+                    android:textSize="25dp" />
+                <TextView
+                    android:id="@+id/txt_patient_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="6"
+                    android:textColor="@color/color_black"
+                    android:textAllCaps="true"
+                    android:text="Vo quoc trịnh" />
+
+                <TextView
+                    android:id="@+id/txt_appointment_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="Sẵn sàng"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/color_green_500" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/input_margin_top"
+                android:background="@color/color_grey_200"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giờ bắt đầu:" />
+            <TextView
+                android:id="@+id/txt_start_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_black"
+                android:layout_marginLeft="@dimen/input_margin_top"
+                android:layout_marginBottom="@dimen/input_margin_top"
+                android:text="09:30 20/10/2996" />
+            </LinearLayout>
+            <!--<TextView-->
+                <!--android:id="@+id/btn_view_note"-->
+                <!--android:layout_width="100dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_gravity="end"-->
+                <!--android:layout_marginBottom="@dimen/input_margin_top"-->
+                <!--android:background="@color/color_white"-->
+                <!--android:text="Xem Thêm"-->
+                <!--android:textAlignment="textEnd"-->
+                <!--android:textAllCaps="true"-->
+                <!--android:textColor="@color/color_blue_500" />-->
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/linear_layout_note"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:animateLayoutChanges="true"-->
+                <!--android:visibility="gone"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<View-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="1dp"-->
+                    <!--android:layout_marginTop="@dimen/input_margin_top"-->
+                    <!--android:background="@color/color_grey_200" />-->
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/input_margin_top"-->
+                    <!--android:text="Ghi chú" />-->
+                <!--<TextView-->
+                    <!--android:id="@+id/txt_note"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/input_margin_top"-->
+                    <!--android:textColor="@color/color_black"-->
+                    <!--android:text="ghi chú" />-->
+            <!--</LinearLayout>-->
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+    <Button
+        android:id="@+id/btn_change_doctor"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:background="@color/color_blue_800"
+        android:text="Đổi bác sĩ"
+        android:textColor="@android:color/white" />
+    <Button
+        android:id="@+id/btn_cancle"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:background="@color/color_red_500"
+        android:text="Hủy"
+        android:textColor="@android:color/white" />
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>

@@ -200,5 +200,6 @@
 
     <string name="button_choose_dialog">Chọn</string>
     <string name="label_money">Số tiền</string>
+    <string name="label_patient_apppointment">Bệnh nhân này có: %1$d lịch hẹn trong ngày hôm nay</string>
 
 </resources>

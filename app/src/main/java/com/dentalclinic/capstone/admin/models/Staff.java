@@ -35,7 +35,6 @@ public class Staff implements Serializable {
     private int districtId;
     @SerializedName("city")
     private City city;
-
     @SerializedName("roles")
     private List<Role> roles;
     @SerializedName("access_token")

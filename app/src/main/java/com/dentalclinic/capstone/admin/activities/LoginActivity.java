@@ -75,7 +75,7 @@ public class LoginActivity extends BaseActivity {
         if (staff != null) {
             Calendar  currentTime = Calendar.getInstance();
             Date tokenTime = DateUtils.getDate(staff.getTokenCreatedDate(), DateTimeFormat.DATE_TIME_DB);
-            if(currentTime.getTime().before(tokenTime)){
+            if(currentTime.getTime().after(tokenTime)){
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();
