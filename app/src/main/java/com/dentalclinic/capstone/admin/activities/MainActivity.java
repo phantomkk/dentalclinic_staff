@@ -219,7 +219,7 @@ public class MainActivity extends BaseActivity
                         } else if (response.code() == 401) {
                             showErrorUnAuth();
                         } else if (response.code() == 400) {
-                            showConfigCreateNewUserDialog("Tại tài khoản cho bệnh nhân?");
+                            showConfigCreateNewUserDialog("Tạo tài khoản cho bệnh nhân?");
                             if (searchPatientFragment != null) {
                                 searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
 //                                searchPatientFragment.enableAllButton();
@@ -256,22 +256,25 @@ public class MainActivity extends BaseActivity
     public void showConfigCreateNewUserDialog(String message) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this)
                 .setMessage(message)
-                .setTitle("Tài khoản chưa Đăng ký")
+                .setTitle(getString(R.string.dialog_default_title))
                 .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                     }
                 })
-                .setPositiveButton("Tạo Mới", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-//                        showMessage("Tạo mới bệnh nhân");
                         Intent intent = new Intent(MainActivity.this, CreatePatientActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putString(AppConst.PHONE, phone);
                         intent.putExtra(AppConst.BUNDLE, bundle);
                         startActivity(intent);
+                    }
+                }).setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
                     }
                 });
         alertDialog.show();
@@ -279,8 +282,8 @@ public class MainActivity extends BaseActivity
 
     public void showConfigCreateNewPatientDialog(String message) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.dialog_default_title))
                 .setMessage(message)
-                .setTitle("Tài khoản chưa có thông tin")
                 .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

@@ -10,6 +10,7 @@
     <!--Loading dialog-->
     <string name="waiting_msg">Xin vui lòng chờ...</string>
     <string name="dialog_cancel">Bạn đã hủy</string>
+    <string name="dialog_default_title">Thông báo</string>
     <!-- Strings related to login -->
     <string name="prompt_phone">Số Điện Thoại</string>
     <string name="prompt_email">Email</string>

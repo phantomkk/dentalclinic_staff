@@ -116,7 +116,7 @@ public class SearchPatientActivity extends BaseActivity {
 
     @Override
     public String getMainTitle() {
-        return "Search";
+        return "Tìm kiếm";
     }
 
     @Override

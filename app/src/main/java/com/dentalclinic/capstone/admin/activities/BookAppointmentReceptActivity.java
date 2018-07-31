@@ -309,7 +309,8 @@ public class BookAppointmentReceptActivity extends BaseActivity {
                     public void onSuccess(Response<List<Appointment>> response) {
                         if (response.isSuccessful()) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(BookAppointmentReceptActivity.this)
-                                    .setTitle("Đặt lịch thành công")
+                                    .setTitle(getString(R.string.dialog_default_title))
+                                    .setMessage("Đặt lịch thành công")
                                     .setPositiveButton("Xác nhận", (DialogInterface var1, int var2) -> {
                                         finish();
                                     });

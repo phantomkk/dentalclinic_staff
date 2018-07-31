@@ -269,15 +269,19 @@ public class SearchPatientFragment extends BaseFragment {
                                         }
                                     } else if (response.code() == 417) {
                                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext())
+                                                .setTitle(getString(R.string.dialog_default_title))
                                                 .setMessage("Bạn có muốn tạo lịch hẹn")
-                                                .setPositiveButton("Tạo", (DialogInterface dialogInterface, int i) -> {
+                                                .setPositiveButton("Đồng ý", (DialogInterface dialogInterface, int i) -> {
                                                     Intent intent = new Intent(getContext(), BookAppointmentReceptActivity.class);
                                                     intent.putExtra(SearchPatientFragment.PATIENT_INFO, crrPatient);
                                                     if (currentStaff != null) {
                                                         intent.putExtra(SearchPatientFragment.STAFF_INFO, currentStaff);
                                                     }
                                                     startActivity(intent);
-                                                });
+                                                }).setNegativeButton("Không", (DialogInterface dialogInterface, int i) -> {
+                                                       //Do nothing
+                                                        }
+                                                );
                                         alertDialog.show();
                                     } else if (response.code() == 500) {
                                         showFatalError(response.errorBody(), "mAdapter.setOnDelListener");
