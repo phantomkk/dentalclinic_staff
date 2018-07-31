@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.activities.EditAccoutActivity;
 import com.dentalclinic.capstone.admin.activities.EditPasswordActivity;
+import com.dentalclinic.capstone.admin.activities.MainActivity;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.api.services.StaffService;
@@ -253,7 +254,7 @@ public class MyAccoutFragment extends BaseFragment implements View.OnClickListen
                 try {
                     InputStream is = getActivity().getContentResolver().openInputStream(resultUri);
 //                    showLoading();
-//                    uploadImage(getBytes(is));
+                    uploadImage(getBytes(is));
                     cvAvatar.setImageURI(resultUri);
 //                    showMessage("update success!");
                 } catch (IOException e) {
