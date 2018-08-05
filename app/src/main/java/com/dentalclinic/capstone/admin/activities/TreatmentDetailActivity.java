@@ -2,6 +2,7 @@ package com.dentalclinic.capstone.admin.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
 import com.dentalclinic.capstone.admin.R;
@@ -31,9 +32,11 @@ public class TreatmentDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_treatment_detail);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         if(getSupportActionBar()!=null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.side_nav_bar));
+//            getSupportActionBar().setBackgroundDrawable(getDrawable(R.drawable.side_nav_bar));
         }
 //        prepareData();
         Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
