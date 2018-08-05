@@ -40,6 +40,8 @@ public class Appointment implements Serializable {
     private int status;
     @SerializedName("patient")
     private Patient patient;
+    @SerializedName("dentist")
+    private Staff dentist;
 
     private boolean isExpand = false;
     public Appointment(String note, String name, int numericalOrder, int status) {
@@ -182,4 +184,11 @@ public class Appointment implements Serializable {
     }
 
 
+    public Staff getDentist() {
+        return dentist;
+    }
+
+    public void setDentist(Staff dentist) {
+        this.dentist = dentist;
+    }
 }

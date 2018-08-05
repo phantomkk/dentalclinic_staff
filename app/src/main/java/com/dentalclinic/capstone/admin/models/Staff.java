@@ -15,6 +15,8 @@ public class Staff implements Serializable {
     private String email;
     @SerializedName("noti_token")
     private String notifToken;
+    @SerializedName("status")
+    private String status;
     @SerializedName("degree")
     private String degree;
     @SerializedName("phone")
@@ -207,5 +209,13 @@ public class Staff implements Serializable {
 
     public void setTokenCreatedDate(String tokenCreatedDate) {
         this.tokenCreatedDate = tokenCreatedDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
