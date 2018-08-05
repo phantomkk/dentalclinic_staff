@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_white"
+    android:orientation="vertical"
+    tools:context=".activities.CreatePatientActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorAccent"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edt_fullname_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/drawable_padding"
+                    android:drawableStart="@drawable/ic_account_circle_black_24dp"
+                    android:hint="@string/tv_promt_fullname"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textSize="@dimen/input_size_normal" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/input_margin_top"
+
+                >
+
+                <EditText
+                    android:id="@+id/edt_phone_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_phone_iphone_black_24dp"
+                    android:drawablePadding="@dimen/drawable_padding"
+                    android:hint="@string/label_phone_book_appt"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:enabled="false"
+                    android:maxLines="1"
+                    android:textSize="@dimen/input_size_normal" />
+            </android.support.design.widget.TextInputLayout>
+
+            <RadioGroup
+                android:id="@+id/rg_gender_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/input_margin_top"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+
+                android:weightSum="100">
+
+                <RadioButton
+                    android:id="@+id/rbt_male_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Nam"
+
+                    android:textSize="@dimen/input_size_normal" />
+
+                <RadioButton
+                    android:id="@+id/rbt_female_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Nữ"
+                    android:textSize="@dimen/input_size_normal" />
+
+                <RadioButton
+                    android:id="@+id/rbt_others_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Khác"
+                    android:textSize="@dimen/input_size_normal" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/tv_birthday_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="40"
+                    android:clickable="true"
+                    android:drawablePadding="9dp"
+                    android:drawableStart="@drawable/ic_date_range_black_24dp"
+                    android:focusable="true"
+                    android:paddingStart="5dp"
+                    android:text="@string/label_birthday_register"
+                    android:textColor="@color/color_blue_grey_300"
+                    android:textSize="@dimen/input_size_normal" />
+
+                <TextView
+                    android:id="@+id/txt_error_date_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="60"
+                    android:gravity="left"
+                    android:paddingEnd="1dp"
+                    android:paddingStart="9dp"
+                    android:text=""
+                    android:textColor="@color/error_label" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_select_anamnesis"
+                style="@style/custom_button_blue"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Chọn tiền sử bệnh" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/input_margin_top">
+
+                <AutoCompleteTextView
+                    android:id="@+id/edt_address_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|left"
+                    android:drawablePadding="9dp"
+                    android:drawableStart="@drawable/ic_home_black_24dp"
+                    android:hint="@string/label_address_book_appt"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLength="2000"
+                    android:maxLines="4"
+                    android:minLines="3"
+                    android:paddingEnd="2dp"
+                    android:paddingStart="6dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/input_size_normal" />
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100">
+
+                <Spinner
+                    android:id="@+id/spinner_district_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"></Spinner>
+
+                <Spinner
+                    android:id="@+id/spinner_city_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"></Spinner>
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btn_edit"
+                style="@style/custom_button_blue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="Sửa hồ sơ bệnh nhân" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

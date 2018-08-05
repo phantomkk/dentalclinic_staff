@@ -40,6 +40,7 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
     private CircleImageView cvAvatar;
     private Button btnViewTreatment;
     private Button btnViewPayment;
+    private Button btnEditPatient;
     private TextView txtName, txtGender, txtPhone, txtAddress, txtDateOfBirth;
     private Patient patient;
     public static String LIST_TREATMENT = "LIST_TREATMENT";
@@ -59,6 +60,7 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
 
         btnViewPayment = findViewById(R.id.btn_view_payment);
         btnViewTreatment = findViewById(R.id.btn_view_treatment);
+        btnEditPatient = findViewById(R.id.btn_edit_patient);
         cvAvatar = findViewById(R.id.img_avatar_user);
         txtName = findViewById(R.id.txt_name);
         txtDateOfBirth = findViewById(R.id.txt_date_of_birth);
@@ -194,6 +196,11 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
 //
 //                }
             }
+        });
+        btnEditPatient.setOnClickListener(view->{
+            Intent intent = new Intent(PatientDetailActivity.this, EditPatientActivity.class);
+            intent.putExtra(AppConst.PATIENT_OBJ, patient);
+            startActivity(intent);
         });
     }
 

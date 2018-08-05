@@ -91,7 +91,7 @@ public class MedicineListActivity extends Activity {
     public void search(String keyword){
         currentSearchList.clear();
         for (MedicineQuantity mq : listMedicineQuantity) {
-            if (mq.getMedicine().getName().contains(keyword)) {
+            if (mq.getMedicine().getName().toUpperCase().contains(keyword.toUpperCase())) {
                 currentSearchList.add(mq);
             }
         }

@@ -7,15 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PatientProfileRequest implements Serializable{
+    @SerializedName("id")
+    private String id;
     @SerializedName("phone")
     private String phone;
     @SerializedName("name")
     private String name;
     @SerializedName("gender")
     private String gender;
-    @SerializedName("birthday")
+    @SerializedName("date_of_birth")
     private String birthday;
-    @SerializedName("districtId")
+    @SerializedName("district_id")
     private int districtId;
     @SerializedName("address")
     private String address;
@@ -78,5 +80,13 @@ public class PatientProfileRequest implements Serializable{
 
     public void setListAnamnesis(List<Integer> listAnamnesis) {
         this.listAnamnesis = listAnamnesis;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

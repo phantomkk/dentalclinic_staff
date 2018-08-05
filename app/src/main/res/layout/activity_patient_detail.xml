@@ -249,13 +249,20 @@
                 </RelativeLayout>
             </LinearLayout>
 
-            <View
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:layout_marginBottom="10dp"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:background="@color/color_grey_200" />-->
+            <Button
+                android:id="@+id/btn_edit_patient"
+                style="@style/custom_button_blue"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/color_grey_200" />
-
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:text="@string/my_acc_edit_button" />
 
         </LinearLayout>
     </ScrollView>

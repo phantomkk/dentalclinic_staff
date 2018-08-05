@@ -3,6 +3,7 @@ package com.dentalclinic.capstone.admin.models;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Patient implements Serializable {
@@ -24,7 +25,8 @@ public class Patient implements Serializable {
     private District district;
     @SerializedName("city")
     private City city;
-
+    @SerializedName("anamnesis")
+    private ArrayList<AnamnesisCatalog> listAnamnesis;
     @SerializedName("treatment_histories")
     private List<TreatmentHistory> treatmentHistories;
 
@@ -150,5 +152,13 @@ public class Patient implements Serializable {
 
     public void setCity(City city) {
         this.city = city;
+    }
+
+    public ArrayList<AnamnesisCatalog> getListAnamnesis() {
+        return listAnamnesis;
+    }
+
+    public void setListAnamnesis(ArrayList<AnamnesisCatalog> listAnamnesis) {
+        this.listAnamnesis = listAnamnesis;
     }
 }
