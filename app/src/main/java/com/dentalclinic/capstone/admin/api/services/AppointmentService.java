@@ -13,11 +13,15 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface AppointmentService {
     @GET("api/city/{id}/districts")
     Single<Response<List<Appointment>>> getAppointment(@Query("dentist_id") int id, @Query("month") int month, @Query("year") int year);
+
+    @GET("api/appointment/getById/{id}")
+    Single<Response<Appointment>> getById(@Path("id") int id);
 
     @POST("api/appointment/book")
     Single<Response<List<Appointment>>> bookAppointment(@Body AppointmentRequest appointmentRequest);
