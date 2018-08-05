@@ -115,5 +115,5 @@
         android:textColor="@color/color_blue_800"
         android:textAllCaps="true"
         android:textSize="15dp"
-        android:text="Tắt"/>
+        android:text="Đóng"/>
 </LinearLayout>

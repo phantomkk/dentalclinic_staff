@@ -56,6 +56,10 @@ public class AppointmentSwift2Adapter extends RecyclerView.Adapter<AppointmentSw
             if(appointment.getStartTime() !=null){
                 holder.txtStartTime.setText(DateUtils.changeDateFormat(appointment.getStartTime(), DateTimeFormat.DATE_TIME_DB,DateTimeFormat.DATE_TIME_APP));
             }
+            if(appointment.getStaff()!=null && appointment.getStaff().getName()!=null){
+                holder.txtDentist.setText(appointment.getStaff().getName());
+            }
+
             switch (appointment.getStatus()) {
                 case 1:
                     holder.txtStatus.setText("Sẵn Sàng");
@@ -67,6 +71,9 @@ public class AppointmentSwift2Adapter extends RecyclerView.Adapter<AppointmentSw
                 case 3:
                     holder.txtStatus.setText("Hoàn Thành");
                     holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_green_500));
+                    break;
+                case 4:
+                    holder.itemView.setVisibility(View.GONE);
                     break;
                 default:
                     break;
@@ -138,7 +145,7 @@ public class AppointmentSwift2Adapter extends RecyclerView.Adapter<AppointmentSw
 
     class ViewHolder extends RecyclerView.ViewHolder {
         //        CircleImageView imgAvatar;
-        TextView txtName, txtNumber, txtStartTime, txtStatus;
+        TextView txtName, txtNumber, txtStartTime, txtStatus, txtDentist;
         Button btnCancle;
         Button btnChangeDoctor;
         CardView cardView;
@@ -150,6 +157,7 @@ public class AppointmentSwift2Adapter extends RecyclerView.Adapter<AppointmentSw
             txtNumber = itemView.findViewById(R.id.txt_appointment_number);
             txtStartTime = itemView.findViewById(R.id.txt_start_time);
             txtStatus = itemView.findViewById(R.id.txt_appointment_status);
+            txtDentist = itemView.findViewById(R.id.txt_dentist);
             cardView = itemView.findViewById(R.id.card_view);
             btnCancle = itemView.findViewById(R.id.btn_cancle);
             btnChangeDoctor = itemView.findViewById(R.id.btn_change_doctor);

@@ -39,6 +39,8 @@ import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.reactivex.SingleObserver;
@@ -55,10 +57,11 @@ public class AppointmentFragment extends BaseFragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView textView;
     private RecyclerView mListView;
-    private List<Appointment> appointments =new ArrayList<>();
+    private List<Appointment> appointments = new ArrayList<>();
     private AppointmentSwiftAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private TextView txtDate, txtMessage;
+
     public AppointmentFragment() {
         // Required empty public constructor
     }
@@ -87,7 +90,7 @@ public class AppointmentFragment extends BaseFragment {
         prepareData(DateUtils.getDate(Calendar.getInstance().getTime(), DateTimeFormat.DATE_TIME_DB_2));
 
 //        mListView = view.findViewById(R.id.listView);
-        mListView= view.findViewById(R.id.listView);
+        mListView = view.findViewById(R.id.listView);
         mAdapter = new AppointmentSwiftAdapter(getContext(), appointments);
 
         mAdapter.setOnDelListener(new AppointmentSwiftAdapter.onSwipeListener() {
@@ -98,7 +101,7 @@ public class AppointmentFragment extends BaseFragment {
 
             @Override
             public void onTreatmentClick(int pos) {
-                if(appointments.get(pos).getPatient()!=null) {
+                if (appointments.get(pos).getPatient() != null) {
                     Patient patient = appointments.get(pos).getPatient();
                     if (patient != null) {
                         Intent intent = new Intent(getContext(), ShowTreatmentHistoryActivity.class);
@@ -107,7 +110,7 @@ public class AppointmentFragment extends BaseFragment {
                         intent.putExtra(AppConst.BUNDLE, bundle);
                         startActivity(intent);
                     }
-                }else{
+                } else {
                     showDialog("Thông tin chưa được cập nhật");
                 }
             }
@@ -119,7 +122,7 @@ public class AppointmentFragment extends BaseFragment {
 
             @Override
             public void onItemClick(int pos) {
-                if(appointments.get(pos).getPatient()!=null) {
+                if (appointments.get(pos).getPatient() != null) {
                     Patient patient = appointments.get(pos).getPatient();
                     if (patient != null) {
                         Intent intent = new Intent(getContext(), PatientDetailActivity.class);
@@ -128,7 +131,7 @@ public class AppointmentFragment extends BaseFragment {
                         intent.putExtra(AppConst.BUNDLE, bundle);
                         startActivity(intent);
                     }
-                }else{
+                } else {
                     showDialog("Thông tin chưa được cập nhật");
                 }
             }
@@ -150,14 +153,15 @@ public class AppointmentFragment extends BaseFragment {
         return view;
     }
 
-    public void setData(){
-        appointments= new ArrayList<>();
-        appointments.add(new Appointment("haha","vo quoc trinh",3,1, new Patient()));
-        appointments.add(new Appointment("haha","vo quoc trinh",3,2, new Patient()));
-        appointments.add(new Appointment("haha","vo quoc trinh",3,3, new Patient()));
+    public void setData() {
+        appointments = new ArrayList<>();
+        appointments.add(new Appointment("haha", "vo quoc trinh", 3, 1, new Patient()));
+        appointments.add(new Appointment("haha", "vo quoc trinh", 3, 2, new Patient()));
+        appointments.add(new Appointment("haha", "vo quoc trinh", 3, 3, new Patient()));
     }
 
-    public void prepareData(String dateFormat){
+    public void prepareData(String dateFormat) {
+        showLoading();
         AppointmentService service = APIServiceManager.getService(AppointmentService.class);
         service.getApppointmentByDate(CoreManager.getStaff(getContext()).getId(), dateFormat)
                 .subscribeOn(Schedulers.newThread())
@@ -172,13 +176,13 @@ public class AppointmentFragment extends BaseFragment {
                     public void onSuccess(Response<List<Appointment>> response) {
                         if (response.isSuccessful()) {
                             appointments.clear();
-                           appointments.addAll(response.body());
-                           mAdapter.notifyDataSetChanged();
-                           if(appointments.isEmpty()){
-                               txtMessage.setVisibility(View.VISIBLE);
-                           }else{
-                               txtMessage.setVisibility(View.GONE);
-                           }
+                            appointments.addAll(sortList(response.body()));
+                            mAdapter.notifyDataSetChanged();
+                            if (appointments.isEmpty()) {
+                                txtMessage.setVisibility(View.VISIBLE);
+                            } else {
+                                txtMessage.setVisibility(View.GONE);
+                            }
 
                         } else if (response.code() == 500) {
                             showFatalError(response.errorBody(), "appointmentService");
@@ -201,12 +205,8 @@ public class AppointmentFragment extends BaseFragment {
                 });
     }
 
-//    private int dp2px(int dp) {
-//        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-//                getResources().getDisplayMetrics());
-//    }
 
-    public void callSwifData(String dateFormat){
+    public void callSwifData(String dateFormat) {
         AppointmentService service = APIServiceManager.getService(AppointmentService.class);
         service.getApppointmentByDate(CoreManager.getStaff(getContext()).getId(), dateFormat)
                 .subscribeOn(Schedulers.newThread())
@@ -221,11 +221,11 @@ public class AppointmentFragment extends BaseFragment {
                     public void onSuccess(Response<List<Appointment>> response) {
                         if (response.isSuccessful()) {
                             appointments.clear();
-                            appointments.addAll(response.body());
+                            appointments.addAll(sortList(response.body()));
                             mAdapter.notifyDataSetChanged();
-                            if(appointments.isEmpty()){
+                            if (appointments.isEmpty()) {
                                 txtMessage.setVisibility(View.VISIBLE);
-                            }else{
+                            } else {
                                 txtMessage.setVisibility(View.GONE);
                             }
                             swipeRefreshLayout.setRefreshing(false);
@@ -250,7 +250,7 @@ public class AppointmentFragment extends BaseFragment {
                 });
     }
 
-    public void changeStatus(int status, int position){
+    public void changeStatus(int status, int position) {
         showLoading();
         AppointmentService service = APIServiceManager.getService(AppointmentService.class);
         service.changeStatus(appointments.get(position).getId(), status)
@@ -285,6 +285,40 @@ public class AppointmentFragment extends BaseFragment {
                         hideLoading();
                     }
                 });
+    }
+
+
+    private List<Appointment> sortList(List<Appointment> appointments) {
+        List<Appointment> list = appointments;
+        list.sort(Comparator.comparing(Appointment::getStatus).thenComparing(Appointment::getNumericalOrder));
+
+        List<Appointment> list1 = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getStatus() == 2) {
+                list1.add(list.get(i));
+//                list.remove(i);
+            }
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getStatus() == 1) {
+                list1.add(list.get(i));
+//                list.remove(i);
+            }
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getStatus() == 0) {
+                list1.add(list.get(i));
+//                list.remove(i);
+            }
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getStatus() == 3) {
+                list1.add(list.get(i));
+//                list.remove(i);
+            }
+        }
+//        list1.addAll(list);
+        return list1;
     }
 
 }

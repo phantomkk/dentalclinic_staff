@@ -41,8 +41,10 @@ import com.dentalclinic.capstone.admin.adapter.PatientAdapter;
 import com.dentalclinic.capstone.admin.adapter.PatientSwiftAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
+import com.dentalclinic.capstone.admin.api.services.AppointmentService;
 import com.dentalclinic.capstone.admin.api.services.PatientService;
 import com.dentalclinic.capstone.admin.api.services.UserService;
+import com.dentalclinic.capstone.admin.dialog.AppointmentDetailDialog;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Staff;
@@ -104,8 +106,7 @@ public class SearchPatientFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_search_patient, container, false);
         textView = view.findViewById(R.id.txt_label_message);
         txtLabelAppointment = view.findViewById(R.id.txt_label_appointment);
-        int number = 2;
-        txtLabelAppointment.setText(getResources().getString(R.string.label_patient_apppointment, number));
+//        int number = 2;
         //button newPatient
         btnNewPatient = new FloatingActionButton(getContext());
         btnNewPatient.setTitle("Thêm mới bệnh nhân");
@@ -361,16 +362,21 @@ public class SearchPatientFragment extends BaseFragment {
             @Override
             public void onChangeDoctorClick(int pos) {
                 showMessage("Change Doctor");
+
             }
 
             @Override
             public void onCancleClick(int pos) {
-                showMessage("Cancle Appointment");
+//                showMessage("Cancle Appointment");
+                changeStatus(4, pos);
             }
 
             @Override
             public void onItemClick(int pos) {
-                showMessage("show dialog");
+              Appointment appointment = appointments.get(pos);
+                AppointmentDetailDialog dialog = new AppointmentDetailDialog(getActivity(), appointment);
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.show();
             }
         });
         appointmentRecyclerView.setAdapter(mAdapter2);
@@ -455,12 +461,16 @@ public class SearchPatientFragment extends BaseFragment {
     private void prepareData2() {
         appointments.add(new Appointment("haha","vo quoc trinh",3,1));
         appointments.add(new Appointment("haha","vo quoc trinh",3,3));
+        appointments.add(new Appointment("haha","vo quoc trinh",3,2));
+        appointments.add(new Appointment("haha","vo quoc trinh",3,4));
     }
 
     public void setPatientsAndNotifiAdapter(List<Patient> patientList) {
         if (patientList.isEmpty()) {
             textView.setVisibility(View.VISIBLE);
+            txtLabelAppointment.setVisibility(View.GONE);
         } else {
+            txtLabelAppointment.setVisibility(View.VISIBLE);
             textView.setVisibility(View.GONE);
         }
         patients.clear();
@@ -469,11 +479,7 @@ public class SearchPatientFragment extends BaseFragment {
     }
 
     public void setAppointmentAndNotifiAdapter(List<Appointment> appointmentList) {
-//        if (appointmentList.isEmpty()) {
-//            textView.setVisibility(View.VISIBLE);
-//        } else {
-//            textView.setVisibility(View.GONE);
-//        }
+        txtLabelAppointment.setText(getResources().getString(R.string.label_patient_apppointment, appointmentList.size()));
         appointments.clear();
         appointments.addAll(appointmentList);
         mAdapter2.notifyDataSetChanged();
@@ -484,4 +490,40 @@ public class SearchPatientFragment extends BaseFragment {
                 getResources().getDisplayMetrics());
     }
 
+    public void changeStatus(int status, int position){
+        showLoading();
+        AppointmentService service = APIServiceManager.getService(AppointmentService.class);
+        service.changeStatus(appointments.get(position).getId(), status)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<SuccessResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onSuccess(Response<SuccessResponse> successResponseResponse) {
+                        if (successResponseResponse.isSuccessful()) {
+                            appointments.get(position).setStatus(status);
+                            mAdapter.notifyDataSetChanged();
+                        } else if (successResponseResponse.code() == 500) {
+                            showFatalError(successResponseResponse.errorBody(), "appointmentService");
+                        } else if (successResponseResponse.code() == 401) {
+                            showErrorUnAuth();
+                        } else if (successResponseResponse.code() == 400) {
+                            showBadRequestError(successResponseResponse.errorBody(), "appointmentService");
+                        } else {
+                            showErrorMessage(getString(R.string.error_on_error_when_call_api));
+                        }
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showWarningMessage(getResources().getString(R.string.error_on_error_when_call_api));
+                        logError(BookAppointmentReceptActivity.class, "callApi", e.getMessage());
+                        hideLoading();
+                    }
+                });
+    }
 }

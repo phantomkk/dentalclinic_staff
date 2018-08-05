@@ -1,6 +1,7 @@
 package com.dentalclinic.capstone.admin.fragment;
 
 
+import android.content.Intent;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import com.dentalclinic.capstone.admin.api.responseobject.Event;
 import com.dentalclinic.capstone.admin.api.services.AppointmentService;
 import com.dentalclinic.capstone.admin.api.services.MyJsonService;
 import com.dentalclinic.capstone.admin.api.services.StaffService;
+import com.dentalclinic.capstone.admin.dialog.AppointmentDetailDialog;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.DateCheck;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
@@ -194,18 +196,18 @@ public class BaseWeekViewFragment extends BaseFragment implements WeekView.Event
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        Toast.makeText(getContext(), "Clicked " + event.getName(), Toast.LENGTH_SHORT).show();
-
+//        Toast.makeText(getContext(), "Clicked " + event.getName(), Toast.LENGTH_SHORT).show();
+        getAppointmentById((int) event.getId());
     }
 
     @Override
     public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
-        Toast.makeText(getContext(), "Long pressed event: " + event.getName(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "Long pressed event: " + event.getName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onEmptyViewLongPress(Calendar time) {
-        Toast.makeText(getContext(), "Empty view long pressed: " + getEventTitle(time), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "Empty view long pressed: " + getEventTitle(time), Toast.LENGTH_SHORT).show();
     }
 
     public WeekView getWeekView() {
@@ -279,6 +281,46 @@ public class BaseWeekViewFragment extends BaseFragment implements WeekView.Event
             }
         }
         return viewEvents;
+    }
+
+    private void getAppointmentById(int id){
+        showLoading();
+        AppointmentService service = APIServiceManager.getService(AppointmentService.class);
+        service.getById(id).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<Appointment>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onSuccess(Response<Appointment> appointmentResponse) {
+                        if(appointmentResponse.isSuccessful()){
+                            Appointment appointment = appointmentResponse.body();
+                            AppointmentDetailDialog dialog = new AppointmentDetailDialog(getActivity(), appointment);
+                            dialog.setCanceledOnTouchOutside(true);
+                            dialog.show();
+                        } else if (appointmentResponse.code() == 500) {
+                            showFatalError(appointmentResponse.errorBody(), "logoutOnServer");
+                        } else if (appointmentResponse.code() == 401) {
+                            showErrorUnAuth();
+                        } else if (appointmentResponse.code() == 400) {
+                            showBadRequestError(appointmentResponse.errorBody(), "logoutOnServer");
+                        } else {
+                            showDialog(getString(R.string.error_message_api));
+                        }
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        hideLoading();
+                    }
+                });
+
+        //success appointment
+
     }
 
 }

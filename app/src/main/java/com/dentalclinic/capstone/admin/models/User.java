@@ -50,7 +50,7 @@ public class User implements Serializable {
     @SerializedName("patients")
     private List<Patient> patients;
 
-    @SerializedName("appointment")
+    @SerializedName("appointments")
     private List<Appointment> appointments;
 
 //    public Patient getCurrentPatient() {

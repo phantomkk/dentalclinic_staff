@@ -61,23 +61,52 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/input_margin_top"
+                android:layout_marginBottom="@dimen/input_margin_top"
                 android:background="@color/color_grey_200"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:weightSum="10"
                 android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Giờ bắt đầu:" />
+                android:layout_weight="3"
+                android:text="Bác Sĩ:" />
             <TextView
-                android:id="@+id/txt_start_time"
-                android:layout_width="match_parent"
+                android:id="@+id/txt_dentist"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_black"
-                android:layout_marginLeft="@dimen/input_margin_top"
+                android:layout_weight="7"
                 android:layout_marginBottom="@dimen/input_margin_top"
-                android:text="09:30 20/10/2996" />
+                android:textAllCaps="true"
+                android:text="Võ quốc trịnh" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/input_margin_top"
+                android:layout_marginBottom="@dimen/input_margin_top"
+                android:background="@color/color_grey_200"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="10"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="Giờ bắt đầu:" />
+                <TextView
+                    android:id="@+id/txt_start_time"
+                    android:layout_width="0dp"
+                    android:layout_weight="7"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_black"
+                    android:layout_marginBottom="@dimen/input_margin_top"
+                    android:text="09:30 20/10/2996" />
             </LinearLayout>
             <!--<TextView-->
                 <!--android:id="@+id/btn_view_note"-->

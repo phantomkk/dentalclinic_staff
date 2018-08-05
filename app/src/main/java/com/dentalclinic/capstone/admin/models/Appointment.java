@@ -22,6 +22,8 @@ public class Appointment implements Serializable {
     private int id;
     @SerializedName("staff_id")
     private int staffId;
+    @SerializedName("dentist")
+    private Staff staff;
     @SerializedName("date_booking")
     private String dateBooking;
     @SerializedName("phone")
@@ -40,8 +42,8 @@ public class Appointment implements Serializable {
     private int status;
     @SerializedName("patient")
     private Patient patient;
-    @SerializedName("dentist")
-    private Staff dentist;
+//    @SerializedName("dentist")
+//    private Staff dentist;
 
     private boolean isExpand = false;
     public Appointment(String note, String name, int numericalOrder, int status) {
@@ -183,12 +185,11 @@ public class Appointment implements Serializable {
         return weekViewEvent;
     }
 
-
-    public Staff getDentist() {
-        return dentist;
+    public Staff getStaff() {
+        return staff;
     }
 
-    public void setDentist(Staff dentist) {
-        this.dentist = dentist;
+    public void setStaff(Staff staff) {
+        this.staff = staff;
     }
 }
