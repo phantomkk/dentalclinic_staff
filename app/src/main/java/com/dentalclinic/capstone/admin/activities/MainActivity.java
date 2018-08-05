@@ -35,12 +35,15 @@ import com.dentalclinic.capstone.admin.fragment.BaseWeekViewFragment;
 import com.dentalclinic.capstone.admin.fragment.CalendarFragment;
 import com.dentalclinic.capstone.admin.fragment.MyAccoutFragment;
 import com.dentalclinic.capstone.admin.fragment.SearchPatientFragment;
+import com.dentalclinic.capstone.admin.fragment.SettingFragment;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
+import com.dentalclinic.capstone.admin.utils.SettingManager;
+import com.dentalclinic.capstone.admin.utils.Utils;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.squareup.picasso.Picasso;
 
@@ -94,6 +97,8 @@ public class MainActivity extends BaseActivity
         mStaffName = header.findViewById(R.id.txt_staff_name);
         mStaffPhone = header.findViewById(R.id.txt_staff_phone);
         staff = CoreManager.getStaff(MainActivity.this);
+        Utils.setVNLocale(this);
+        SettingManager.initSetting(this);
         setDataHeader(staff);
 //
         getAllPhone();
@@ -209,7 +214,7 @@ public class MainActivity extends BaseActivity
                             } else {
                                 if (searchPatientFragment != null) {
                                     searchPatientFragment.setPatientsAndNotifiAdapter(response.body().getPatients());
-                                    if(response.body().getAppointments()!=null){
+                                    if (response.body().getAppointments() != null) {
                                         searchPatientFragment.setAppointmentAndNotifiAdapter(response.body().getAppointments());
                                     }
                                     searchPatientFragment.enableAllButton();
@@ -277,7 +282,7 @@ public class MainActivity extends BaseActivity
                         Bundle bundle = new Bundle();
                         bundle.putString(AppConst.PHONE, phone);
                         intent.putExtra(AppConst.BUNDLE, bundle);
-                        startActivityForResult(intent,REQUEST_CREATE_PATIENT);
+                        startActivityForResult(intent, REQUEST_CREATE_PATIENT);
                     }
                 }).setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     @Override
@@ -305,7 +310,7 @@ public class MainActivity extends BaseActivity
                         Bundle bundle = new Bundle();
                         bundle.putString(AppConst.PHONE, phone);
                         intent.putExtra(AppConst.BUNDLE, bundle);
-                        startActivityForResult(intent,REQUEST_CREATE_PATIENT);
+                        startActivityForResult(intent, REQUEST_CREATE_PATIENT);
                     }
                 });
         alertDialog.show();
@@ -391,6 +396,11 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_my_accout) {
             MyAccoutFragment newFragment = new MyAccoutFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, newFragment).commit();
+        } else if (id == R.id.nav_setting) {
+            setTitle("Cài đặt");
+            SettingFragment settingFragment = new SettingFragment();
+            fragmentManager.beginTransaction().replace(R.id.main_fragment, settingFragment).commit();
+            //donothing
         } else if (id == R.id.nav_log_out) {
 //            logoutOnServer();
             CoreManager.clearStaff(MainActivity.this);
@@ -453,8 +463,8 @@ public class MainActivity extends BaseActivity
             }
 
             return;
-        }else if(requestCode == REQUEST_CREATE_PATIENT){
-            if(requestCode == RESULT_OK){
+        } else if (requestCode == REQUEST_CREATE_PATIENT) {
+            if (requestCode == RESULT_OK) {
                 getPatienst(phone);
             }
         }

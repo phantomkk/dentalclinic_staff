@@ -34,5 +34,6 @@ public class AppConst {
     public final static String CHANNEL_FEEDBACK = "CHANNEL_FEEDBACK";
     public final static String RESPONSE_FEEDBACK = "RESPONSE_FEEDBACK";
     public final static String RESPONSE_APPOINTMENT_REMINDER = "RESPONSE_APPOINTMENT_REMINDER";
+    public final static String TOPIC_PROMOTION = "PROMOTION";
 
 }

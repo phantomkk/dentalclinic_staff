@@ -29,6 +29,10 @@
                 android:id="@+id/nav_my_accout"
                 android:icon="@drawable/ic_account_circle_black_24dp"
                 android:title="@string/my_accout_fragment_title" />
+                <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="Cài đặt" />
             </group>
             <item
                 android:id="@+id/nav_log_out"
