@@ -158,8 +158,8 @@ public class SearchPatientFragment extends BaseFragment {
         if (getContext() != null) {
             currentStaff = CoreManager.getStaff(getContext());
         }
-        prepareData();
-        prepareData2();
+//        prepareData();
+//        prepareData2();
 //        mListVi
 // ew = (SwipeMenuListView) view.findViewById(R.id.listView);
 //        mAdapter = new PatientAdapter(getContext(), patients);

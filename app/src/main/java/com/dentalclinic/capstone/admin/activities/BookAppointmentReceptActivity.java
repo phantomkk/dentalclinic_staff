@@ -25,10 +25,12 @@ import com.ajithvgiri.searchdialog.OnSearchItemSelected;
 import com.ajithvgiri.searchdialog.SearchListItem;
 import com.ajithvgiri.searchdialog.SearchableDialog;
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.adapter.SearchDentistAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.requestobject.AppointmentRequest;
 import com.dentalclinic.capstone.admin.api.services.AppointmentService;
 import com.dentalclinic.capstone.admin.api.services.StaffService;
+import com.dentalclinic.capstone.admin.dialog.SearchDentistDialog;
 import com.dentalclinic.capstone.admin.fragment.SearchPatientFragment;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
@@ -63,9 +65,9 @@ public class BookAppointmentReceptActivity extends BaseActivity {
     private User user;
     private Patient patient;
     private boolean isDateValid = true;
-    private List<SearchListItem> listItemDentist;
+    private List<SearchDentistAdapter.SearchDentisItem> listItemDentist;
     private List<Staff> listDentist;
-    private SearchableDialog searchDentistDialog;
+    private SearchDentistDialog searchDentistDialog;
     private Staff currentDentist;
     private RadioButton rbtDefault, rbtDoctor;
     private LinearLayout linearLayout;
@@ -137,7 +139,7 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         }
 
         callApiGetListDentist();
-        searchDentistDialog = new SearchableDialog(this, listItemDentist, "Tìm kiếm nha sĩ");
+        searchDentistDialog = new SearchDentistDialog(this, listItemDentist, "Tìm kiếm nha sĩ");
         setListener();
     }
 
@@ -182,13 +184,13 @@ public class BookAppointmentReceptActivity extends BaseActivity {
             if (searchDentistDialog != null && listDentist != null && listDentist.size() > 0) {
                 searchDentistDialog.show();
             } else {
-                showMessage("Danh sách răng trống");
+                showMessage("Danh sách nha sĩ trống");
             }
         });
 
-        searchDentistDialog.setOnItemSelected(new OnSearchItemSelected() {
+        searchDentistDialog.setOnItemSelected(new SearchDentistDialog.OnSearchDentistItemSelected() {
             @Override
-            public void onClick(int position, SearchListItem searchListItem) {
+            public void onClick(int position, SearchDentistAdapter.SearchDentisItem searchListItem) {
                 int dentistId = searchListItem.getId();
                 tvDentist.setText(searchListItem.getTitle());
                 for (Staff s : listDentist) {
@@ -232,7 +234,7 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         request.setPhone(phone);
         if (patient != null) {
             request.setPatientId(patient.getId() + "");
-            logError("METHOD", "PATINET ko null" );
+            logError("METHOD", "PATINET ko null");
         }
         if (currentDentist != null) {
             request.setStaffId(currentDentist.getId() + "");
@@ -349,7 +351,7 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         StaffService service = APIServiceManager.getService(StaffService.class);
         Calendar c = Calendar.getInstance();
         String currentDate = DateUtils.getDate(c.getTime(), DateTimeFormat.DATE_TIME_DB_2);
-        service.getAvailableDentist(currentDate)
+        service.getCurrentFreeDentistAt(currentDate)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Response<List<Staff>>>() {
@@ -386,10 +388,12 @@ public class BookAppointmentReceptActivity extends BaseActivity {
                 });
     }
 
-    private List<SearchListItem> convertListDentist(List<Staff> list) {
-        List<SearchListItem> listItems = new ArrayList<>();
+    private List<SearchDentistAdapter.SearchDentisItem> convertListDentist(List<Staff> list) {
+        List<SearchDentistAdapter.SearchDentisItem> listItems = new ArrayList<>();
         for (Staff s : list) {
-            listItems.add(new SearchListItem(s.getId(), s.getName()));
+            SearchDentistAdapter.SearchDentisItem item =
+                    new SearchDentistAdapter.SearchDentisItem(s.getId(), s.getName(), s.getStatus());
+            listItems.add(item);
         }
         return listItems;
     }

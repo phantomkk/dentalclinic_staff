@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -80,6 +81,9 @@ public class MedicineListActivity extends Activity {
                     String keyword = editable.toString();
                     search(keyword);
                     adapter.notifyDataSetChanged();
+                Log.d("LISTM", listMedicineQuantity.size() + "listMedicineQuantitySIZE");
+                Log.d("LISTM", currentSearchList.size() + "currentSearchListSIZE");
+                Log.d("LISTM", selectedMedicineQuantity.size() + "selectedMedicineQuantitySIZE");
             }
         });
     }
