@@ -102,6 +102,7 @@ public class BookAppointmentReceptActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 linearLayout.setVisibility(View.VISIBLE);
                 linearLayout.startAnimation(slideDown);
+                currentDentist = null;
             }
         });
 

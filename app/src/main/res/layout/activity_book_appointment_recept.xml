@@ -84,7 +84,6 @@
                     android:id="@+id/linear_choose_doctor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:layout_marginTop="@dimen/input_margin_top"
                     android:orientation="vertical">
 
