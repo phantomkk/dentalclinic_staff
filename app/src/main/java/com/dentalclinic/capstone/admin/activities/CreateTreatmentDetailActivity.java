@@ -35,6 +35,7 @@ import com.dentalclinic.capstone.admin.adapter.ToothSpinnerAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.requestobject.TreatmentHistoryRequest;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
+import com.dentalclinic.capstone.admin.api.services.MedicineService;
 import com.dentalclinic.capstone.admin.api.services.ToothService;
 import com.dentalclinic.capstone.admin.api.services.TreatmentDetailService;
 import com.dentalclinic.capstone.admin.api.services.TreatmentHistoryService;
@@ -145,7 +146,7 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
         selectedMedicine = new ArrayList<>();
         adapter = new ToothSpinnerAdapter(this, android.R.layout.simple_spinner_item, listTooth);
         if (getIntent() != null) {
-                currentPatient = (Patient) getIntent().getSerializableExtra(PATIENT_BUNDLE);
+            currentPatient = (Patient) getIntent().getSerializableExtra(PATIENT_BUNDLE);
             currentTreatmentHistory = (TreatmentHistory) getIntent().getSerializableExtra(TREATMENT_HISTORY_BUNDLE);
             if (currentTreatmentHistory != null) {
                 currentTooth = currentTreatmentHistory.getTooth();
@@ -187,7 +188,8 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
         btnCreateTmHistory.setOnClickListener((v) -> {
             callApiTreatmentService();
         });
-        prepareMedicineDummy();
+//        prepareMedicineDummy();
+        prepareData();
         IntentFilter filter = new IntentFilter("Hello Main");
         LocalBroadcastManager.getInstance(this).registerReceiver(onNotice, filter);
 
@@ -248,11 +250,45 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
         lblTreatmentStep.setText(stepsStr);
     }
 
+    private void prepareData() {
+        MedicineService medicineService = APIServiceManager.getService(MedicineService.class);
+        medicineService.getAllMedicine().
+                subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<List<Medicine>>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onSuccess(Response<List<Medicine>> listResponse) {
+                        if (listResponse.isSuccessful()) {
+                            if (listResponse.body() != null) {
+                                listMedicine.clear();
+                                listMedicine.addAll(convertListMedicine(listResponse.body()));
+                            }
+                        } else if (listResponse.code() == 500) {
+                            showFatalError(listResponse.errorBody(), "callApiTreatmentService");
+                        } else if (listResponse.code() == 401) {
+                            showErrorUnAuth();
+                        } else if (listResponse.code() == 400) {
+                            showBadRequestError(listResponse.errorBody(), "callApiTreatmentService");
+                        } else {
+                            showErrorMessage("Lỗi không xác định");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
+    }
 
     private void updateMedicineLabel(List<MedicineQuantity> medicines) {
         String mStr = "";
         for (MedicineQuantity s : medicines) {
-            mStr+= Utils.getMedicineLine(s.getMedicine().getName(), s.getQuantity(), 40)+"\n";
+            mStr += Utils.getMedicineLine(s.getMedicine().getName(), s.getQuantity(), 40) + "\n";
 //            mStr += s.getMedicine().getName() + " ___ " + s.getQuantity() + " viên" + "\n";
         }
         lblMedicineQuantity.setText(mStr);
@@ -396,6 +432,16 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
         }
     }
 
+    private List<MedicineQuantity> convertListMedicine(List<Medicine> list) {
+        List<MedicineQuantity> listMQ = new ArrayList<>();
+        for (Medicine m : list) {
+            MedicineQuantity q = new MedicineQuantity(m.getId(), 0, 0);
+            q.setMedicine(m);
+            listMQ.add(q);
+        }
+        return listMQ;
+    }
+
 
     private void callApiTreatmentService() {
         TreatmentHistoryRequest requestObj = new TreatmentHistoryRequest();
@@ -425,14 +471,14 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
         builder.setType(MultipartBody.FORM);
         builder.addFormDataPart("treatment_history_id", treatmentHistoryId + "");
         builder.addFormDataPart("staff_id", s.getId() + "");
-        builder.addFormDataPart("patient_id", currentPatient.getId()+"");
+        builder.addFormDataPart("patient_id", currentPatient.getId() + "");
         builder.addFormDataPart("detail_note", actTmDetailNote.getText().toString() + " ");
         for (MedicineQuantity mq : selectedMedicine) {
             builder.addFormDataPart("medicine_id[]", mq.getMedicineId() + "");
             builder.addFormDataPart("medicine_quantity[]", mq.getQuantity() + "");
         }
         for (TreatmentStep st : crrTreatmentSteps) {
-            if(st.isCheck()) {
+            if (st.isCheck()) {
                 builder.addFormDataPart("step_id[]", st.getStepId() + "");
             }
         }

@@ -61,48 +61,48 @@ public class MedicineAdapter extends ArrayAdapter<MedicineQuantity> {
             convertView.setTag(viewHolder);
             convertView.setOnClickListener((View view) -> {
             });
-            viewHolder.edtQuantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean hasFocus) {
-                    if (!hasFocus) {
-                        String qt =viewHolder.edtQuantity.getText().toString();
-                        int quantity = Integer.parseInt(qt);
-                        medicine.setQuantity(quantity);
-                        updateQuantityInList(medicine);
-                    }
-                }
-            });
-
-            //set Listener
-            viewHolder.btnAdd.setOnClickListener((v) -> {
-                if (medicine != null) {
-//                viewHolder.quantity++;
-                    medicine.setQuantity(medicine.getQuantity() + 1);
-                    updateQuantityInList(medicine);
-                    viewHolder.edtQuantity.setText(medicine.getQuantity() + "");
-
-                }
-            });
-            viewHolder.btnSubtract.setOnClickListener((v) -> {
-                if (medicine != null) {
-                    medicine.setQuantity(medicine.getQuantity() - 1);
-                    updateQuantityInList(medicine);
-                    viewHolder.edtQuantity.setText(medicine.getQuantity() + "");
-                }
-            });
-            if (medicine != null) {
-                viewHolder.txtMedicineName.setText(medicine.getMedicine().getName());
-                viewHolder.edtQuantity.setText(medicine.getQuantity() + "");
-                MedicineQuantity tmp;
-                if ((tmp = isInSelectedList(medicine)) != null) {
-                    viewHolder.edtQuantity.setText(tmp.getQuantity() + "");
-                    medicine.setQuantity(tmp.getQuantity());
-                }
-            }
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        viewHolder.edtQuantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    String qt =viewHolder.edtQuantity.getText().toString();
+                    int quantity = Integer.parseInt(qt);
+                    medicine.setQuantity(quantity);
+                    updateQuantityInList(medicine);
+                }
+            }
+        });
+
+        //set Listener
+        viewHolder.btnAdd.setOnClickListener((v) -> {
+            if (medicine != null) {
+//                viewHolder.quantity++;
+                medicine.setQuantity(medicine.getQuantity() + 1);
+                updateQuantityInList(medicine);
+                viewHolder.edtQuantity.setText(medicine.getQuantity() + "");
+
+            }
+        });
+        viewHolder.btnSubtract.setOnClickListener((v) -> {
+            if (medicine != null) {
+                medicine.setQuantity(medicine.getQuantity() - 1);
+                updateQuantityInList(medicine);
+                viewHolder.edtQuantity.setText(medicine.getQuantity() + "");
+            }
+        });
+        if (medicine != null) {
+            viewHolder.txtMedicineName.setText(medicine.getMedicine().getName());
+            viewHolder.edtQuantity.setText(medicine.getQuantity() + "");
+            MedicineQuantity tmp;
+            if ((tmp = isInSelectedList(medicine)) != null) {
+                viewHolder.edtQuantity.setText(tmp.getQuantity() + "");
+                medicine.setQuantity(tmp.getQuantity());
+            }
+        }
 
 //        viewHolder.btnSelect.setOnClickListener((v) -> {
 //            if (viewHolder.isSelected) {

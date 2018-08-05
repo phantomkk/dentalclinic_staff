@@ -56,6 +56,9 @@ public interface StaffService {
     @GET("api/staff/getAvailableDentist")
     Single<Response<List<Staff>>> getAvailableDentist(@Query("date") String date);
 
+    @GET("api/staff/getCurrentFreeDentist")
+    Single<Response<List<Staff>>> getCurrentFreeDentistAt(@Query("date") String date);
+
     @GET("api/user/logout")
     Single<Response<SuccessResponse>> logout();
 

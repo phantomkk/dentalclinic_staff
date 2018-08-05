@@ -22,7 +22,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +34,7 @@ import com.dentalclinic.capstone.admin.adapter.ToothSpinnerAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.requestobject.TreatmentHistoryRequest;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
+import com.dentalclinic.capstone.admin.api.services.MedicineService;
 import com.dentalclinic.capstone.admin.api.services.ToothService;
 import com.dentalclinic.capstone.admin.api.services.TreatmentHistoryService;
 import com.dentalclinic.capstone.admin.api.services.TreatmentService;
@@ -44,7 +44,6 @@ import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.Tooth;
 import com.dentalclinic.capstone.admin.models.Treatment;
-import com.dentalclinic.capstone.admin.models.TreatmentHistory;
 import com.dentalclinic.capstone.admin.models.TreatmentImage;
 import com.dentalclinic.capstone.admin.models.TreatmentStep;
 import com.dentalclinic.capstone.admin.utils.AppConst;
@@ -52,9 +51,6 @@ import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.Utils;
 import com.fxn.pix.Pix;
 import com.fxn.utility.PermUtil;
-import com.nguyenhoanglam.imagepicker.model.Config;
-import com.nguyenhoanglam.imagepicker.model.Image;
-import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -68,15 +64,12 @@ import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.internal.Util;
 import retrofit2.Response;
-
-import static java.security.AccessController.getContext;
 
 public class CreateTreatmentActivity extends BaseActivity implements TextWatcher {
     private AutoCompleteTextView actPrice;
@@ -235,7 +228,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             callApiTreatmentService();
         });
         prepareData();
-        prepareMedicineDummy();
+//        prepareMedicineDummy();
 //        FirebaseMessaging.getInstance().subscribeToTopic("AAA");
         // REST OF YOUR CODE
         IntentFilter filter = new IntentFilter("Hello Main");
@@ -407,53 +400,63 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
 
     }
 
-    private void prepareMedicineDummy() {
-        Medicine m1 = new Medicine();
-        m1.setId(1);
-        m1.setName("paradol");
-        Medicine m2 = new Medicine();
-        m2.setId(2);
-        m2.setName("paracetamol");
-        Medicine m3 = new Medicine();
-        m3.setId(3);
-        m3.setName("pharmaton");
-        Medicine m4 = new Medicine();
-        m4.setId(4);
-        m4.setName("tiffy");
-        Medicine m5 = new Medicine();
-        m5.setId(5);
-        m5.setName("aquavina");
-        Medicine m6 = new Medicine();
-        m6.setId(6);
-        m6.setName("beberin");
-        Medicine m7 = new Medicine();
-        m7.setId(7);
-        m7.setName("torbrin");
-        Medicine m8 = new Medicine();
-        m8.setId(8);
-        m8.setName("acitonin");
-        Medicine m9 = new Medicine();
-        m9.setId(9);
-        m9.setName("hiruscar");
-        Medicine m10 = new Medicine();
-        m10.setId(10);
-        m10.setName("thuoc te");
-        List<Medicine> lst = new ArrayList<>();
-        lst.add(m1);
-        lst.add(m2);
-        lst.add(m3);
-        lst.add(m4);
-        lst.add(m5);
-        lst.add(m6);
-        lst.add(m7);
-        lst.add(m8);
-        lst.add(m9);
-        lst.add(m10);
-        for (Medicine m : lst) {
+//    private void prepareMedicineDummy() {
+//        Medicine m1 = new Medicine();
+//        m1.setId(1);
+//        m1.setName("paradol");
+//        Medicine m2 = new Medicine();
+//        m2.setId(2);
+//        m2.setName("paracetamol");
+//        Medicine m3 = new Medicine();
+//        m3.setId(3);
+//        m3.setName("pharmaton");
+//        Medicine m4 = new Medicine();
+//        m4.setId(4);
+//        m4.setName("tiffy");
+//        Medicine m5 = new Medicine();
+//        m5.setId(5);
+//        m5.setName("aquavina");
+//        Medicine m6 = new Medicine();
+//        m6.setId(6);
+//        m6.setName("beberin");
+//        Medicine m7 = new Medicine();
+//        m7.setId(7);
+//        m7.setName("torbrin");
+//        Medicine m8 = new Medicine();
+//        m8.setId(8);
+//        m8.setName("acitonin");
+//        Medicine m9 = new Medicine();
+//        m9.setId(9);
+//        m9.setName("hiruscar");
+//        Medicine m10 = new Medicine();
+//        m10.setId(10);
+//        m10.setName("thuoc te");
+//        List<Medicine> lst = new ArrayList<>();
+//        lst.add(m1);
+//        lst.add(m2);
+//        lst.add(m3);
+//        lst.add(m4);
+//        lst.add(m5);
+//        lst.add(m6);
+//        lst.add(m7);
+//        lst.add(m8);
+//        lst.add(m9);
+//        lst.add(m10);
+//        for (Medicine m : lst) {
+//            MedicineQuantity q = new MedicineQuantity(m.getId(), 0, 0);
+//            q.setMedicine(m);
+//            listMedicine.add(q);
+//        }
+//    }
+
+    private List<MedicineQuantity> convertListMedicine(List<Medicine> list) {
+        List<MedicineQuantity> listMQ = new ArrayList<>();
+        for (Medicine m : list) {
             MedicineQuantity q = new MedicineQuantity(m.getId(), 0, 0);
             q.setMedicine(m);
-            listMedicine.add(q);
+            listMQ.add(q);
         }
+        return listMQ;
     }
 
     private void prepareData() {
@@ -465,14 +468,20 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         Single<Response<List<Tooth>>> toothService = APIServiceManager.getService(ToothService.class)
                 .getAllTooth().subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
-        Single<CombineClass> combineClass = Single.zip(treatmentService, toothService,
-                new BiFunction<Response<List<Treatment>>, Response<List<Tooth>>, CombineClass>() {
+        Single<Response<List<Medicine>>> medicineService = APIServiceManager.getService(MedicineService.class)
+                .getAllMedicine().subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+
+
+        Single<CombineClass> combineClass = Single.zip(treatmentService, toothService, medicineService,
+                new Function3<Response<List<Treatment>>, Response<List<Tooth>>, Response<List<Medicine>>, CombineClass>() {
                     @Override
                     public CombineClass apply(
                             Response<List<Treatment>> listResponse,
-                            Response<List<Tooth>> listResponse2)
+                            Response<List<Tooth>> listResponse2,
+                            Response<List<Medicine>> listResponse3)
                             throws Exception {
-                        return new CombineClass(listResponse, listResponse2);
+                        return new CombineClass(listResponse, listResponse2, listResponse3);
                     }
                 });
         combineClass.subscribe(new SingleObserver<CombineClass>() {
@@ -509,6 +518,24 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                         listTreatment.clear();
                         listTreatment.addAll(treatmentResponse.body());
                         listItemsTreatment.addAll(convertTreatmentList(listTreatment));
+                    } else {
+                        logError("onSuccess", "list treatment null");
+                    }
+                } else if (treatmentResponse.code() == 500) {
+                    showFatalError(treatmentResponse.errorBody(), "prepareData");
+                } else if (treatmentResponse.code() == 401) {
+                    showErrorUnAuth();
+                } else if (treatmentResponse.code() == 400) {
+                    showBadRequestError(treatmentResponse.errorBody(), "prepareData");
+                } else {
+                    showDialog(getString(R.string.error_message_api));
+                }
+
+                Response<List<Medicine>> medicineResponse = combineClass.listMedicine;
+                if (treatmentResponse.isSuccessful()) {
+                    if (treatmentResponse.body() != null) {
+                        listMedicine.clear();
+                        listMedicine.addAll(convertListMedicine(medicineResponse.body()));
                     } else {
                         logError("onSuccess", "list treatment null");
                     }
@@ -570,8 +597,8 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         builder.setType(MultipartBody.FORM);
         builder.addFormDataPart("treatment_id", currentTreatment.getId() + "");
         builder.addFormDataPart("treatment_hi-;story_id", treatmentHistoryId + "");
-        builder.addFormDataPart("staff_id", s.getId()+"");
-        builder.addFormDataPart("patient_id", currentPatient.getId()+"");
+        builder.addFormDataPart("staff_id", s.getId() + "");
+        builder.addFormDataPart("patient_id", currentPatient.getId() + "");
         builder.addFormDataPart("description", actTmHistoryDescription.getText().toString().trim() + "");
         builder.addFormDataPart("detail_note", actTmDetailNote.getText().toString() + "");
         builder.addFormDataPart("tooth_number", currentTooth.getToothNumber() + "");
@@ -701,11 +728,15 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private class CombineClass {
         private Response<List<Treatment>> listTreatment;
         private Response<List<Tooth>> listTooth;
+        private Response<List<Medicine>> listMedicine;
 
         public CombineClass(Response<List<Treatment>> listTreatment,
-                            Response<List<Tooth>> listTooth) {
+                            Response<List<Tooth>> listTooth,
+                            Response<List<Medicine>> listMedicine
+        ) {
             this.listTreatment = listTreatment;
             this.listTooth = listTooth;
+            this.setListMedicine(listMedicine);
         }
 
         public Response<List<Treatment>> getListTreatment() {
@@ -722,6 +753,14 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
 
         public void setListTooth(Response<List<Tooth>> listTooth) {
             this.listTooth = listTooth;
+        }
+
+        public Response<List<Medicine>> getListMedicine() {
+            return listMedicine;
+        }
+
+        public void setListMedicine(Response<List<Medicine>> listMedicine) {
+            this.listMedicine = listMedicine;
         }
     }
 
