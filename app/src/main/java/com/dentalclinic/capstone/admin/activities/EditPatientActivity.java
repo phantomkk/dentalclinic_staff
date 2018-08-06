@@ -348,7 +348,7 @@ public class EditPatientActivity extends BaseActivity {
             if (listAnamnesis.size() > 0) {
                 profileRequest.setListAnamnesis(listAnamnesis);
             }
-            createPatientAPI(profileRequest);
+            editPatientAPI(profileRequest);
 
         }
     }
@@ -369,7 +369,7 @@ public class EditPatientActivity extends BaseActivity {
         return value;
     }
 
-    public void createPatientAPI(PatientProfileRequest requestObj) {
+    public void editPatientAPI(PatientProfileRequest requestObj) {
         showLoading();
         PatientService service = APIServiceManager.getService(PatientService.class);
         service.changePatientInfo(requestObj)
@@ -395,11 +395,11 @@ public class EditPatientActivity extends BaseActivity {
                             setResult(RESULT_OK);
                             finish();
                         } else if (patientResponse.code() == 500) {
-                            showFatalError(patientResponse.errorBody(), "createPatientAPI");
+                            showFatalError(patientResponse.errorBody(), "editPatientAPI");
                         } else if (patientResponse.code() == 401) {
                             showErrorUnAuth();
                         } else if (patientResponse.code() == 400) {
-                            showBadRequestError(patientResponse.errorBody(), "createPatientAPI");
+                            showBadRequestError(patientResponse.errorBody(), "editPatientAPI");
                         } else {
                             showErrorMessage(getString(R.string.error_on_error_when_call_api));
                         }
@@ -410,7 +410,7 @@ public class EditPatientActivity extends BaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        logError("createPatientAPI", e.getMessage());
+                        logError("editPatientAPI", e.getMessage());
                         hideLoading();
                     }
                 });
