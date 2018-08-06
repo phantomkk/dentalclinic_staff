@@ -18,6 +18,7 @@ import com.dentalclinic.capstone.admin.dialog.CreateNewPaymentDialog;
 import com.dentalclinic.capstone.admin.models.Payment;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
+import com.dentalclinic.capstone.admin.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,9 @@ public class PatientPaymentActivity extends BaseActivity {
         }
         adapter = new PaymentAdapter(this, payments, expandableListView);
         expandableListView.setAdapter(adapter);
+        if(Utils.isDentist(PatientPaymentActivity.this)){
+            btnCreateNew.setVisibility(View.GONE);
+        }
         btnCreateNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

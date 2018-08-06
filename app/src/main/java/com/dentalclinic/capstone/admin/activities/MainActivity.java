@@ -31,8 +31,10 @@ import com.dentalclinic.capstone.admin.api.services.StaffService;
 import com.dentalclinic.capstone.admin.api.services.UserService;
 import com.dentalclinic.capstone.admin.fragment.AbsentFragment;
 import com.dentalclinic.capstone.admin.fragment.AppointmentFragment;
+import com.dentalclinic.capstone.admin.fragment.BarChartFragment;
 import com.dentalclinic.capstone.admin.fragment.BaseWeekViewFragment;
 import com.dentalclinic.capstone.admin.fragment.CalendarFragment;
+import com.dentalclinic.capstone.admin.fragment.ChartFragment;
 import com.dentalclinic.capstone.admin.fragment.MyAccoutFragment;
 import com.dentalclinic.capstone.admin.fragment.SearchPatientFragment;
 import com.dentalclinic.capstone.admin.fragment.SettingFragment;
@@ -138,6 +140,12 @@ public class MainActivity extends BaseActivity
         searchPatientFragment = new SearchPatientFragment();
         fragmentManager.beginTransaction().replace(R.id.main_fragment, searchPatientFragment).commit();
         navigationView.getMenu().getItem(0).setChecked(true);
+
+        if(Utils.isRceiption(MainActivity.this)){
+            navigationView.getMenu().findItem(R.id.nav_history).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_appointment_list).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_chart).setVisible(false);
+        }
     }
 
     private Disposable disposable;
@@ -201,14 +209,13 @@ public class MainActivity extends BaseActivity
                     public void onSuccess(Response<User> response) {
                         if (response.isSuccessful()) {
                             if (response.body().getPatients().isEmpty()) {
-                                showConfigCreateNewPatientDialog("Tạo thông tin bệnh nhân cho tài khoản này?");
+                                if (Utils.isRceiption(MainActivity.this)) {
+                                    showConfigCreateNewPatientDialog("Tạo thông tin bệnh nhân cho tài khoản này?");
+                                }
                                 if (searchPatientFragment != null) {
                                     searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
                                     searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
                                     searchPatientFragment.removeAllButton();
-//                                    searchPatientFragment.enableAllButton();
-//                                    searchPatientFragment.removeButtonAppointment();
-//                                    searchPatientFragment.removeButtonPayment();
                                     searchPatientFragment.addButtonNewPatient();
                                 }
                             } else {
@@ -230,17 +237,15 @@ public class MainActivity extends BaseActivity
                         } else if (response.code() == 401) {
                             showErrorUnAuth();
                         } else if (response.code() == 400) {
-                            showConfigCreateNewUserDialog("Tạo tài khoản cho bệnh nhân?");
+                            if(Utils.isRceiption(MainActivity.this)) {
+                                showConfigCreateNewUserDialog("Tạo tài khoản cho bệnh nhân?");
+                            }
                             if (searchPatientFragment != null) {
                                 searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
                                 searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
-//                                searchPatientFragment.enableAllButton();
-//                                searchPatientFragment.removeButtonAppointment();
-//                                searchPatientFragment.removeButtonPayment();
                                 searchPatientFragment.removeAllButton();
                                 searchPatientFragment.addButtonNewPatient();
                             }
-//                            showBadRequestError(response.errorBody(), "callApiLogin");
                         } else {
                             showErrorMessage(getString(R.string.error_on_error_when_call_api));
                         }
@@ -389,6 +394,14 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_appointment_list) {
             AppointmentFragment calendarFragment = new AppointmentFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, calendarFragment).commit();
+        } else if (id == R.id.nav_bar_chart) {
+            setTitle(getResources().getString(R.string.bar_chart_title));
+            BarChartFragment barChartFragment = new BarChartFragment();
+            fragmentManager.beginTransaction().replace(R.id.main_fragment, barChartFragment).commit();
+        }  else if (id == R.id.nav_chart) {
+            setTitle(getResources().getString(R.string.chart_title));
+            ChartFragment chartFragment = new ChartFragment();
+            fragmentManager.beginTransaction().replace(R.id.main_fragment, chartFragment).commit();
         } else if (id == R.id.nav_request_absent) {
 //            startActivity(new Intent(MainActivity.this, DatePickerActivity.class));
             AbsentFragment absentFragment = new AbsentFragment();

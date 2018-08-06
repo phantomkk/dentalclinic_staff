@@ -45,7 +45,8 @@ public class Staff implements Serializable {
     private String refreshToken;
     @SerializedName("token_created_date")
     private String tokenCreatedDate;
-
+    @SerializedName("role_id")
+    private int role;
 
     public Staff() {
     }
@@ -217,5 +218,14 @@ public class Staff implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 }

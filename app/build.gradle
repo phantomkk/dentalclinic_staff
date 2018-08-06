@@ -72,6 +72,8 @@ dependencies {
     implementation 'com.applandeo:material-calendar-view:1.4.0'
     //yearmonthpicker
     implementation 'com.github.dewinjm:monthyear-picker:1.0.0'
+    //chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
 
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'

@@ -18,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
@@ -37,7 +39,10 @@ public class Utils {
     public static final String STATUS_DONE = "Hoàn Thành";
     public static final String STATUS_NOT_DONE = "Hoàn Thành";
     public static final String PATTERN_DATE = "dd-MM-yyyy";
-
+    public static final int DENTIST = 2;
+    public static final int RECEIPTION = 3;
+    public static String LIST_TREATMENT = "LIST_TREATMENT";
+    public static String LIST_PAYMENT = "LIST_PAYMENT";
     public static boolean isEmulator() {
         return Build.FINGERPRINT.startsWith("generic")
                 || Build.FINGERPRINT.startsWith("unknown")
@@ -119,10 +124,12 @@ public class Utils {
     }
 
     public static String formatMoney(Long money) {
-//        NumberFormat formatter = new DecimalFormat("#,###");
+        NumberFormat formatter = new DecimalFormat("#,###");
 //        double myNumber = 1000000;
-//        String formattedNumber = formatter.format(myNumber);
-        return (String.format("%,d", money)).replace(',', '.');
+        String formattedNumber = formatter.format(money);
+//            return (String.format("%,d", money)).replace(',', '.');
+//            return money.toString();
+        return  formattedNumber;
     }
 
     public static <T> T parseJson(String source, Class<T> c) throws JsonSyntaxException {
@@ -142,7 +149,22 @@ public class Utils {
         res.updateConfiguration(conf, dm);
     }
 
-
+    public static boolean isDentist(Context context){
+        boolean rs = false;
+        Staff staff = CoreManager.getStaff(context);
+        if(staff.getRole() ==DENTIST){
+            return true;
+        }
+        return rs;
+    }
+    public static boolean isRceiption(Context context){
+        boolean rs = false;
+        Staff staff = CoreManager.getStaff(context);
+        if(staff.getRole()==RECEIPTION){
+            return true;
+        }
+        return rs;
+    }
 
 
 }

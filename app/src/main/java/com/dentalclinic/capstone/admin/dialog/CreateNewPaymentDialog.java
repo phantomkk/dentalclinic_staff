@@ -101,11 +101,12 @@ public class CreateNewPaymentDialog extends Dialog{
                        rs+=payment.getTreatmentNames().get(i)+", ";
                    }
                }
+               txtTreatment.setText(rs);
            }
            if(payment.getTotalPrice()!=null){
-               txtTotal.setText(payment.getTotalPrice()+" "+ getContext().getResources().getString(R.string.current_unit));
+               txtTotal.setText(Utils.formatMoney(payment.getTotalPrice())+getContext().getResources().getString(R.string.current_unit));
                if(payment.getPaid()!=null){
-                   txtNotPayYet.setText((payment.getTotalPrice()- payment.getPaid())+" "+ getContext().getResources().getString(R.string.current_unit));
+                   txtNotPayYet.setText(Utils.formatMoney(payment.getTotalPrice()- payment.getPaid())+ getContext().getResources().getString(R.string.current_unit));
                }
            }
         }

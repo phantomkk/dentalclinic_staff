@@ -16,6 +16,7 @@ import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
 import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.dentalclinic.capstone.admin.utils.GenderUtils;
+import com.dentalclinic.capstone.admin.utils.Utils;
 import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
 import com.squareup.picasso.Picasso;
 
@@ -98,6 +99,9 @@ public class PatientSwiftAdapter extends RecyclerView.Adapter<PatientSwiftAdapte
 
             }
         });
+        if(Utils.isDentist(mContext)){
+            holder.btnTreatment.setVisibility(View.GONE);
+        }
     }
 
     @Override

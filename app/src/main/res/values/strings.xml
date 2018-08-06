@@ -179,10 +179,13 @@
     <string name="success_message_api">Cập Nhật Thành Công</string>
     <string name="title_activity_main">MainActivity</string>
 
-    <string name="search_patient_titie">Tìm kiếm bệnh nhân</string>
+    <string name="search_patient_titie">Tìm Kiếm Bệnh Nhân</string>
     <string name="history_work_title">Lịch hẹn</string>
     <string name="appointment_title">Khám bệnh</string>
-    <string name="absent_title">Xin Nghỉ</string>
+    <string name="absent_title">Nghỉ Phép</string>
+    <string name="chart_title">Báo Cáo Biểu Đồ</string>
+    <string name="bar_chart_title">Biểu Đồ Doanh Thu</string>
+    <string name="line_chart_title">Doanh Thu</string>
 
 
     <string name="action_today">Hôm Hay</string>
