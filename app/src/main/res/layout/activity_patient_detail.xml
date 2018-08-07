@@ -176,6 +176,31 @@
                 android:layout_height="1dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
+                android:background="@color/color_grey_200" />  <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tiền sử bệnh" />
+
+                <TextView
+                    android:id="@+id/txt_list_anamnesis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/color_black"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/color_grey_200" />
 
             <LinearLayout

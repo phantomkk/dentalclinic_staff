@@ -14,6 +14,7 @@ import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.services.HistoryTreatmentService;
 import com.dentalclinic.capstone.admin.api.services.PaymentService;
+import com.dentalclinic.capstone.admin.models.AnamnesisCatalog;
 import com.dentalclinic.capstone.admin.models.Event;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Payment;
@@ -41,7 +42,7 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
     private Button btnViewTreatment;
     private Button btnViewPayment;
     private Button btnEditPatient;
-    private TextView txtName, txtGender, txtPhone, txtAddress, txtDateOfBirth;
+    private TextView txtName, txtGender, txtPhone, txtAddress, txtDateOfBirth, txtAnamnesis;
     private Patient patient;
     public static String LIST_TREATMENT = "LIST_TREATMENT";
     public static String LIST_PAYMENT = "LIST_PAYMENT";
@@ -67,6 +68,7 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
         txtGender = findViewById(R.id.txt_gender);
         txtPhone = findViewById(R.id.txt_phone);
         txtAddress = findViewById(R.id.txt_address);
+        txtAnamnesis = findViewById(R.id.txt_list_anamnesis);
         setListenter();
         Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
         if (bundle != null) {
@@ -225,6 +227,13 @@ public class PatientDetailActivity extends BaseActivity implements View.OnClickL
             }
             if (patient.getPhone() != null) {
                 txtPhone.setText(patient.getPhone());
+            }
+            if (patient.getListAnamnesis() != null) {
+                String anamensis = "";
+                for (AnamnesisCatalog c : patient.getListAnamnesis()) {
+                    anamensis += "- " +c.getName() + "\n";
+                }
+                txtAnamnesis.setText(anamensis);
             }
             if (patient.getAddress() != null) {
                 String address = patient.getAddress();
