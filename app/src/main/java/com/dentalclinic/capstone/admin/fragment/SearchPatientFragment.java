@@ -86,7 +86,7 @@ public class SearchPatientFragment extends BaseFragment {
     private String phone;
     public static final String PATIENT_INFO = "PATIENT_INFO";
     public static final String STAFF_INFO = "STAFF_INFO";
-
+    public static final int REUQUEST_CREATE_APPOINTMENT = 102;
     public SearchPatientFragment() {
         // Required empty public constructor
     }
@@ -204,7 +204,7 @@ public class SearchPatientFragment extends BaseFragment {
                                                     if (currentStaff != null) {
                                                         intent.putExtra(SearchPatientFragment.STAFF_INFO, currentStaff);
                                                     }
-                                                    startActivity(intent);
+                                                    startActivityForResult(intent, REUQUEST_CREATE_APPOINTMENT);
                                                 }).setNegativeButton("Không", (DialogInterface dialogInterface, int i) -> {
                                                        //Do nothing
                                                         }
@@ -525,6 +525,17 @@ public class SearchPatientFragment extends BaseFragment {
 //                for (TreatmentHistory t : treatmentHistories) {
 //
 //                }
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REUQUEST_CREATE_APPOINTMENT){
+            if(resultCode == getActivity().RESULT_OK){
+                ((MainActivity) getActivity()).getPatienst(phone);
+            }
         }
     }
 }

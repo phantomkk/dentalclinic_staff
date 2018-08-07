@@ -315,6 +315,7 @@ public class BookAppointmentReceptActivity extends BaseActivity {
                                     .setTitle(getString(R.string.dialog_default_title))
                                     .setMessage("Đặt lịch thành công")
                                     .setPositiveButton("Xác nhận", (DialogInterface var1, int var2) -> {
+                                        setResult(RESULT_OK);
                                         finish();
                                     });
                             builder.create().show();

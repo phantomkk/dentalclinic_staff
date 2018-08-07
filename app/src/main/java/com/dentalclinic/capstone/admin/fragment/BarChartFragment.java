@@ -79,6 +79,7 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -196,7 +197,8 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
     }
 
     private Disposable disposable;
-    private void prepareData(){
+
+    private void prepareData() {
         showLoading();
         ChartService service = APIServiceManager.getService(ChartService.class);
         service.getDataBarChart(monthSelected, yearSelected)
@@ -211,10 +213,14 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
                     @Override
                     public void onSuccess(retrofit2.Response<List<BarChartData>> listResponse) {
                         if (listResponse.isSuccessful()) {
-                            for (BarChartData data:listResponse.body()) {
-                                data.setMoney(data.getMoney()/1000);
+//                            for (BarChartData data:listResponse.body()) {
+//                                data.setMoney(data.getMoney()/1000);
+//                            }
+                            if (listResponse.body().isEmpty()) {
+                                mChart.clear();
+                            } else {
+                                setData2(listResponse.body());
                             }
-                            setData2(listResponse.body());
                         } else if (listResponse.code() == 500) {
                             showFatalError(listResponse.errorBody(), "chartService");
                         } else if (listResponse.code() == 401) {
@@ -237,11 +243,10 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
     }
 
 
-
     private void setData2(List<BarChartData> datas) {
         List<String> names = new ArrayList<>();
         List<Integer> money = new ArrayList<>();
-        for (BarChartData data: datas){
+        for (BarChartData data : datas) {
             names.add(data.getName());
             money.add(Integer.parseInt(data.getMoney().toString()));
         }
@@ -291,6 +296,8 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
             data.setBarWidth(0.9f);
 
             mChart.setData(data);
+            mChart.animateXY(3000, 3000);
+            mChart.requestFocus();
         }
     }
 
@@ -310,7 +317,6 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
                 yVals1.add(new BarEntry(i, val));
             }
         }
-
 
 
         BarDataSet set1, set2;
@@ -375,7 +381,7 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.actionToggleValues: {
                 for (IDataSet set : mChart.getData().getDataSets())
                     set.setDrawValues(!set.isDrawValuesEnabled());
