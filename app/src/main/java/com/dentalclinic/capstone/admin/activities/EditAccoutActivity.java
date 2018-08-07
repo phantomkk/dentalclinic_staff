@@ -165,7 +165,7 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
                 DatePickerDialog dialog = new DatePickerDialog(EditAccoutActivity.this,
                         (DatePicker datePicker, int iYear, int iMonth, int iDay) -> {
                             txtDateOfBirth
-                                    .setText(iYear + "-" + iMonth + "-" + iDay);
+                                    .setText(iYear + "-" + (iMonth+1) + "-" + iDay);
                             calendar.set(iYear, iMonth, iDay);
                             Calendar currentDay = Calendar.getInstance();
                             if (currentDay.before(calendar)) {

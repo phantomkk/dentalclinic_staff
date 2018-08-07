@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class BarChartData implements Serializable {
-    @SerializedName("money")
+    @SerializedName("total_price")
     private Long money;
-    @SerializedName("denstist_id")
+    @SerializedName("staff_id")
     private int treatmentId;
-    @SerializedName("dentist_name")
+    @SerializedName("staff_name")
     private String name;
 
     public BarChartData(Long money, int treatmentId, String name) {

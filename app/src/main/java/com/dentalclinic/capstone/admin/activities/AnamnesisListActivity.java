@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.adapter.AnamnesisCalatalogAdapter;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnamnesisListActivity extends Activity {
-    private Button btnSelectDone;
+    private TextView btnSelectDone;
     private ListView listView;
     private ArrayAdapter<AnamnesisCatalog> anamnesisAdapter;
 
@@ -26,6 +27,7 @@ public class AnamnesisListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anamnesis_list);
+        btnSelectDone = findViewById(R.id.btn_select_done);
         btnSelectDone = findViewById(R.id.btn_select_done);
         listView = findViewById(R.id.list_anamnesis_activity);
         listAnamnesisCatalog = (ArrayList<AnamnesisCatalog>) getIntent().getSerializableExtra(CreatePatientActivity.LIST_ANAMNESIS);

@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.api.APIServiceManager;
+import com.dentalclinic.capstone.admin.api.services.ChartService;
 import com.dentalclinic.capstone.admin.custom.DayAxisValueFormatter;
 import com.dentalclinic.capstone.admin.custom.DentistAxisValueFormatter;
 import com.dentalclinic.capstone.admin.custom.MyAxisValueFormatter;
@@ -26,6 +28,7 @@ import com.dentalclinic.capstone.admin.custom.XYMarkerView;
 import com.dentalclinic.capstone.admin.dialog.DatePickerAbsentDialog;
 import com.dentalclinic.capstone.admin.model.GradientColor;
 import com.dentalclinic.capstone.admin.models.BarChartData;
+import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.github.dewinjm.monthyearpicker.MonthYearPickerDialog;
 import com.github.dewinjm.monthyearpicker.MonthYearPickerDialogFragment;
 import com.github.mikephil.charting.charts.BarChart;
@@ -47,6 +50,12 @@ import com.github.mikephil.charting.utils.MPPointF;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -97,12 +106,14 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
                         yearSelected = year;
                         txtMonthPicker.setText(value);
                         mChart.invalidate();
-                        List<BarChartData> datas = new ArrayList<>();
-                        datas.add(new BarChartData((long)30,2,"Nhieu Si Luc"));
-                        datas.add(new BarChartData((long)100,3,"Tran Tuan Dung"));
-                        datas.add(new BarChartData((long) 50,1,"Vo quoc trinh"));
-                        datas.add(new BarChartData((long)2000,3,"Huynh Vo Thien Phuc"));
-                        setData2(datas);
+//                        List<BarChartData> datas = new ArrayList<>();
+//                        datas.add(new BarChartData((long)30,2,"Nhieu Si Luc"));
+//                        datas.add(new BarChartData((long)100,3,"Tran Tuan Dung"));
+//                        datas.add(new BarChartData((long) 50,1,"Vo quoc trinh"));
+//                        datas.add(new BarChartData((long)2000,3,"Huynh Vo Thien Phuc"));
+//                        setData2(datas);
+                        prepareData();
+
                     }
                 });
                 dialogFragment.show(getFragmentManager(), null);
@@ -173,13 +184,56 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
 
 //        setData(200, 100000);
 
-        List<BarChartData> datas = new ArrayList<>();
-        datas.add(new BarChartData((long) 1000,1,"Vo quoc trinh"));
-        datas.add(new BarChartData((long)1040,2,"Nhieu Si Luc"));
-        datas.add(new BarChartData((long)450,3,"Tran Tuan Dung"));
-        datas.add(new BarChartData((long)9000,3,"Huynh Vo Thien Phuc"));
-        setData2(datas);
+//        List<BarChartData> datas = new ArrayList<>();
+//        datas.add(new BarChartData((long) 100000,1,"Vo quoc trinh"));
+//        datas.add(new BarChartData((long)1040000,2,"Nhieu Si Luc"));
+//        datas.add(new BarChartData((long)450000,3,"Tran Tuan Dung"));
+//        datas.add(new BarChartData((long)9000000,3,"Huynh Vo Thien Phuc"));
+//        setData2(datas);
+
+        prepareData();
         return view;
+    }
+
+    private Disposable disposable;
+    private void prepareData(){
+        showLoading();
+        ChartService service = APIServiceManager.getService(ChartService.class);
+        service.getDataBarChart(monthSelected, yearSelected)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<List<BarChartData>>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onSuccess(retrofit2.Response<List<BarChartData>> listResponse) {
+                        if (listResponse.isSuccessful()) {
+                            for (BarChartData data:listResponse.body()) {
+                                data.setMoney(data.getMoney()/1000);
+                            }
+                            setData2(listResponse.body());
+                        } else if (listResponse.code() == 500) {
+                            showFatalError(listResponse.errorBody(), "chartService");
+                        } else if (listResponse.code() == 401) {
+                            showErrorUnAuth();
+                        } else if (listResponse.code() == 400) {
+                            showBadRequestError(listResponse.errorBody(), "chartService");
+                        } else {
+                            showErrorMessage(getString(R.string.error_on_error_when_call_api));
+                        }
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showWarningMessage(getResources().getString(R.string.error_on_error_when_call_api));
+//                        logError(getTag() "callApi", e.getMessage());
+                        hideLoading();
+                    }
+                });
     }
 
 

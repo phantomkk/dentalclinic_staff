@@ -268,7 +268,7 @@ public class EditPatientActivity extends BaseActivity {
             DatePickerDialog dialog = new DatePickerDialog(EditPatientActivity.this,
                     (DatePicker datePicker, int iYear, int iMonth, int iDay) -> {
                         tvBirthday
-                                .setText(iYear + "-" + iMonth + "-" + iDay);
+                                .setText(iYear + "-" + (iMonth+1) + "-" + iDay);
                         calendar.set(iYear, iMonth, iDay);
                         Calendar currentDay = Calendar.getInstance();
                         if (currentDay.before(calendar)) {

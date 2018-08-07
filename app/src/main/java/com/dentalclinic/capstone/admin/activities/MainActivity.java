@@ -103,7 +103,7 @@ public class MainActivity extends BaseActivity
         SettingManager.initSetting(this);
         setDataHeader(staff);
 //
-        getAllPhone();
+//        getAllPhone();
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
         searchView.setVoiceSearch(true);
         searchView.setCursorDrawable(R.drawable.custom_cursor);
@@ -154,6 +154,11 @@ public class MainActivity extends BaseActivity
         return searchView;
     }
 
+    public void setSugesstion(List<String> sugesstion){
+        String[] stockArr = new String[sugesstion.size()];
+        stockArr = sugesstion.toArray(stockArr);
+        searchView.setSuggestions(stockArr);
+    }
     public void getAllPhone() {
         showLoading();
         UserService userService = APIServiceManager.getService(UserService.class);
@@ -477,8 +482,9 @@ public class MainActivity extends BaseActivity
 
             return;
         } else if (requestCode == REQUEST_CREATE_PATIENT) {
-            if (requestCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 getPatienst(phone);
+                searchPatientFragment.getAllPhone();
             }
         }
     }

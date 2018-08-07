@@ -112,6 +112,7 @@ public class SearchPatientFragment extends BaseFragment {
         txtLabelAppointment = view.findViewById(R.id.txt_label_appointment);
 //        int number = 2;
         //button newPatient
+        getAllPhone();
         btnNewPatient = new FloatingActionButton(getContext());
         btnNewPatient.setTitle("Thêm mới bệnh nhân");
         btnNewPatient.setIconDrawable(getResources().getDrawable(R.drawable.ic_supervisor_account_white_24dp));
@@ -395,6 +396,7 @@ public class SearchPatientFragment extends BaseFragment {
         mAdapter.notifyDataSetChanged();
     }
 
+
     public void setAppointmentAndNotifiAdapter(List<Appointment> appointmentList) {
         txtLabelAppointment.setText(getResources().getString(R.string.label_patient_apppointment, appointmentList.size()));
         appointments.clear();
@@ -439,6 +441,43 @@ public class SearchPatientFragment extends BaseFragment {
                     public void onError(Throwable e) {
                         showWarningMessage(getResources().getString(R.string.error_on_error_when_call_api));
                         logError(BookAppointmentReceptActivity.class, "callApi", e.getMessage());
+                        hideLoading();
+                    }
+                });
+    }
+    private Disposable disposable;
+
+    public void getAllPhone() {
+        showLoading();
+        UserService userService = APIServiceManager.getService(UserService.class);
+        userService.getAllPhone("")
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<List<String>>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onSuccess(Response<List<String>> userResponse) {
+                        if (userResponse.isSuccessful()) {
+                            ((MainActivity)getActivity()).setSugesstion(userResponse.body());
+                        } else if (userResponse.code() == 500) {
+                            showFatalError(userResponse.errorBody(), "callApiLogin");
+                        } else if (userResponse.code() == 401) {
+                            showErrorUnAuth();
+                        } else if (userResponse.code() == 400) {
+                            showBadRequestError(userResponse.errorBody(), "callApiLogin");
+                        } else {
+                            showErrorMessage(getString(R.string.error_on_error_when_call_api));
+                        }
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        logError(LoginActivity.class, "attemptLogin", e.getMessage());
                         hideLoading();
                     }
                 });

@@ -1,5 +1,6 @@
 package com.dentalclinic.capstone.admin.api.services;
 
+import com.dentalclinic.capstone.admin.models.BarChartData;
 import com.dentalclinic.capstone.admin.models.District;
 import com.dentalclinic.capstone.admin.models.PieChartData;
 
@@ -13,4 +14,7 @@ import retrofit2.http.Query;
 public interface ChartService {
     @GET("api/treatmentHistory/getTreatmentHistoryReport/")
     Single<Response<List<PieChartData>>> getDataPiechart(@Query("staff_id") int id,@Query("month") int month,@Query("year") int year);
+    @GET("api/payment/getPaymentReport/")
+    Single<Response<List<BarChartData>>> getDataBarChart(@Query("month") int month, @Query("year") int year);
+
 }

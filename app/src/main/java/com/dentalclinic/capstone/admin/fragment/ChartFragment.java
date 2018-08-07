@@ -183,7 +183,6 @@ public class ChartFragment extends BaseFragment {
     private Disposable disposable;
     private void prepateData(){
         showLoading();
-        showLoading();
         ChartService service = APIServiceManager.getService(ChartService.class);
         service.getDataPiechart(CoreManager.getStaff(getContext()).getId(), monthSelected, yearSelected)
                 .subscribeOn(Schedulers.newThread())

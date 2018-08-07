@@ -68,7 +68,7 @@ public class CreatePatientActivity extends BaseActivity {
     private String phone = "";
     private ArrayList<AnamnesisCatalog> listAnamnesisCatalog;
     private ArrayList<AnamnesisCatalog> patientAnamnesis;
-
+    private TextView txtAnamnesis;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +85,7 @@ public class CreatePatientActivity extends BaseActivity {
         if(bundle!=null){
             phone = bundle.getString(AppConst.PHONE);
         }
+        txtAnamnesis = findViewById(R.id.lbl_anamnesis_list);
         edtFullname = findViewById(R.id.edt_fullname_register);
         edtPhone = findViewById(R.id.edt_phone_register);
         edtAddress = findViewById(R.id.edt_address_register);
@@ -196,8 +197,9 @@ public class CreatePatientActivity extends BaseActivity {
                         patientAnamnesis.addAll(list);
                         String listAnamnesis = "";
                         for (AnamnesisCatalog a : patientAnamnesis) {
-                            listAnamnesis += a.getName() + "\n";
+                            listAnamnesis += "- "+ a.getName() + "\n";
                         }
+                        txtAnamnesis.setText(listAnamnesis);
                     }
                 }
             }
@@ -214,7 +216,7 @@ public class CreatePatientActivity extends BaseActivity {
             DatePickerDialog dialog = new DatePickerDialog(CreatePatientActivity.this,
                     (DatePicker datePicker, int iYear, int iMonth, int iDay) -> {
                         tvBirthday
-                                .setText(iYear + "-" + iMonth + "-" + iDay);
+                                .setText(iYear + "-" + (iMonth+1) + "-" + iDay);
                         calendar.set(iYear, iMonth, iDay);
                         Calendar currentDay = Calendar.getInstance();
                         if (currentDay.before(calendar)) {
