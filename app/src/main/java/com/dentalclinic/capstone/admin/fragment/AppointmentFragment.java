@@ -25,7 +25,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.activities.BookAppointmentActivity;
 import com.dentalclinic.capstone.admin.activities.BookAppointmentReceptActivity;
+import com.dentalclinic.capstone.admin.activities.CreatePatientActivity;
+import com.dentalclinic.capstone.admin.activities.MainActivity;
 import com.dentalclinic.capstone.admin.activities.PatientDetailActivity;
 import com.dentalclinic.capstone.admin.activities.ShowTreatmentHistoryActivity;
 import com.dentalclinic.capstone.admin.adapter.AppointmentAdapter;
@@ -66,6 +69,7 @@ public class AppointmentFragment extends BaseFragment {
     private AppointmentSwiftAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private TextView txtDate, txtMessage;
+    private final int REQUEST_BOOK_APPOINTMENT = 902;
 
     public AppointmentFragment() {
         // Required empty public constructor
@@ -106,23 +110,23 @@ public class AppointmentFragment extends BaseFragment {
 
             @Override
             public void onTreatmentClick(int pos) {
-                if (appointments.get(pos).getPatient() != null) {
-                    Patient patient = appointments.get(pos).getPatient();
-                    if (patient != null) {
-                        Intent intent = new Intent(getContext(), ShowTreatmentHistoryActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(AppConst.PATIENT_OBJ, patient);
-                        intent.putExtra(AppConst.BUNDLE, bundle);
-                        startActivity(intent);
-                    }
-                } else {
-                    showDialog("Thông tin chưa được cập nhật");
-                }
+//                if (appointments.get(pos).getPatient() != null) {
+//                    Patient patient = appointments.get(pos).getPatient();
+//                    if (patient != null) {
+//                        Intent intent = new Intent(getContext(), ShowTreatmentHistoryActivity.class);
+//                        Bundle bundle = new Bundle();
+//                        bundle.putSerializable(AppConst.PATIENT_OBJ, patient);
+//                        intent.putExtra(AppConst.BUNDLE, bundle);
+//                        startActivity(intent);
+//                    }
+//                } else {
+//                    showDialog("Thông tin chưa được cập nhật");
+//                }
             }
 
             @Override
             public void onDoneClick(int pos) {
-                changeStatus(3, pos);
+                showConfirmDialog(pos);
             }
 
             @Override
@@ -156,6 +160,31 @@ public class AppointmentFragment extends BaseFragment {
             }
         });
         return view;
+    }
+
+    public void showConfirmDialog(int pos) {
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext())
+                .setMessage("Bạn có muốn đặt lịch hẹn lại cho bệnh nhân này?")
+                .setTitle(getString(R.string.dialog_default_title))
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        changeStatus(3, pos);
+                    }
+                })
+                .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(getContext(), BookAppointmentActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(AppConst.PATIENT_OBJ, appointments.get(pos).getPatient());
+                        bundle.putInt("POSITION_APPOINTMENT",pos);
+                        intent.putExtra(AppConst.BUNDLE, bundle);
+                        startActivityForResult(intent, REQUEST_BOOK_APPOINTMENT);
+                    }
+                });
+        alertDialog.show();
     }
 
     public void setData() {
@@ -327,6 +356,18 @@ public class AppointmentFragment extends BaseFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_BOOK_APPOINTMENT) {
+            if (resultCode == getActivity().RESULT_OK) {
+                int pos = data.getIntExtra("POSITION_APPOINTMENT", -1);
+                if (pos != -1) {
+                    changeStatus(3, pos);
+                }
+            }
+        }
+    }
+    @Override
     public void onResume() {
         super.onResume();
         if (getActivity() != null) {
@@ -351,7 +392,9 @@ public class AppointmentFragment extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("receiver", "Got message");
-            showMessage("APPOINTMENT RELOAD");
+//            showMessage("APPOINTMENT RELOAD");
+            prepareData(DateUtils.getDate(Calendar.getInstance().getTime(), DateTimeFormat.DATE_TIME_DB_2));
+
         }
     };
 }

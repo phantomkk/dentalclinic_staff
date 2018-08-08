@@ -3,23 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.AppointmentFragment">
-
+    tools:context=".fragment.Appointment2Fragment">
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!--<TextView-->
-        <!--android:id="@+id/txt_label_message"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textAlignment="center"-->
-        <!--android:text="Không có kết quả" />-->
-        <!--<com.baoyz.swipemenulistview.SwipeMenuListView-->
-        <!--android:id="@+id/listView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent" />-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -53,5 +42,6 @@
                 android:layout_marginTop="@dimen/input_margin_top" />
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </FrameLayout>

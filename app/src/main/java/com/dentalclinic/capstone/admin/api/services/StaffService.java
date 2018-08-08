@@ -35,7 +35,7 @@ public interface StaffService {
     Single<Response<Staff>> login(@Body LoginRequest request);
 
     @Multipart
-    @POST("api/user/changeAvatar")
+    @POST("api/staff/changeAvatar")
     Single<Response<SuccessResponse>> changeAvatar(
             @Part MultipartBody.Part image,
             @Part MultipartBody.Part id);

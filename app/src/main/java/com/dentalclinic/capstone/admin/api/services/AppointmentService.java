@@ -32,4 +32,8 @@ public interface AppointmentService {
     @FormUrlEncoded
     @POST("api/appointment/updateStatus")
     Single<Response<SuccessResponse>> changeStatus(@Field("appointment_id") int id, @Field("status") int status);
+
+    @GET("api/appointment/getUserAppointmentByCurrentDate")
+    Single<Response<List<Appointment>>> getAppointmentByPhone(@Query("phone") String phone);
+
 }

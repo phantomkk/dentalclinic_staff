@@ -184,7 +184,7 @@ public class ChartFragment extends BaseFragment {
     private void prepateData(){
         showLoading();
         ChartService service = APIServiceManager.getService(ChartService.class);
-        service.getDataPiechart(CoreManager.getStaff(getContext()).getId(), monthSelected, yearSelected)
+        service.getDataPiechart(CoreManager.getStaff(getContext()).getId(), monthSelected +1, yearSelected)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<retrofit2.Response<List<PieChartData>>>() {
@@ -220,7 +220,7 @@ public class ChartFragment extends BaseFragment {
 
     private SpannableString generateCenterSpannableText() {
 
-        SpannableString s = new SpannableString("Biểu Đồ\nSố Lượng Bệnh Nhân Theo Loại Bệnh");
+        SpannableString s = new SpannableString("Biểu Đồ\nSố Lượng Khám Bệnh Trong Tháng");
         s.setSpan(new RelativeSizeSpan(1.7f), 0, 8, 0);
 //        s.setSpan(new StyleSpan(Typeface.NORMAL), 8, s.length(), 0);
 //        s.setSpan(new ForegroundColorSpan(Color.GRAY), 8, s.length(), 0);
@@ -279,6 +279,7 @@ public class ChartFragment extends BaseFragment {
         mChart.highlightValues(null);
 
         mChart.invalidate();
+        mChart.animateXY(1000, 1000);
     }
 
     private void setData(int count, float range) {

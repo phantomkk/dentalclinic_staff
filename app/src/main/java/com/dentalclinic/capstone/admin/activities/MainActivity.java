@@ -16,6 +16,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import io.reactivex.functions.BiFunction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -24,8 +25,10 @@ import android.widget.TextView;
 
 import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
+import com.dentalclinic.capstone.admin.api.CombinePatientClass;
 import com.dentalclinic.capstone.admin.api.RetrofitClient;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
+import com.dentalclinic.capstone.admin.api.services.AppointmentService;
 import com.dentalclinic.capstone.admin.api.services.PatientService;
 import com.dentalclinic.capstone.admin.api.services.StaffService;
 import com.dentalclinic.capstone.admin.api.services.UserService;
@@ -53,9 +56,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -141,7 +146,7 @@ public class MainActivity extends BaseActivity
         fragmentManager.beginTransaction().replace(R.id.main_fragment, searchPatientFragment).commit();
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        if(Utils.isRceiption(MainActivity.this)){
+        if (Utils.isRceiption(MainActivity.this)) {
             navigationView.getMenu().findItem(R.id.nav_history).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_appointment_list).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_chart).setVisible(false);
@@ -154,11 +159,12 @@ public class MainActivity extends BaseActivity
         return searchView;
     }
 
-    public void setSugesstion(List<String> sugesstion){
+    public void setSugesstion(List<String> sugesstion) {
         String[] stockArr = new String[sugesstion.size()];
         stockArr = sugesstion.toArray(stockArr);
         searchView.setSuggestions(stockArr);
     }
+
     public void getAllPhone() {
         showLoading();
         UserService userService = APIServiceManager.getService(UserService.class);
@@ -168,7 +174,7 @@ public class MainActivity extends BaseActivity
                 .subscribe(new SingleObserver<Response<List<String>>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        disposable = d;
+//                        disposable = d;
                     }
 
                     @Override
@@ -200,69 +206,172 @@ public class MainActivity extends BaseActivity
 
     public void getPatienst(String phone) {
         showLoading();
-        PatientService patientService = APIServiceManager.getService(PatientService.class);
-        patientService.getPatientsByPhone(phone)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<User>>() {
+        Single patient = APIServiceManager.getService(PatientService.class)
+                .getPatientsByPhone(phone)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        Single appointment = APIServiceManager.getService(AppointmentService.class)
+                .getAppointmentByPhone(phone)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        Single<CombinePatientClass> combine = Single.zip(patient,appointment,
+                new BiFunction<Response<List<Patient>>, Response<List<Appointment>>, CombinePatientClass>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        disposable = d;
+                    public CombinePatientClass apply(Response<List<Patient>> patientResponse,Response<List<Appointment>> appointmentRespone) throws Exception {
+                        return new CombinePatientClass(patientResponse, appointmentRespone);
                     }
+                });
+        combine.subscribe(new SingleObserver<CombinePatientClass>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+//                disposable = d;
+            }
 
-                    @Override
-                    public void onSuccess(Response<User> response) {
-                        if (response.isSuccessful()) {
-                            if (response.body().getPatients().isEmpty()) {
-                                if (Utils.isRceiption(MainActivity.this)) {
-                                    showConfigCreateNewPatientDialog("Tạo thông tin bệnh nhân cho tài khoản này?");
-                                }
-                                if (searchPatientFragment != null) {
-                                    searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
-                                    searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
-                                    searchPatientFragment.removeAllButton();
-                                    searchPatientFragment.addButtonNewPatient();
-                                }
-                            } else {
-                                if (searchPatientFragment != null) {
-                                    searchPatientFragment.setPatientsAndNotifiAdapter(response.body().getPatients());
-                                    if (response.body().getAppointments() != null) {
-                                        searchPatientFragment.setAppointmentAndNotifiAdapter(response.body().getAppointments());
-                                    }
-                                    searchPatientFragment.enableAllButton();
-                                    searchPatientFragment.removeAllButton();
-                                    searchPatientFragment.addButtonNewPatient();
-                                    searchPatientFragment.addButtonPayment();
-                                    searchPatientFragment.addButtonAppointment();
-
-                                }
-                            }
-                        } else if (response.code() == 500) {
-                            showFatalError(response.errorBody(), "callApiLogin");
-                        } else if (response.code() == 401) {
-                            showErrorUnAuth();
-                        } else if (response.code() == 400) {
-                            if(Utils.isRceiption(MainActivity.this)) {
-                                showConfigCreateNewUserDialog("Tạo tài khoản cho bệnh nhân?");
+            @Override
+            public void onSuccess(CombinePatientClass combinePatientClass) {
+                if(combinePatientClass.getPatients()!=null){
+                    if(combinePatientClass.getPatients().isSuccessful()){
+                       if (combinePatientClass.getPatients().body().isEmpty()) {
+                            if (Utils.isRceiption(MainActivity.this)) {
+                                showConfigCreateNewPatientDialog("Tạo thông tin bệnh nhân cho tài khoản này?");
                             }
                             if (searchPatientFragment != null) {
                                 searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
-                                searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
+//                                searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
                                 searchPatientFragment.removeAllButton();
                                 searchPatientFragment.addButtonNewPatient();
                             }
                         } else {
-                            showErrorMessage(getString(R.string.error_on_error_when_call_api));
-                        }
-                        hideLoading();
-                    }
+                            if (searchPatientFragment != null) {
+                                searchPatientFragment.setPatientsAndNotifiAdapter(combinePatientClass.getPatients().body());
+//                                searchPatientFragment.setAppointmentAndNotifiAdapter(response.body().getAppointments());
+                                searchPatientFragment.enableAllButton();
+                                searchPatientFragment.removeAllButton();
+                                searchPatientFragment.addButtonNewPatient();
+                                searchPatientFragment.addButtonPayment();
+                                searchPatientFragment.addButtonAppointment();
 
-                    @Override
-                    public void onError(Throwable e) {
-                        logError(LoginActivity.class, "attemptLogin", e.getMessage());
-                        hideLoading();
+                            }
+                        }
+                    }else if (combinePatientClass.getPatients().code() == 500) {
+                        showFatalError(combinePatientClass.getPatients().errorBody(), "callApiLogin");
+                    } else if (combinePatientClass.getPatients().code() == 401) {
+                        showErrorUnAuth();
+                    } else if (combinePatientClass.getPatients().code() == 400) {
+
+                        if (Utils.isRceiption(MainActivity.this)) {
+                            showConfigCreateNewUserDialog("Tạo tài khoản cho bệnh nhân?");
+                        }
+                        if (searchPatientFragment != null) {
+                            searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
+//                            searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
+                            searchPatientFragment.removeAllButton();
+                            searchPatientFragment.addButtonNewPatient();
+                        }
+//                        showBadRequestError(combinePatientClass.getAppointments().errorBody(),"combineGetAppointment");
+                        logError("calPatient","lỗi");
+                    } else {
+                        showErrorMessage(getString(R.string.error_on_error_when_call_api));
                     }
-                });
+                }
+
+                if(combinePatientClass.getAppointments()!=null){
+                    if(combinePatientClass.getAppointments().isSuccessful()){
+                        if (combinePatientClass.getAppointments().body().isEmpty()) {
+                            if (searchPatientFragment != null) {
+                                searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
+                            }
+                        } else {
+                            if (searchPatientFragment != null) {
+                                searchPatientFragment.setAppointmentAndNotifiAdapter(combinePatientClass.getAppointments().body());
+                            }
+                        }
+                    }else if (combinePatientClass.getAppointments().code() == 500) {
+                        showFatalError(combinePatientClass.getAppointments().errorBody(), "callApiLogin");
+                    } else if (combinePatientClass.getAppointments().code() == 401) {
+                        showErrorUnAuth();
+                    } else if (combinePatientClass.getAppointments().code() == 400) {
+                        showBadRequestError(combinePatientClass.getAppointments().errorBody(),"combineGetAppointment");
+                    } else {
+                        showErrorMessage(getString(R.string.error_on_error_when_call_api));
+                    }
+                }
+                hideLoading();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                hideLoading();
+            }
+        });
+
+
+
+//        AppointmentService service = APIServiceManager.getService(AppointmentService.class);
+//        service.getAppointmentByPhone(phone)
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new SingleObserver<Response<List<Appointment>>>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//                        disposable = d;
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(Response<List<Appointment>> response) {
+//                        if (response.isSuccessful()) {
+//                            if (response.body().isEmpty()) {
+////                                if (Utils.isRceiption(MainActivity.this)) {
+////                                    showConfigCreateNewPatientDialog("Tạo thông tin bệnh nhân cho tài khoản này?");
+////                                }
+////                                if (searchPatientFragment != null) {
+////                                    searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
+////                                    searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
+////                                    searchPatientFragment.removeAllButton();
+////                                    searchPatientFragment.addButtonNewPatient();
+////                                }
+//                                searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
+//                            } else {
+//                                if (searchPatientFragment != null) {
+////                                    searchPatientFragment.setPatientsAndNotifiAdapter(response.body().getPatients());
+////                                    if (response.body().getAppointments() != null) {
+//                                    searchPatientFragment.setAppointmentAndNotifiAdapter(response.body());
+////                                    }
+////                                    searchPatientFragment.enableAllButton();
+////                                    searchPatientFragment.removeAllButton();
+////                                    searchPatientFragment.addButtonNewPatient();
+////                                    searchPatientFragment.addButtonPayment();
+////                                    searchPatientFragment.addButtonAppointment();
+//
+//                                }
+//                            }
+//                        } else if (response.code() == 500) {
+//                            showFatalError(response.errorBody(), "callApiLogin");
+//                        } else if (response.code() == 401) {
+//                            showErrorUnAuth();
+//                        } else if (response.code() == 400) {
+//                            if (Utils.isRceiption(MainActivity.this)) {
+//                                showConfigCreateNewUserDialog("Tạo tài khoản cho bệnh nhân?");
+//                            }
+//                            if (searchPatientFragment != null) {
+//                                searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
+//                                searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
+//                                searchPatientFragment.removeAllButton();
+//                                searchPatientFragment.addButtonNewPatient();
+//                            }
+//                        } else {
+//                            showErrorMessage(getString(R.string.error_on_error_when_call_api));
+//                        }
+//                        hideLoading();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        logError(LoginActivity.class, "attemptLogin", e.getMessage());
+//                        hideLoading();
+//                    }
+//                });
     }
 
     @Override
@@ -294,10 +403,6 @@ public class MainActivity extends BaseActivity
                         intent.putExtra(AppConst.BUNDLE, bundle);
                         startActivityForResult(intent, REQUEST_CREATE_PATIENT);
                     }
-                }).setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
                 });
         alertDialog.show();
     }
@@ -327,7 +432,7 @@ public class MainActivity extends BaseActivity
     }
 
 
-    private void setDataHeader(Staff staff) {
+    public void setDataHeader(Staff staff) {
         if (staff == null) {
             return;
         }
@@ -403,7 +508,7 @@ public class MainActivity extends BaseActivity
             setTitle(getResources().getString(R.string.bar_chart_title));
             BarChartFragment barChartFragment = new BarChartFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, barChartFragment).commit();
-        }  else if (id == R.id.nav_chart) {
+        } else if (id == R.id.nav_chart) {
             setTitle(getResources().getString(R.string.chart_title));
             ChartFragment chartFragment = new ChartFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, chartFragment).commit();

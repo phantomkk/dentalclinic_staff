@@ -43,7 +43,11 @@ public class AppointmentSwiftAdapter extends RecyclerView.Adapter<AppointmentSwi
             if (appointment.getNumericalOrder() != -1) {
                 holder.txtNumber.setText(appointment.getNumericalOrder() + "");
             }
-            if (appointment.getName() != null) {
+            if (appointment.getPatient() != null) {
+                if (appointment.getPatient().getName() != null) {
+                    holder.txtName.setText(appointment.getPatient().getName());
+                }
+            } else if (appointment.getName() != null) {
                 holder.txtName.setText(appointment.getName());
             }
             if (appointment.getStatus() != 0) {

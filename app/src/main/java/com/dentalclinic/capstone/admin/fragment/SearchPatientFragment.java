@@ -110,7 +110,9 @@ public class SearchPatientFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_search_patient, container, false);
         textView = view.findViewById(R.id.txt_label_message);
         txtLabelAppointment = view.findViewById(R.id.txt_label_appointment);
-//        int number = 2;
+//        int number = 0;
+        txtLabelAppointment.setText(getResources().getString(R.string.label_patient_apppointment,0));
+
         //button newPatient
         getAllPhone();
         btnNewPatient = new FloatingActionButton(getContext());
@@ -386,9 +388,9 @@ public class SearchPatientFragment extends BaseFragment {
     public void setPatientsAndNotifiAdapter(List<Patient> patientList) {
         if (patientList.isEmpty()) {
             textView.setVisibility(View.VISIBLE);
-            txtLabelAppointment.setVisibility(View.GONE);
+//            txtLabelAppointment.setVisibility(View.GONE);
         } else {
-            txtLabelAppointment.setVisibility(View.VISIBLE);
+//            txtLabelAppointment.setVisibility(View.VISIBLE);
             textView.setVisibility(View.GONE);
         }
         patients.clear();

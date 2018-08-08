@@ -84,7 +84,7 @@
         android:layout_height="match_parent"
         android:background="@color/color_green_500"
         android:clickable="true"
-        android:text="Khám"
+        android:text="Nhận Bệnh"
         android:textColor="@android:color/white"/>
 
     <!--<Button-->

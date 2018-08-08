@@ -18,7 +18,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface PatientService {
-    @GET("api/patient/getByPhone")
+    @GET("api/patient/getListPatientByPhone")
     Single<Response<User>> getPatientsByPhone(@Query("phone") String phone);
 
     @POST("api/patient/updatePatient")

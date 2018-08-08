@@ -192,6 +192,10 @@ public class MyAccoutFragment extends BaseFragment implements View.OnClickListen
                             if (response.body() != null) {
 //                                CoreManager.saveAvatar(getContext(), (String) response.body().getData());
 //                                MainActivity.resetHeader(getContext());
+//                                response.body().getData();
+                                Staff staff = CoreManager.getStaff(getContext());
+                                staff.setAvatar((String)response.body().getData());
+                                ((MainActivity) getActivity()).setDataHeader(staff);
                                 showMessage(getResources().getString(R.string.success_message_api));
                             }
                         } else {
@@ -275,7 +279,9 @@ public class MyAccoutFragment extends BaseFragment implements View.OnClickListen
         } else if (requestCode == REQUEST_CHANGE_ACCOUNT) {
             if (resultCode == getActivity().RESULT_OK) {
                 if (getContext() != null) {
-                    setData(CoreManager.getStaff(getContext()));
+                    Staff staff = CoreManager.getStaff(getContext());
+                    setData(staff);
+                    ((MainActivity) getActivity()).setDataHeader(staff);
                 }
             }
         }

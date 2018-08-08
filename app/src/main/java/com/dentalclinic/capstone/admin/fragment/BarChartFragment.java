@@ -106,13 +106,6 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
                         monthSelected = month;
                         yearSelected = year;
                         txtMonthPicker.setText(value);
-                        mChart.invalidate();
-//                        List<BarChartData> datas = new ArrayList<>();
-//                        datas.add(new BarChartData((long)30,2,"Nhieu Si Luc"));
-//                        datas.add(new BarChartData((long)100,3,"Tran Tuan Dung"));
-//                        datas.add(new BarChartData((long) 50,1,"Vo quoc trinh"));
-//                        datas.add(new BarChartData((long)2000,3,"Huynh Vo Thien Phuc"));
-//                        setData2(datas);
                         prepareData();
 
                     }
@@ -213,9 +206,9 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
                     @Override
                     public void onSuccess(retrofit2.Response<List<BarChartData>> listResponse) {
                         if (listResponse.isSuccessful()) {
-//                            for (BarChartData data:listResponse.body()) {
-//                                data.setMoney(data.getMoney()/1000);
-//                            }
+                            for (BarChartData data:listResponse.body()) {
+                                data.setMoney(data.getMoney()/1000);
+                            }
                             if (listResponse.body().isEmpty()) {
                                 mChart.clear();
                             } else {
@@ -296,7 +289,7 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
             data.setBarWidth(0.9f);
 
             mChart.setData(data);
-            mChart.animateXY(3000, 3000);
+            mChart.animateXY(1000, 1000);
             mChart.requestFocus();
         }
     }

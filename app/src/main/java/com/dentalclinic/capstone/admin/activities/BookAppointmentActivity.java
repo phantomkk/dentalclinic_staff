@@ -1,9 +1,11 @@
 package com.dentalclinic.capstone.admin.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -22,6 +24,7 @@ import com.dentalclinic.capstone.admin.api.services.AppointmentService;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.User;
+import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
 import com.dentalclinic.capstone.admin.utils.DateUtils;
@@ -49,7 +52,7 @@ public class BookAppointmentActivity extends BaseActivity {
     private User user;
     private Patient patient;
     private boolean isDateValid = true;
-
+    private int pos = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,11 @@ public class BookAppointmentActivity extends BaseActivity {
             getSupportActionBar().setBackgroundDrawable(
                     ContextCompat.getDrawable(BookAppointmentActivity.this, R.drawable.side_nav_bar)
             );
+        }
+        Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
+        if(bundle!=null){
+            pos = bundle.getInt("POSITION_APPOINTMENT");
+            patient = (Patient) bundle.getSerializable(AppConst.PATIENT_OBJ);
         }
 //        ImageView img = findViewById(R.id.img_logo_quick_register);
         tvFullname = findViewById(R.id.tv_fullname_book_appt);
@@ -130,6 +138,7 @@ public class BookAppointmentActivity extends BaseActivity {
                 }
             }
         });
+        setData();
 
     }
 
@@ -142,6 +151,19 @@ public class BookAppointmentActivity extends BaseActivity {
     public void onCancelLoading() {
         if (appointmentDisposable != null) {
             appointmentDisposable.dispose();
+        }
+    }
+
+    private void setData(){
+        if(patient!=null){
+            if(patient.getName()!=null){
+                tvFullname.setText(patient.getName());
+                tvFullname.setEnabled(false);
+            }
+            if(patient.getPhone()!=null){
+                tvPhone.setText(patient.getPhone());
+                tvPhone.setEnabled(false);
+            }
         }
     }
 
@@ -158,10 +180,16 @@ public class BookAppointmentActivity extends BaseActivity {
                 DateTimeFormat.DATE_APP,
                 DateTimeFormat.DATE_TIME_DB);
         AppointmentRequest request = new AppointmentRequest();
+        request.setStaffId(CoreManager.getStaff(BookAppointmentActivity.this).getId()+"");
         request.setDate(bookingDate);
         request.setNote(note);
         request.setFullname(name);
         request.setPhone(phone);
+        if(patient !=null){
+            if(patient.getId()!=-1){
+                request.setPatientId(patient.getId()+"");
+            }
+        }
         return request;
 //        }
 //        return null;
@@ -209,7 +237,10 @@ public class BookAppointmentActivity extends BaseActivity {
                                     .setTitle(getString(R.string.dialog_default_title))
                                     .setMessage("Đặt lịch thành công")
                                     .setPositiveButton("Xác nhận", (DialogInterface var1, int var2) -> {
+                                        setResult(Activity.RESULT_OK,
+                                                new Intent().putExtra("POSITION_APPOINTMENT", pos));
                                         finish();
+//                                        finish();
                                     });
                             builder.create().show();
                         } else if (response.code() == 500) {
