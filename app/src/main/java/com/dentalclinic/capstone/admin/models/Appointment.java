@@ -46,6 +46,7 @@ public class Appointment implements Serializable {
 //    private Staff dentist;
 
     private boolean isExpand = false;
+
     public Appointment(String note, String name, int numericalOrder, int status) {
         this.note = note;
         this.name = name;
@@ -160,27 +161,51 @@ public class Appointment implements Serializable {
     }
 
     @SuppressLint("SimpleDateFormat")
-    public WeekViewEvent toWeekViewEvent(){
+    public WeekViewEvent toWeekViewEvent() {
 
         // Create an week view event.
         WeekViewEvent weekViewEvent = new WeekViewEvent();
         weekViewEvent.setId(getId());
         weekViewEvent.setName(getPhone());
-        Calendar calendar= Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         Date startTime = DateUtils.getDate(getStartTime(), DateTimeFormat.DATE_TIME_DB);
         calendar.setTime(startTime);
         weekViewEvent.setStartTime(calendar);
         Calendar calendarEnd = Calendar.getInstance();
         calendarEnd.setTime(startTime);
         Time estimatedTime = Time.valueOf(getEstimatedTime());
-        calendarEnd.add(Calendar.HOUR,estimatedTime.getHours());
-        calendarEnd.add(Calendar.MINUTE,estimatedTime.getMinutes());
+        calendarEnd.add(Calendar.HOUR, estimatedTime.getHours());
+        calendarEnd.add(Calendar.MINUTE, estimatedTime.getMinutes());
         weekViewEvent.setEndTime(calendarEnd);
-        if(getStatus()==1) {
-            weekViewEvent.setColor(Color.parseColor("#b71414"));
-        }else{
-            weekViewEvent.setColor(Color.parseColor("#1480b7"));
+        switch (getStatus()) {
+            case 0:
+                weekViewEvent.setColor(Color.parseColor("#2196F3"));
+//                weekViewEvent.setColor(R.color.color_blue_500);
+                break;
+            case 1:
+                weekViewEvent.setColor(Color.parseColor("#81C784"));
+//                weekViewEvent.setColor(R.color.color_green_300);
+                break;
+            case 2:
+                weekViewEvent.setColor(Color.parseColor("#FF9800"));
+//                weekViewEvent.setColor(R.color.color_orange_500);
+                break;
+            case 3:
+                weekViewEvent.setColor(Color.parseColor("#388E3C"));
+//                weekViewEvent.setColor(R.color.color_green_700);
+                break;
+            case 4:
+                weekViewEvent.setColor(Color.parseColor("#b71414"));
+                break;
+            default:
+                weekViewEvent.setColor(Color.parseColor("#b71414"));
+
         }
+//        if (getStatus() == 1) {
+//            weekViewEvent.setColor(Color.parseColor("#b71414"));
+//        } else {
+//            weekViewEvent.setColor(Color.parseColor("#1480b7"));
+//        }
 
         return weekViewEvent;
     }

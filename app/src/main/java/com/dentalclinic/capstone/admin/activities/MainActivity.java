@@ -151,6 +151,9 @@ public class MainActivity extends BaseActivity
             navigationView.getMenu().findItem(R.id.nav_history).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_appointment_list).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_chart).setVisible(false);
+        }else if(Utils.isDentist(MainActivity.this)){
+            navigationView.getMenu().findItem(R.id.nav_appointment_list_2).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_bar_chart).setVisible(false);
         }
     }
 

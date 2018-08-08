@@ -31,6 +31,7 @@ public class ChoosePatientForAppointmentDialog extends Dialog {
     public interface OnButtonClickListener {
 //        void onSave(float money, Payment payment);
         void onItemClick(Patient patient);
+        void onCreatePatientClick();
     }
 
     public OnButtonClickListener getListener() {
@@ -67,11 +68,12 @@ public class ChoosePatientForAppointmentDialog extends Dialog {
         btnCreateNewPatient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(c, CreatePatientActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(AppConst.PHONE, patients.get(0).getPhone());
-                intent.putExtra(AppConst.BUNDLE, bundle);
-                c.startActivityForResult(intent,AppConst.REQUEST_CREATENEW_PATIENT);
+                listener.onCreatePatientClick();
+//                Intent intent = new Intent(c, CreatePatientActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putString(AppConst.PHONE, patients.get(0).getPhone());
+//                intent.putExtra(AppConst.BUNDLE, bundle);
+//                c.startActivityForResult(intent,AppConst.REQUEST_CREATENEW_PATIENT);
             }
         });
         adapter = new PatientAdapter(c,patients);

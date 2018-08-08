@@ -116,7 +116,7 @@ public class Appointment2Fragment extends BaseFragment {
             }
         });
         mListView.setAdapter(mAdapter);
-        mListView.setLayoutManager(mLayoutManager = new GridLayoutManager(getContext(), 1));
+        mListView.setLayoutManager(mLayoutManager = new LinearLayoutManager(getContext()));
 
         //6 2016 10 21 add , 增加viewChache 的 get()方法，
         // 可以用在：当点击外部空白处时，关闭正在展开的侧滑菜单。我个人觉得意义不大，
@@ -167,6 +167,15 @@ public class Appointment2Fragment extends BaseFragment {
                                     @Override
                                     public void onItemClick(Patient patient) {
                                         receiveAppointmentManually(appointments.get(posAppointment).getId(), patient.getId());
+                                    }
+
+                                    @Override
+                                    public void onCreatePatientClick() {
+                                        Intent intent = new Intent(getContext(), CreatePatientActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString(AppConst.PHONE, phone);
+                                        intent.putExtra(AppConst.BUNDLE, bundle);
+                                        startActivityForResult(intent,AppConst.REQUEST_CREATENEW_PATIENT);
                                     }
                                 });
                                 dialog.setCanceledOnTouchOutside(true);
@@ -294,9 +303,10 @@ public class Appointment2Fragment extends BaseFragment {
                     @Override
                     public void onSuccess(Response<SuccessResponse> successResponseResponse) {
                         if (successResponseResponse.isSuccessful()) {
-//                            appointments.get(position).setStatus(status);
+                            appointments.remove(position);
                             mAdapter.notifyItemRemoved(position);
-//                            mAdapter.notifyDataSetChanged();
+                            mAdapter.notifyItemRangeChanged(position, appointments.size());
+
                         } else if (successResponseResponse.code() == 500) {
                             showFatalError(successResponseResponse.errorBody(), "appointmentService");
                         } else if (successResponseResponse.code() == 401) {
@@ -345,6 +355,7 @@ public class Appointment2Fragment extends BaseFragment {
                                 txtMessage.setVisibility(View.GONE);
                             }
                             swipeRefreshLayout.setRefreshing(false);
+                            mListView.getLayoutManager().removeAllViews();
                         } else if (response.code() == 500) {
                             showFatalError(response.errorBody(), "appointmentService");
                         } else if (response.code() == 401) {
@@ -421,7 +432,7 @@ public class Appointment2Fragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == AppConst.REQUEST_CREATENEW_PATIENT) {
+        if (requestCode == AppConst.REQUEST_CREATENEW_PATIENT) {
             if (resultCode == Activity.RESULT_OK) {
                 if (dialog != null) {
                     dialog.dismiss();
