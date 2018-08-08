@@ -2,15 +2,20 @@ package com.dentalclinic.capstone.admin.fragment;
 
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -321,4 +326,32 @@ public class AppointmentFragment extends BaseFragment {
         return list1;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null) {
+            LocalBroadcastManager.getInstance
+                    (getActivity())
+                    .registerReceiver(mMessageReceiver, new IntentFilter(AppConst.ACTION_RELOAD_APPOINTMENT));
+        }
+            Log.d("DEBUG_TAG", "ACTION_RELOAD_APPOINTMENT REGISTER");
+    }
+
+    @Override
+    public void onPause() {
+        if (getActivity() != null) {
+            LocalBroadcastManager.getInstance(getActivity())
+                    .unregisterReceiver(mMessageReceiver);
+        }
+            Log.d("DEBUG_TAG", "ACTION_RELOAD_APPOINTMENT PAUSE");
+        super.onPause();
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("receiver", "Got message");
+            showMessage("APPOINTMENT RELOAD");
+        }
+    };
 }

@@ -1,5 +1,6 @@
 package com.dentalclinic.capstone.admin.api.services;
 
+import com.dentalclinic.capstone.admin.api.requestobject.LoginRequest;
 import com.dentalclinic.capstone.admin.api.requestobject.PatientProfileRequest;
 import com.dentalclinic.capstone.admin.api.requestobject.ReqAbsentRequest;
 import com.dentalclinic.capstone.admin.api.requestobject.StaffProfileRequest;
@@ -30,9 +31,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface StaffService {
-    @FormUrlEncoded
     @POST("api/staff/login")
-    Single<Response<Staff>> login(@Field("phone") String phone, @Field("password") String password);
+    Single<Response<Staff>> login(@Body LoginRequest request);
 
     @Multipart
     @POST("api/user/changeAvatar")

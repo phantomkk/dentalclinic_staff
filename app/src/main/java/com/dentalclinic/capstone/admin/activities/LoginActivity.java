@@ -175,7 +175,7 @@ public class LoginActivity extends BaseActivity {
         request.setPhone(phone);
         request.setNotifToken(FirebaseInstanceId.getInstance().getToken());
         StaffService staffService = APIServiceManager.getService(StaffService.class);
-        staffService.login(phone, password)
+        staffService.login(request)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Response<Staff>>() {
