@@ -29,6 +29,9 @@ public interface AppointmentService {
     @GET("api/staff/getPatientAppointmentByDate")
     Single<Response<List<Appointment>>> getApppointmentByDate(@Query("staff_id") int id, @Query("date") String date);
 
+    @GET("api/appointment/getAppointmentByDate")
+    Single<Response<List<Appointment>>> getApppointmentByDate(@Query("date") String date);
+
     @FormUrlEncoded
     @POST("api/appointment/updateStatus")
     Single<Response<SuccessResponse>> changeStatus(@Field("appointment_id") int id, @Field("status") int status);
