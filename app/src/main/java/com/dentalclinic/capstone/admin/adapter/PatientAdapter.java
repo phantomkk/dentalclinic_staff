@@ -39,7 +39,7 @@ public class PatientAdapter extends ArrayAdapter<Patient> {
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.item_patient, parent, false);
+            convertView = inflater.inflate(R.layout.item_patient_without_swift_button, parent, false);
             viewHolder.imgAvatar = convertView.findViewById(R.id.img_avatar_user);
             viewHolder.txtName = convertView.findViewById(R.id.txt_name);
             viewHolder.txtDateOfBirth = convertView.findViewById(R.id.txt_date_of_birth);

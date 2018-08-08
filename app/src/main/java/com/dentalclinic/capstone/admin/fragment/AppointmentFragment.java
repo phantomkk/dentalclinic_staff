@@ -110,18 +110,18 @@ public class AppointmentFragment extends BaseFragment {
 
             @Override
             public void onTreatmentClick(int pos) {
-//                if (appointments.get(pos).getPatient() != null) {
-//                    Patient patient = appointments.get(pos).getPatient();
-//                    if (patient != null) {
-//                        Intent intent = new Intent(getContext(), ShowTreatmentHistoryActivity.class);
-//                        Bundle bundle = new Bundle();
-//                        bundle.putSerializable(AppConst.PATIENT_OBJ, patient);
-//                        intent.putExtra(AppConst.BUNDLE, bundle);
-//                        startActivity(intent);
-//                    }
-//                } else {
-//                    showDialog("Thông tin chưa được cập nhật");
-//                }
+                if (appointments.get(pos).getPatient() != null) {
+                    Patient patient = appointments.get(pos).getPatient();
+                    if (patient != null) {
+                        Intent intent = new Intent(getContext(), ShowTreatmentHistoryActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(AppConst.PATIENT_OBJ, patient);
+                        intent.putExtra(AppConst.BUNDLE, bundle);
+                        startActivity(intent);
+                    }
+                } else {
+                    showDialog("Thông tin chưa được cập nhật");
+                }
             }
 
             @Override
@@ -397,4 +397,23 @@ public class AppointmentFragment extends BaseFragment {
 
         }
     };
+
+    public void showConfirmDelete(int pos) {
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext())
+                .setMessage("Bạn có muốn hủy lịch hẹn này?")
+                .setTitle(getString(R.string.dialog_default_title))
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        changeStatus(4, pos);
+                    }
+                });
+        alertDialog.show();
+    }
 }

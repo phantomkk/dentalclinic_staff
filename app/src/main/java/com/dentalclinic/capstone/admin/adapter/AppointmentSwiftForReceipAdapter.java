@@ -79,6 +79,12 @@ public class AppointmentSwiftForReceipAdapter extends RecyclerView.Adapter<Appoi
                     break;
 
             }
+            if(appointment.getPatient()!=null){
+                holder.btnTreatment.setVisibility(View.GONE);
+            }
+            if (appointment.getPhone()!=null){
+                holder.txtPhone.setText(appointment.getPhone());
+            }
 
         }
 
@@ -159,7 +165,7 @@ public class AppointmentSwiftForReceipAdapter extends RecyclerView.Adapter<Appoi
 
     class ViewHolder extends RecyclerView.ViewHolder {
         //        CircleImageView imgAvatar;
-        TextView txtName, txtNumber, txtStartTime, txtStatus, txtDentist;
+        TextView txtName, txtNumber, txtStartTime, txtStatus, txtDentist, txtPhone;
         Button btnCancle;
         Button btnChangeDoctor;
         Button btnTreatment;
@@ -169,6 +175,7 @@ public class AppointmentSwiftForReceipAdapter extends RecyclerView.Adapter<Appoi
             super(itemView);
 //            imgAvatar =  itemView.findViewById(R.id.img_avatar_user);
             txtName = itemView.findViewById(R.id.txt_patient_name);
+            txtPhone = itemView.findViewById(R.id.txt_patient_phone);
             txtNumber = itemView.findViewById(R.id.txt_appointment_number);
             txtStartTime = itemView.findViewById(R.id.txt_start_time);
             txtStatus = itemView.findViewById(R.id.txt_appointment_status);

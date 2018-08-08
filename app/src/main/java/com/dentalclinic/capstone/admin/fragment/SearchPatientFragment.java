@@ -275,6 +275,7 @@ public class SearchPatientFragment extends BaseFragment {
         });
 
         recyclerView.setNestedScrollingEnabled(true);
+
         appointmentRecyclerView = view.findViewById(R.id.list_appointment);
         appointmentRecyclerView.setNestedScrollingEnabled(true);
         mAdapter2 = new AppointmentSwift2Adapter(getContext(), appointments);
@@ -288,7 +289,8 @@ public class SearchPatientFragment extends BaseFragment {
             @Override
             public void onCancleClick(int pos) {
 //                showMessage("Cancle Appointment");
-                changeStatus(4, pos);
+//                changeStatus(4, pos);
+                showConfirmDelete(pos);
             }
 
             @Override
@@ -539,5 +541,24 @@ public class SearchPatientFragment extends BaseFragment {
                 ((MainActivity) getActivity()).getPatienst(phone);
             }
         }
+    }
+
+    public void showConfirmDelete(int pos) {
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext())
+                .setMessage("Bạn có muốn hủy lịch hẹn này?")
+                .setTitle(getString(R.string.dialog_default_title))
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        changeStatus(4, pos);
+                    }
+                });
+        alertDialog.show();
     }
 }

@@ -29,7 +29,7 @@ public interface AppointmentService {
     @GET("api/staff/getPatientAppointmentByDate")
     Single<Response<List<Appointment>>> getApppointmentByDate(@Query("staff_id") int id, @Query("date") String date);
 
-    @GET("api/appointment/getAppointmentByDate")
+    @GET("api/appointment/getByDate")
     Single<Response<List<Appointment>>> getApppointmentByDate(@Query("date") String date);
 
     @FormUrlEncoded
@@ -39,4 +39,7 @@ public interface AppointmentService {
     @GET("api/appointment/getUserAppointmentByCurrentDate")
     Single<Response<List<Appointment>>> getAppointmentByPhone(@Query("phone") String phone);
 
+    @FormUrlEncoded
+    @POST("api/patient/receiveManually")
+    Single<Response<SuccessResponse>> receiAppointmentManual(@Field("patient_id") int patientId,@Field("appointment_id") int appointmentId);
 }

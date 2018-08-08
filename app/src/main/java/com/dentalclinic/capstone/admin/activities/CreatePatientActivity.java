@@ -338,7 +338,11 @@ public class CreatePatientActivity extends BaseActivity {
 ////                                        startActivity(intent);
 //                                    });
 //                            alertDialog.show();
-                            setResult(RESULT_OK);
+                            Intent intent = new Intent();
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(AppConst.PATIENT_OBJ, patientResponse.body());
+                            intent.putExtra(AppConst.BUNDLE, bundle);
+                            setResult(RESULT_OK,intent);
                             finish();
                         } else if (patientResponse.code() == 500) {
                             showFatalError(patientResponse.errorBody(), "createPatientAPI");

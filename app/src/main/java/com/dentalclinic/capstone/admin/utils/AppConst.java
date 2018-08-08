@@ -19,7 +19,7 @@ public class AppConst {
     public final static String GENDER_OTHER = "OTHER";
 
 
-
+    public final static int REQUEST_CREATENEW_PATIENT = 909;
 
     public final static String USER_OBJ = "USER_OBJ";
     public final static String PHONE = "PHONE";

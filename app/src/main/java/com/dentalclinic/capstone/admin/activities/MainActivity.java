@@ -33,6 +33,7 @@ import com.dentalclinic.capstone.admin.api.services.PatientService;
 import com.dentalclinic.capstone.admin.api.services.StaffService;
 import com.dentalclinic.capstone.admin.api.services.UserService;
 import com.dentalclinic.capstone.admin.fragment.AbsentFragment;
+import com.dentalclinic.capstone.admin.fragment.Appointment2Fragment;
 import com.dentalclinic.capstone.admin.fragment.AppointmentFragment;
 import com.dentalclinic.capstone.admin.fragment.BarChartFragment;
 import com.dentalclinic.capstone.admin.fragment.BaseWeekViewFragment;
@@ -501,6 +502,9 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_history) {
             BaseWeekViewFragment calendarFragment = new BaseWeekViewFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, calendarFragment).commit();
+        } else if (id == R.id.nav_appointment_list_2) {
+            Appointment2Fragment appointment2Fragment = new Appointment2Fragment();
+            fragmentManager.beginTransaction().replace(R.id.main_fragment, appointment2Fragment).commit();
         } else if (id == R.id.nav_appointment_list) {
             AppointmentFragment calendarFragment = new AppointmentFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, calendarFragment).commit();
