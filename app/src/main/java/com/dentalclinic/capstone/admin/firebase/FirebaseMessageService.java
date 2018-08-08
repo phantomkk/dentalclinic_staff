@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -25,10 +26,12 @@ import com.google.gson.JsonSyntaxException;
 import java.util.Map;
 
 public class FirebaseMessageService extends FirebaseMessagingService {
+
     @Override
     public void onMessageReceived(RemoteMessage message) {
         String responseType = message.getData().get("type");
-        if (responseType.equals(AppConst.RESPONSE_FEEDBACK)) {
+        Log.d("DEBUG_TAG", "INTO FirebaseMessageService");
+        if (responseType!= null && responseType.equals(AppConst.RESPONSE_FEEDBACK)) {
             try {
                 FeedbackResponse response =
                         Utils.parseJson(message.getData().get("body"), FeedbackResponse.class);
@@ -40,43 +43,13 @@ public class FirebaseMessageService extends FirebaseMessagingService {
                 ex.printStackTrace();
                 showToast(ex.getMessage());
             }
+        } else if (responseType!= null && responseType.equals(AppConst.RESPONSE_RELOAD)) {
+            String activityAction = message.getData().get("body");
+            Intent intent = new Intent(activityAction);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+            Log.d("DEBUG_TAG", "RELOAD CALL");
         }
     }///End oncreated
-
-    /**
-     * Create and show a simple notification containing the received FCM message.
-     *
-     */
-//    private void sendNotificationFinal(String messageBody) {
-//        Intent intent = new Intent(this, FeedbackActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-//                PendingIntent.FLAG_ONE_SHOT);
-//
-//        String channelId = "XXX";
-//        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//        NotificationCompat.Builder notificationBuilder =
-//                new NotificationCompat.Builder(this, channelId)
-//                        .setSmallIcon(R.drawable.ic_launcher)
-//                        .setContentTitle("FCM Message")
-//                        .setContentText(messageBody)
-//                        .setAutoCancel(true)
-//                        .setSound(defaultSoundUri)
-//                        .setContentIntent(pendingIntent);
-//
-//        NotificationManager notificationManager =
-//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//        // Since android Oreo notification channel is needed.
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel channel = new NotificationChannel(channelId,
-//                    "Channel human readable title",
-//                    NotificationManager.IMPORTANCE_DEFAULT);
-//            notificationManager.createNotificationChannel(channel);
-//        }
-//
-//        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-//    }
 
     private void showToast(String msg) {
         Handler handler = new Handler(Looper.getMainLooper());
