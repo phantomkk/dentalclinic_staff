@@ -319,6 +319,14 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
+            <TextView
+                android:id="@+id/txt_hint_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/color_green_500"
+                android:textSize="11sp"
+                />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"

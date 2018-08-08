@@ -525,7 +525,7 @@ public class MainActivity extends BaseActivity
             fragmentManager.beginTransaction().replace(R.id.main_fragment, settingFragment).commit();
             //donothing
         } else if (id == R.id.nav_log_out) {
-//            logoutOnServer();
+            logoutOnServer();
             CoreManager.clearStaff(MainActivity.this);
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -538,8 +538,9 @@ public class MainActivity extends BaseActivity
     }
 
     private void logoutOnServer() {
+        Staff staff = CoreManager.getStaff(this);
         StaffService staffService = APIServiceManager.getService(StaffService.class);
-        staffService.logout().subscribeOn(Schedulers.newThread())
+        staffService.logout(staff.getPhone()).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Response<SuccessResponse>>() {
                     @Override
@@ -551,14 +552,14 @@ public class MainActivity extends BaseActivity
                     public void onSuccess(Response<SuccessResponse> successResponse) {
                         if (successResponse.isSuccessful()) {
                             logError("Logout on server", "Log out success");
-                        } else if (successResponse.code() == 500) {
-                            showFatalError(successResponse.errorBody(), "logoutOnServer");
+                        }else if (successResponse.code() == 500) {
+                            logError("Logout on server", "Log out 500");
                         } else if (successResponse.code() == 401) {
-                            showErrorUnAuth();
+                            logError("Logout on server", "Log out showErrorUnAuth");
                         } else if (successResponse.code() == 400) {
-                            showBadRequestError(successResponse.errorBody(), "logoutOnServer");
+                            logError("Logout on server", "Log out showBadRequestError");
                         } else {
-                            showDialog(getString(R.string.error_message_api));
+                            logError("Logout on server", "Log out ELSE");
                         }
 //                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 //                        startActivity(intent);

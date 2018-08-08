@@ -79,6 +79,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private TextView lblTreatment;
     private TextView lblTreatmentStep;
     private TextView lblMedicineQuantity;
+    private TextView txtHintPrice;
     private String current = "0";
     private ToothSpinnerAdapter adapter;
     private ImageFileAdapter imageAdapter;
@@ -130,6 +131,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         lblTreatment = findViewById(R.id.lbl_treatment_slt);
         lblTreatmentStep = findViewById(R.id.lbl_treatmentstep);
         lblMedicineQuantity = findViewById(R.id.lbl_medicine_slt);
+        txtHintPrice = findViewById(R.id.txt_hint_price);
         listTooth = new ArrayList<>();
         btnShowListTooth = findViewById(R.id.btn_list_tooth);
         btnShowListTreatment = findViewById(R.id.btn_list_treatments);
@@ -155,6 +157,9 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 for (Treatment t : listTreatment) {
                     if (t.getId() == treatmentId) {
                         currentTreatment = t;
+                        actPrice.setText((t.getMaxPrice()) + "");
+                        txtHintPrice.setText("Giá từ " + formatVnCurrence(t.getMinPrice() + "")
+                                + " đến " + formatVnCurrence("" + t.getMaxPrice()));
                         treatmentHistoryId = currentTreatment.getId();
                         crrTreatmentSteps.clear();
                         crrTreatmentSteps.addAll(currentTreatment.getTreatmentSteps());
@@ -228,6 +233,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             callApiTreatmentService();
         });
         prepareData();
+
 //        prepareMedicineDummy();
 //        FirebaseMessaging.getInstance().subscribeToTopic("AAA");
         // REST OF YOUR CODE
@@ -562,25 +568,30 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private void callApiTreatmentService() {
         TreatmentHistoryRequest requestObj = new TreatmentHistoryRequest();
         Staff s = CoreManager.getStaff(this);
-//        if (currentTreatment == null) {
-//            showErrorMessage("Vui lòng chọn điều trị");
-//            return;
-//        }
-//        if (currentTooth == null) {
-//            showErrorMessage("Vui lòng chọn loại răng");
-//            return;
-//        }
-        if (s == null) {
-            showErrorMessage("Không tìm thấy thông tin đăng nhập");
+        if (currentTreatment == null) {
+            showErrorMessage("Vui lòng chọn điều trị");
             return;
         }
-        if (currentPatient == null) {
-            showErrorMessage("Không tìm thấy bệnh nhân");
+        if (currentTooth == null) {
+            showErrorMessage("Vui lòng chọn loại răng");
             return;
         }
+//        if (s == null) {
+//            showErrorMessage("Không tìm thấy thông tin đăng nhập");
+//            return;
+//        }
+//        if (currentPatient == null) {
+//            showErrorMessage("Không tìm thấy bệnh nhân");
+//            return;
+//        }
         String price = actPrice.getText().toString().replaceAll("[đ,.]", "").trim();
         if (price.length() == 0 || price.equals("0")) {
             showErrorMessage("Vui lòng nhập giá");
+            return;
+        }
+        double priceDb = Double.parseDouble(price);
+        if (priceDb > currentTreatment.getMaxPrice() || priceDb < currentTreatment.getMinPrice()) {
+            showErrorMessage("Vui lòng nhập giá hợp lệ");
             return;
         }
         String description = actTmHistoryDescription.getText().toString().trim();
@@ -596,7 +607,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         MultipartBody.Builder builder = new MultipartBody.Builder();
         builder.setType(MultipartBody.FORM);
         builder.addFormDataPart("treatment_id", currentTreatment.getId() + "");
-        builder.addFormDataPart("treatment_hi-;story_id", treatmentHistoryId + "");
+        builder.addFormDataPart("treatment_history_id", treatmentHistoryId + "");
         builder.addFormDataPart("staff_id", s.getId() + "");
         builder.addFormDataPart("patient_id", currentPatient.getId() + "");
         builder.addFormDataPart("description", actTmHistoryDescription.getText().toString().trim() + "");
@@ -708,6 +719,18 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     public void afterTextChanged(Editable editable) {
 //        current=editable.toString();
 //        current= current.replaceAll("[đ,. ]", "");
+        String price = actPrice.getText().toString().replaceAll("[đ,.]", "").trim();
+        if (currentTreatment != null) {
+
+            double priceDb = Double.parseDouble(price);
+            if (priceDb > currentTreatment.getMaxPrice() || priceDb < currentTreatment.getMinPrice()) {
+                String minTmPrice = formatVnCurrence(currentTreatment.getMinPrice() + "");
+                String maxTmPrice = formatVnCurrence(currentTreatment.getMaxPrice() + "");
+                actPrice.setError("Giá nhập vào khoảng từ " + minTmPrice + " đến " + maxTmPrice);
+            } else {
+                actPrice.setError(null);
+            }
+        }
     }
 
 //    @Override
