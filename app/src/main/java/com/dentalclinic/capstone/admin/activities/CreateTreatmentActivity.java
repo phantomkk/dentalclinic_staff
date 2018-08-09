@@ -158,8 +158,13 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                     if (t.getId() == treatmentId) {
                         currentTreatment = t;
                         actPrice.setText((t.getMaxPrice()) + "");
-                        txtHintPrice.setText("Giá từ " + formatVnCurrence(t.getMinPrice() + "")
-                                + " đến " + formatVnCurrence("" + t.getMaxPrice()));
+                        if (t.getMaxPrice().intValue() == t.getMinPrice().intValue()) {
+                            txtHintPrice.setText("Giá cố định là " + formatVnCurrence(t.getMaxPrice() + ""));
+                        } else {
+                            txtHintPrice.setText("Giá từ " + formatVnCurrence(t.getMinPrice() + "")
+                                    + " đến " + formatVnCurrence("" + t.getMaxPrice()));
+                        }
+
                         treatmentHistoryId = currentTreatment.getId();
                         crrTreatmentSteps.clear();
                         crrTreatmentSteps.addAll(currentTreatment.getTreatmentSteps());
@@ -726,7 +731,12 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             if (priceDb > currentTreatment.getMaxPrice() || priceDb < currentTreatment.getMinPrice()) {
                 String minTmPrice = formatVnCurrence(currentTreatment.getMinPrice() + "");
                 String maxTmPrice = formatVnCurrence(currentTreatment.getMaxPrice() + "");
-                actPrice.setError("Giá nhập vào khoảng từ " + minTmPrice + " đến " + maxTmPrice);
+                if (currentTreatment.getMinPrice().intValue() == currentTreatment.getMaxPrice().intValue()) {
+                    actPrice.setError("Giá cố định là " + formatVnCurrence(currentTreatment.getMaxPrice() + ""));
+                } else {
+                    actPrice.setError("Giá nhập vào khoảng từ " + minTmPrice + " đến " + maxTmPrice);
+                }
+
             } else {
                 actPrice.setError(null);
             }

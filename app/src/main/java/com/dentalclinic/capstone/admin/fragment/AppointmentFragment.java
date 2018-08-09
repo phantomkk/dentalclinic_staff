@@ -263,6 +263,7 @@ public class AppointmentFragment extends BaseFragment {
                                 txtMessage.setVisibility(View.GONE);
                             }
                             swipeRefreshLayout.setRefreshing(false);
+                            mListView.getLayoutManager().removeAllViews();
                         } else if (response.code() == 500) {
                             showFatalError(response.errorBody(), "appointmentService");
                         } else if (response.code() == 401) {

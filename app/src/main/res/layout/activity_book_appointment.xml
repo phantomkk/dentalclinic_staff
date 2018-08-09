@@ -157,6 +157,7 @@
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLines="1"
+                        android:text="30"
                         android:singleLine="true"
                         android:textSize="@dimen/input_size_normal" />
 
