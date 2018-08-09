@@ -166,7 +166,7 @@ public class AppointmentFragment extends BaseFragment {
         android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext())
                 .setMessage("Bạn có muốn đặt lịch hẹn lại cho bệnh nhân này?")
                 .setTitle(getString(R.string.dialog_default_title))
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Không", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -402,7 +402,7 @@ public class AppointmentFragment extends BaseFragment {
         android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext())
                 .setMessage("Bạn có muốn hủy lịch hẹn này?")
                 .setTitle(getString(R.string.dialog_default_title))
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Không", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
