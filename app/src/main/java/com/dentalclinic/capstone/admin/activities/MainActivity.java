@@ -503,12 +503,15 @@ public class MainActivity extends BaseActivity
             searchPatientFragment = new SearchPatientFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, searchPatientFragment).commit();
         } else if (id == R.id.nav_history) {
+            setTitle("Lịch hẹn");
             BaseWeekViewFragment calendarFragment = new BaseWeekViewFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, calendarFragment).commit();
         } else if (id == R.id.nav_appointment_list_2) {
+            setTitle("Nhận bệnh");
             Appointment2Fragment appointment2Fragment = new Appointment2Fragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, appointment2Fragment).commit();
         } else if (id == R.id.nav_appointment_list) {
+            setTitle("Khám bệnh");
             AppointmentFragment calendarFragment = new AppointmentFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, calendarFragment).commit();
         } else if (id == R.id.nav_bar_chart) {
@@ -520,10 +523,12 @@ public class MainActivity extends BaseActivity
             ChartFragment chartFragment = new ChartFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, chartFragment).commit();
         } else if (id == R.id.nav_request_absent) {
+            setTitle("Nghỉ phép");
 //            startActivity(new Intent(MainActivity.this, DatePickerActivity.class));
             AbsentFragment absentFragment = new AbsentFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, absentFragment).commit();
         } else if (id == R.id.nav_my_accout) {
+            setTitle("Thông tin tài khoản");
             MyAccoutFragment newFragment = new MyAccoutFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, newFragment).commit();
         } else if (id == R.id.nav_setting) {
