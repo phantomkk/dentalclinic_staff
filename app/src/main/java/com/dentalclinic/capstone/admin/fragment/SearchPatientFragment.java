@@ -201,6 +201,8 @@ public class SearchPatientFragment extends BaseFragment {
                                         if (response.body() != null) {
                                             logError("ABC", "CCC");
                                             showSuccessMessage(response.body().getMessage());
+                                            ((MainActivity) getActivity()).getPatienst(phone);
+                                            appointmentRecyclerView.getLayoutManager().removeAllViews();
                                         }
                                     } else if (response.code() == 417) {
                                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext())
@@ -667,7 +669,9 @@ public class SearchPatientFragment extends BaseFragment {
                 .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        changeStatus(4, pos);
+//                        changeStatus(4, pos);
+                        ((MainActivity) getActivity()).getPatienst(phone);
+                        appointmentRecyclerView.getLayoutManager().removeAllViews();
                     }
                 });
         alertDialog.show();

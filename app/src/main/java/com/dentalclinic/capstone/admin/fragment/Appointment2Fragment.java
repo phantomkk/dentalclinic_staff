@@ -316,7 +316,6 @@ public class Appointment2Fragment extends BaseFragment {
                             appointments.remove(position);
                             mAdapter.notifyItemRemoved(position);
                             mAdapter.notifyItemRangeChanged(position, appointments.size());
-
                         } else if (successResponseResponse.code() == 500) {
                             showFatalError(successResponseResponse.errorBody(), "appointmentService");
                         } else if (successResponseResponse.code() == 401) {

@@ -75,7 +75,7 @@ public class ShowTreatmentHistoryActivity extends BaseActivity {
                 intent.putExtra(CreateTreatmentDetailActivity.TREATMENT_HISTORY_BUNDLE, selectedTreatment);
                 intent.putExtra("PATIENT_BUNDLE", patient);
                 ////////dummy request code
-                startActivityForResult(intent, REQUEST_CREATE_NEW_HISTORY);
+                startActivityForResult(intent, REQUEST_CREATE_NEW_DETAIL);
             }
         });
 
