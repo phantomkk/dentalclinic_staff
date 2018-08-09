@@ -114,6 +114,7 @@ public class ShowTreatmentHistoryActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<List<TreatmentHistory>> listResponse) {
                         if (listResponse.isSuccessful()) {
+                            treatmentHistories.clear();
                             treatmentHistories.addAll(listResponse.body());
                             mAdapter.notifyDataSetChanged();
                             if(treatmentHistories.isEmpty()){
