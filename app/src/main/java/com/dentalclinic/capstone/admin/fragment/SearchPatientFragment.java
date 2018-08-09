@@ -40,19 +40,24 @@ import com.dentalclinic.capstone.admin.activities.PatientPaymentActivity;
 import com.dentalclinic.capstone.admin.adapter.AppointmentSwift2Adapter;
 import com.dentalclinic.capstone.admin.adapter.PatientAdapter;
 import com.dentalclinic.capstone.admin.adapter.PatientSwiftAdapter;
+import com.dentalclinic.capstone.admin.adapter.SearchDentistAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.api.services.AppointmentService;
 import com.dentalclinic.capstone.admin.api.services.PatientService;
 import com.dentalclinic.capstone.admin.api.services.PaymentService;
+import com.dentalclinic.capstone.admin.api.services.StaffService;
 import com.dentalclinic.capstone.admin.api.services.UserService;
 import com.dentalclinic.capstone.admin.dialog.AppointmentDetailDialog;
+import com.dentalclinic.capstone.admin.dialog.SearchDentistDialog;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Payment;
 import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
+import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
+import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.dentalclinic.capstone.admin.utils.Utils;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -60,6 +65,7 @@ import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.SingleObserver;
@@ -282,7 +288,8 @@ public class SearchPatientFragment extends BaseFragment {
         mAdapter2.setOnDelListener(new AppointmentSwift2Adapter.onSwipeListener() {
             @Override
             public void onChangeDoctorClick(int pos) {
-                showMessage("Change Doctor");
+//                showMessage("Change Doctor");
+                callApiGetListDentist(pos);
 
             }
 
@@ -427,8 +434,9 @@ public class SearchPatientFragment extends BaseFragment {
                     @Override
                     public void onSuccess(Response<SuccessResponse> successResponseResponse) {
                         if (successResponseResponse.isSuccessful()) {
-                            appointments.get(position).setStatus(status);
-                            mAdapter.notifyDataSetChanged();
+                            appointments.remove(position);
+                            mAdapter2.notifyItemRemoved(position);
+                            mAdapter2.notifyItemRangeChanged(position, appointments.size());
                         } else if (successResponseResponse.code() == 500) {
                             showFatalError(successResponseResponse.errorBody(), "appointmentService");
                         } else if (successResponseResponse.code() == 401) {
@@ -530,6 +538,109 @@ public class SearchPatientFragment extends BaseFragment {
 //
 //                }
         }
+    }
+    private List<SearchDentistAdapter.SearchDentisItem> listItemDentist = new ArrayList<>();
+    private List<Staff> listDentist = new ArrayList<>();
+    private SearchDentistDialog searchDentistDialog;
+    private void callApiGetListDentist(int appointmentPos) {
+        StaffService service = APIServiceManager.getService(StaffService.class);
+        Calendar c = Calendar.getInstance();
+        String currentDate = DateUtils.getDate(c.getTime(), DateTimeFormat.DATE_TIME_DB_2);
+        service.getCurrentFreeDentistAt(currentDate)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<List<Staff>>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Response<List<Staff>> listResponse) {
+                        if (listResponse.isSuccessful()) {
+                            if (listResponse.body() != null) {
+                                listDentist.clear();
+                                listItemDentist.clear();
+                                listDentist.addAll(listResponse.body());
+                                listItemDentist.addAll(convertListDentist(listDentist));
+                                searchDentistDialog = new SearchDentistDialog(getActivity(), listItemDentist, "Tìm kiếm nha sĩ");
+                                searchDentistDialog.setOnItemSelected(new SearchDentistDialog.OnSearchDentistItemSelected() {
+                                    @Override
+                                    public void onClick(int position, SearchDentistAdapter.SearchDentisItem searchListItem) {
+//                                        showMessage("id" + listDentist.get(position).getId());
+                                        changeDentist(appointments.get(appointmentPos).getId(),listDentist.get(position).getId(),appointmentPos, position);
+                                    }
+                                });
+                                if (searchDentistDialog != null && listDentist != null && listDentist.size() > 0) {
+                                    searchDentistDialog.show();
+                                } else {
+                                    showMessage("Danh sách nha sĩ trống");
+                                }
+                            }
+                        } else if (listResponse.code() == 500) {
+                            showFatalError(listResponse.errorBody(), "callApiGetListDentist");
+                        } else if (listResponse.code() == 401) {
+                            showErrorUnAuth();
+                        } else if (listResponse.code() == 400) {
+                            showBadRequestError(listResponse.errorBody(), "callApiGetListDentist");
+                        } else {
+                            showDialog(getString(R.string.error_message_api));
+                        }
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        showErrorMessage("Không thể kết nối đến máy chủ");
+                    }
+                });
+    }
+    private List<SearchDentistAdapter.SearchDentisItem> convertListDentist(List<Staff> list) {
+        List<SearchDentistAdapter.SearchDentisItem> listItems = new ArrayList<>();
+        for (Staff s : list) {
+            SearchDentistAdapter.SearchDentisItem item =
+                    new SearchDentistAdapter.SearchDentisItem(s.getId(), s.getName(), s.getStatus());
+            listItems.add(item);
+        }
+        return listItems;
+    }
+    public void changeDentist(int appointmentId, int dentistId,int appointmentPos, int dentisPosition) {
+        showLoading();
+        AppointmentService service = APIServiceManager.getService(AppointmentService.class);
+        service.changeDentist(appointmentId, dentistId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<SuccessResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onSuccess(Response<SuccessResponse> successResponseResponse) {
+                        if (successResponseResponse.isSuccessful()) {
+                            showMessage("Đổi bác sĩ thành công!");
+                            appointments.get(appointmentPos).setStaff(listDentist.get(dentisPosition));
+                            mAdapter2.notifyDataSetChanged();
+                        } else if (successResponseResponse.code() == 500) {
+                            showFatalError(successResponseResponse.errorBody(), "appointmentService");
+                        } else if (successResponseResponse.code() == 401) {
+                            showErrorUnAuth();
+                        } else if (successResponseResponse.code() == 400) {
+                            showBadRequestError(successResponseResponse.errorBody(), "appointmentService");
+                        } else {
+                            showErrorMessage(getString(R.string.error_on_error_when_call_api));
+                        }
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showWarningMessage(getResources().getString(R.string.error_on_error_when_call_api));
+                        logError(BookAppointmentReceptActivity.class, "callApi", e.getMessage());
+                        hideLoading();
+                    }
+                });
     }
 
 
