@@ -391,7 +391,7 @@ public class AppointmentFragment extends BaseFragment {
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("receiver", "Got message");
+            Log.d("DEBUG_TAG", "Got message mMessageReceiver");
 //            showMessage("APPOINTMENT RELOAD");
             prepareData(DateUtils.getDate(Calendar.getInstance().getTime(), DateTimeFormat.DATE_TIME_DB_2));
 

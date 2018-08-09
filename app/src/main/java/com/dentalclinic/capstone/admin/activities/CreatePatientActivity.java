@@ -6,7 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
@@ -223,9 +225,10 @@ public class CreatePatientActivity extends BaseActivity {
                             tvErrorBirthday.setText(getString(R.string.label_error_birthday));
                         } else {
                             tvErrorBirthday.setText("");
-
+                            tvBirthday.setTextColor(ContextCompat.getColor(CreatePatientActivity.this,
+                                    R.color.color_black));
                         }
-                    }, year, month, day);
+                    }, 2000, month, day);
             dialog.show();
         });
 

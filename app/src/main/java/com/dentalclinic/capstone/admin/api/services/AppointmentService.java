@@ -36,10 +36,14 @@ public interface AppointmentService {
     @POST("api/appointment/updateStatus")
     Single<Response<SuccessResponse>> changeStatus(@Field("appointment_id") int id, @Field("status") int status);
 
+    @FormUrlEncoded
+    @POST("api/appointment/changeDentist")
+    Single<Response<SuccessResponse>> changeDentist(@Field("appointment_id") int id, @Field("staff_id") int dentistId);
+
     @GET("api/appointment/getUserAppointmentByCurrentDate")
     Single<Response<List<Appointment>>> getAppointmentByPhone(@Query("phone") String phone);
 
     @FormUrlEncoded
     @POST("api/patient/receiveManually")
-    Single<Response<SuccessResponse>> receiAppointmentManual(@Field("patient_id") int patientId,@Field("appointment_id") int appointmentId);
+    Single<Response<SuccessResponse>> receiAppointmentManual(@Field("patient_id") int patientId, @Field("appointment_id") int appointmentId);
 }

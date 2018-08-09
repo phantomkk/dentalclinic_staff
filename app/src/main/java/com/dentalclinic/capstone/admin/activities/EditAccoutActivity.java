@@ -2,6 +2,7 @@ package com.dentalclinic.capstone.admin.activities;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -172,6 +173,8 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
                                 txtDateError.setText(getString(R.string.label_error_birthday));
                             } else {
                                 txtDateError.setText("");
+                                txtDateOfBirth.setTextColor(ContextCompat.getColor(EditAccoutActivity.this,
+                                        R.color.color_black));
 
                             }
                         }, year, month, day);
