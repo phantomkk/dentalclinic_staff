@@ -35,6 +35,8 @@ public class AppConst {
     public final static String RESPONSE_FEEDBACK = "RESPONSE_FEEDBACK";
     public final static String RESPONSE_RELOAD = "RESPONSE_RELOAD";
 
+    public final static String ACTION_RELOAD = "ACTION_RELOAD";
+    public final static String ACTION_RELOAD_TYPE = "ACTION_RELOAD_TYPE";
     public final static String ACTION_RELOAD_APPOINTMENT = "ACTION_RELOAD_APPOINTMENT";
 //    public final static String ACTION_RELOAD_APPOINTMENT = "ACTION_RELOAD_APPOINTMENT";
 

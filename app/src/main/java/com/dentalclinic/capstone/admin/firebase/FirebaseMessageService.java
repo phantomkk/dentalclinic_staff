@@ -45,7 +45,8 @@ public class FirebaseMessageService extends FirebaseMessagingService {
             }
         } else if (responseType!= null && responseType.equals(AppConst.RESPONSE_RELOAD)) {
             String activityAction = message.getData().get("body");
-            Intent intent = new Intent(activityAction);
+            Intent intent = new Intent(AppConst.ACTION_RELOAD);
+            intent.putExtra(AppConst.ACTION_RELOAD_TYPE, activityAction);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             Log.d("DEBUG_TAG", "RELOAD CALL");
         }

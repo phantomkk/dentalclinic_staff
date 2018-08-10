@@ -1,7 +1,10 @@
 package com.dentalclinic.capstone.admin.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
@@ -9,14 +12,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+
 import io.reactivex.functions.BiFunction;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -48,12 +55,15 @@ import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
+import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
+import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.dentalclinic.capstone.admin.utils.SettingManager;
 import com.dentalclinic.capstone.admin.utils.Utils;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -76,7 +86,10 @@ public class MainActivity extends BaseActivity
     Staff staff = new Staff();
     private NavigationView navigationView;
     private String phone = "";
+    private MenuItem appointmentItem;
+    private MenuItem selectedMenuItem;
     private final int REQUEST_CREATE_PATIENT = 109;
+    private static int numAppointment = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,9 +164,11 @@ public class MainActivity extends BaseActivity
             navigationView.getMenu().findItem(R.id.nav_history).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_appointment_list).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_chart).setVisible(false);
-        }else if(Utils.isDentist(MainActivity.this)){
+        } else if (Utils.isDentist(MainActivity.this)) {
             navigationView.getMenu().findItem(R.id.nav_appointment_list_2).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_bar_chart).setVisible(false);
+            appointmentItem = navigationView.getMenu().findItem(R.id.nav_appointment_list);
+            setNumAppointment(appointmentItem, 0);
         }
     }
 
@@ -218,10 +233,10 @@ public class MainActivity extends BaseActivity
                 .getAppointmentByPhone(phone)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-        Single<CombinePatientClass> combine = Single.zip(patient,appointment,
+        Single<CombinePatientClass> combine = Single.zip(patient, appointment,
                 new BiFunction<Response<List<Patient>>, Response<List<Appointment>>, CombinePatientClass>() {
                     @Override
-                    public CombinePatientClass apply(Response<List<Patient>> patientResponse,Response<List<Appointment>> appointmentRespone) throws Exception {
+                    public CombinePatientClass apply(Response<List<Patient>> patientResponse, Response<List<Appointment>> appointmentRespone) throws Exception {
                         return new CombinePatientClass(patientResponse, appointmentRespone);
                     }
                 });
@@ -233,9 +248,9 @@ public class MainActivity extends BaseActivity
 
             @Override
             public void onSuccess(CombinePatientClass combinePatientClass) {
-                if(combinePatientClass.getPatients()!=null){
-                    if(combinePatientClass.getPatients().isSuccessful()){
-                       if (combinePatientClass.getPatients().body().isEmpty()) {
+                if (combinePatientClass.getPatients() != null) {
+                    if (combinePatientClass.getPatients().isSuccessful()) {
+                        if (combinePatientClass.getPatients().body().isEmpty()) {
                             if (Utils.isRceiption(MainActivity.this)) {
                                 showConfigCreateNewPatientDialog("Tạo thông tin bệnh nhân cho tài khoản này?");
                             }
@@ -257,7 +272,7 @@ public class MainActivity extends BaseActivity
 
                             }
                         }
-                    }else if (combinePatientClass.getPatients().code() == 500) {
+                    } else if (combinePatientClass.getPatients().code() == 500) {
                         showFatalError(combinePatientClass.getPatients().errorBody(), "callApiLogin");
                     } else if (combinePatientClass.getPatients().code() == 401) {
                         showErrorUnAuth();
@@ -273,14 +288,14 @@ public class MainActivity extends BaseActivity
                             searchPatientFragment.addButtonNewPatient();
                         }
 //                        showBadRequestError(combinePatientClass.getAppointments().errorBody(),"combineGetAppointment");
-                        logError("calPatient","lỗi");
+                        logError("calPatient", "lỗi");
                     } else {
                         showErrorMessage(getString(R.string.error_on_error_when_call_api));
                     }
                 }
 
-                if(combinePatientClass.getAppointments()!=null){
-                    if(combinePatientClass.getAppointments().isSuccessful()){
+                if (combinePatientClass.getAppointments() != null) {
+                    if (combinePatientClass.getAppointments().isSuccessful()) {
                         if (combinePatientClass.getAppointments().body().isEmpty()) {
                             if (searchPatientFragment != null) {
                                 searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
@@ -290,12 +305,12 @@ public class MainActivity extends BaseActivity
                                 searchPatientFragment.setAppointmentAndNotifiAdapter(combinePatientClass.getAppointments().body());
                             }
                         }
-                    }else if (combinePatientClass.getAppointments().code() == 500) {
+                    } else if (combinePatientClass.getAppointments().code() == 500) {
                         showFatalError(combinePatientClass.getAppointments().errorBody(), "callApiLogin");
                     } else if (combinePatientClass.getAppointments().code() == 401) {
                         showErrorUnAuth();
                     } else if (combinePatientClass.getAppointments().code() == 400) {
-                        showBadRequestError(combinePatientClass.getAppointments().errorBody(),"combineGetAppointment");
+                        showBadRequestError(combinePatientClass.getAppointments().errorBody(), "combineGetAppointment");
                     } else {
                         showErrorMessage(getString(R.string.error_on_error_when_call_api));
                     }
@@ -309,7 +324,6 @@ public class MainActivity extends BaseActivity
                 hideLoading();
             }
         });
-
 
 
 //        AppointmentService service = APIServiceManager.getService(AppointmentService.class);
@@ -495,8 +509,8 @@ public class MainActivity extends BaseActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        selectedMenuItem = item;
         int id = item.getItemId();
-
         if (id == R.id.nav_search_patient) {
 //            Intent intent = new Intent(MainActivity.this, SearchPatientActivity.class);
 //            startActivity(intent);
@@ -511,6 +525,9 @@ public class MainActivity extends BaseActivity
             Appointment2Fragment appointment2Fragment = new Appointment2Fragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, appointment2Fragment).commit();
         } else if (id == R.id.nav_appointment_list) {
+            //clear number in tab menuItem
+            clearNumAppointment(item);
+            ///////////////////////
             setTitle("Khám bệnh");
             AppointmentFragment calendarFragment = new AppointmentFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, calendarFragment).commit();
@@ -564,7 +581,7 @@ public class MainActivity extends BaseActivity
                     public void onSuccess(Response<SuccessResponse> successResponse) {
                         if (successResponse.isSuccessful()) {
                             logError("Logout on server", "Log out success");
-                        }else if (successResponse.code() == 500) {
+                        } else if (successResponse.code() == 500) {
                             logError("Logout on server", "Log out 500");
                         } else if (successResponse.code() == 401) {
                             logError("Logout on server", "Log out showErrorUnAuth");
@@ -606,4 +623,49 @@ public class MainActivity extends BaseActivity
             }
         }
     }
+
+    public void increaseNumAppointment() {
+        if (Utils.isDentist(MainActivity.this) && appointmentItem!=null && selectedMenuItem != appointmentItem) {
+            numAppointment++;
+            setNumAppointment(appointmentItem, numAppointment);
+        }
+    }
+
+    public void clearNumAppointment(MenuItem item) {
+        if (Utils.isDentist(MainActivity.this) && item!=null) {
+            numAppointment = 0;
+            setNumAppointment(item, numAppointment);
+        }
+    }
+
+    public void setNumAppointment(MenuItem item, int num) {
+            TextView v = (TextView) item.getActionView();
+            v.setText(num + "");
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+            LocalBroadcastManager.getInstance(this)
+                    .registerReceiver(mMessageReceiver, new IntentFilter(AppConst.ACTION_RELOAD));
+        Log.d("DEBUG_TAG", "MainActivity REGISTER");
+    }
+
+    @Override
+    public void onPause() {
+            LocalBroadcastManager.getInstance(this)
+                    .unregisterReceiver(mMessageReceiver);
+        Log.d("DEBUG_TAG", "MainActivity PAUSE");
+        super.onPause();
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String actionReloadType = intent.getStringExtra(AppConst.ACTION_RELOAD_TYPE);
+            if (actionReloadType.equals(AppConst.ACTION_RELOAD_APPOINTMENT)) {
+                increaseNumAppointment();
+            }
+
+        }
+    };
 }

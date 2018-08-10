@@ -368,15 +368,16 @@ public class AppointmentFragment extends BaseFragment {
             }
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
         if (getActivity() != null) {
             LocalBroadcastManager.getInstance
                     (getActivity())
-                    .registerReceiver(mMessageReceiver, new IntentFilter(AppConst.ACTION_RELOAD_APPOINTMENT));
+                    .registerReceiver(mMessageReceiver, new IntentFilter(AppConst.ACTION_RELOAD));
         }
-            Log.d("DEBUG_TAG", "ACTION_RELOAD_APPOINTMENT REGISTER");
+        Log.d("DEBUG_TAG", "ACTION_RELOAD_APPOINTMENT REGISTER");
     }
 
     @Override
@@ -385,7 +386,7 @@ public class AppointmentFragment extends BaseFragment {
             LocalBroadcastManager.getInstance(getActivity())
                     .unregisterReceiver(mMessageReceiver);
         }
-            Log.d("DEBUG_TAG", "ACTION_RELOAD_APPOINTMENT PAUSE");
+        Log.d("DEBUG_TAG", "ACTION_RELOAD_APPOINTMENT PAUSE");
         super.onPause();
     }
 
@@ -394,7 +395,10 @@ public class AppointmentFragment extends BaseFragment {
         public void onReceive(Context context, Intent intent) {
             Log.d("DEBUG_TAG", "Got message mMessageReceiver");
 //            showMessage("APPOINTMENT RELOAD");
-            prepareData(DateUtils.getDate(Calendar.getInstance().getTime(), DateTimeFormat.DATE_TIME_DB_2));
+            String reloadType = intent.getStringExtra(AppConst.ACTION_RELOAD_TYPE);
+            if (reloadType.equals(AppConst.ACTION_RELOAD_APPOINTMENT)) {
+                prepareData(DateUtils.getDate(Calendar.getInstance().getTime(), DateTimeFormat.DATE_TIME_DB_2));
+            }
 
         }
     };
