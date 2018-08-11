@@ -98,7 +98,7 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
             @Override
             public void onClick(View view) {
                 MonthYearPickerDialogFragment dialogFragment = MonthYearPickerDialogFragment
-                        .getInstance(monthSelected, yearSelected);
+                        .getInstance(monthSelected, yearSelected, 2010,calendar.getTimeInMillis());
                 dialogFragment.setOnDateSetListener(new MonthYearPickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(int year, int month) {

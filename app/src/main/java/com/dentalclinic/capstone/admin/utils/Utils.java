@@ -50,6 +50,7 @@ public class Utils {
                 || Build.MODEL.contains("Emulator")
                 || Build.MODEL.contains("Android SDK built for x86");
     }
+    public static String linkServer = "http://150.95.104.237/";
 
     public static void saveStaffInSharePref(Context context, Staff user) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);

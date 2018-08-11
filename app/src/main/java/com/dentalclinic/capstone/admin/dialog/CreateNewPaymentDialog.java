@@ -25,7 +25,7 @@ import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
 
-public class CreateNewPaymentDialog extends Dialog{
+public class CreateNewPaymentDialog extends Dialog {
     public Activity c;
     public Dialog d;
     public TextView btnSave;
@@ -33,11 +33,13 @@ public class CreateNewPaymentDialog extends Dialog{
     private TextView txtTreatment, txtTotal, txtNotPayYet;
     private AutoCompleteTextView edtMoney;
     private OnButtonClickListener listener;
+
     public CreateNewPaymentDialog(Activity a, Payment payment) {
         super(a);
         this.c = a;
         this.payment = payment;
     }
+
     public interface OnButtonClickListener {
         void onSave(float money, Payment payment);
     }
@@ -92,38 +94,38 @@ public class CreateNewPaymentDialog extends Dialog{
         btnSave = findViewById(R.id.btn_save);
 
         if (payment != null) {
-           if(payment.getTreatmentNames() !=null){
-               String rs = "";
-               for (int i=0; i<payment.getTreatmentNames().size();i++){
-                   if(i == payment.getTreatmentNames().size()-1){
-                       rs+= payment.getTreatmentNames().get(i);
-                   }else{
-                       rs+=payment.getTreatmentNames().get(i)+", ";
-                   }
-               }
-               txtTreatment.setText(rs);
-           }
-           if(payment.getTotalPrice()!=null){
-               txtTotal.setText(Utils.formatMoney(payment.getTotalPrice())+getContext().getResources().getString(R.string.current_unit));
-               if(payment.getPaid()!=null){
-                   txtNotPayYet.setText(Utils.formatMoney(payment.getTotalPrice()- payment.getPaid())+ getContext().getResources().getString(R.string.current_unit));
-               }
-           }
+            if (payment.getTreatmentNames() != null) {
+                String rs = "";
+                for (int i = 0; i < payment.getTreatmentNames().size(); i++) {
+                    if (i == payment.getTreatmentNames().size() - 1) {
+                        rs += payment.getTreatmentNames().get(i);
+                    } else {
+                        rs += payment.getTreatmentNames().get(i) + ", ";
+                    }
+                }
+                txtTreatment.setText(rs);
+            }
+            if (payment.getTotalPrice() != null) {
+                txtTotal.setText(Utils.formatMoney(payment.getTotalPrice()) + getContext().getResources().getString(R.string.current_unit));
+                if (payment.getPaid() != null) {
+                    txtNotPayYet.setText(Utils.formatMoney(payment.getTotalPrice() - payment.getPaid()) + getContext().getResources().getString(R.string.current_unit));
+                }
+            }
         }
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String price = edtMoney.getText().toString().replaceAll("[đ,.]", "").trim();
-                listener.onSave(Float.parseFloat(price), payment);
+                if (isValid(price)) {
+                    listener.onSave(Float.parseFloat(price), payment);
+                }
             }
         });
 
     }
 
     public static String formatVnCurrence(String price) {
-
-
         NumberFormat format =
                 new DecimalFormat("#,##0.00");// #,##0.00 ¤ (¤:// Currency symbol)
         format.setCurrency(Currency.getInstance(Locale.US));//Or default locale
@@ -143,5 +145,15 @@ public class CreateNewPaymentDialog extends Dialog{
         return price;
     }
 
+    private boolean isValid(String price) {
+        boolean rs = true;
+        Long money = new Long(price);
+        Long notePay = payment.getTotalPrice() - payment.getPaid();
+        if (money > notePay) {
+            edtMoney.setError("Vui lòng nhập tiền nhỏ hơn hoặc bằng số nợ");
+            rs = false;
+        }
+        return rs;
+    }
 }
 

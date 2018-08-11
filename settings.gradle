@@ -1,1 +1,1 @@
-include ':app', ':searchdialog', ':pix'
+include ':app', ':searchdialog', ':pix',':monthpicker'

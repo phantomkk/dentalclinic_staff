@@ -76,6 +76,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private AutoCompleteTextView actTmDetailNote;
     private AutoCompleteTextView actTmHistoryDescription;
     private TextView lblTooth;
+    private TextView lblSymtoms;
     private TextView lblTreatment;
     private TextView lblTreatmentStep;
     private TextView lblMedicineQuantity;
@@ -94,6 +95,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private Button btnShowListMedicine;
     private Button btnImagePicker;
     private Button btnCreateTmHistory;
+    private Button btnShowListSympToms;
     private RecyclerView recyclerView;
     private Treatment currentTreatment;
     private Tooth currentTooth;
@@ -128,12 +130,14 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         actTmDetailNote = findViewById(R.id.act_note_tmdetail);
         actPrice.addTextChangedListener(this);
         lblTooth = findViewById(R.id.lbl_tooth_slt);
+        lblSymtoms = findViewById(R.id.lbl_symptoms_slt);
         lblTreatment = findViewById(R.id.lbl_treatment_slt);
         lblTreatmentStep = findViewById(R.id.lbl_treatmentstep);
         lblMedicineQuantity = findViewById(R.id.lbl_medicine_slt);
         txtHintPrice = findViewById(R.id.txt_hint_price);
         listTooth = new ArrayList<>();
         btnShowListTooth = findViewById(R.id.btn_list_tooth);
+        btnShowListSympToms = findViewById(R.id.btn_list_symptoms);
         btnShowListTreatment = findViewById(R.id.btn_list_treatments);
         btnShowListTreatmentStep = findViewById(R.id.btn_list_treatmentstep);
         btnShowListMedicine = findViewById(R.id.btn_list_medicine);

@@ -69,6 +69,7 @@ public class Appointment2Fragment extends BaseFragment {
     private List<SearchDentistAdapter.SearchDentisItem> listItemDentist = new ArrayList<>();
     private List<Staff> listDentist = new ArrayList<>();
     private SearchDentistDialog searchDentistDialog;
+
     public Appointment2Fragment() {
         // Required empty public constructor
     }
@@ -100,8 +101,12 @@ public class Appointment2Fragment extends BaseFragment {
         mAdapter.setOnDelListener(new AppointmentSwiftForReceipAdapter.onSwipeListener() {
             @Override
             public void onTreatment(int pos) {
-                posAppointment = pos;
-                getPatientsByPhone(appointments.get(pos).getPhone());
+                if (appointments.get(pos).getPatient() == null) {
+                    posAppointment = pos;
+                    getPatientsByPhone(appointments.get(pos).getPhone());
+                } else {
+                    receiveAppointmentManually(appointments.get(pos).getId(), appointments.get(pos).getId());
+                }
             }
 
             @Override
@@ -185,7 +190,7 @@ public class Appointment2Fragment extends BaseFragment {
                                         Bundle bundle = new Bundle();
                                         bundle.putString(AppConst.PHONE, phone);
                                         intent.putExtra(AppConst.BUNDLE, bundle);
-                                        startActivityForResult(intent,AppConst.REQUEST_CREATENEW_PATIENT);
+                                        startActivityForResult(intent, AppConst.REQUEST_CREATENEW_PATIENT);
                                     }
                                 });
                                 dialog.setCanceledOnTouchOutside(true);
@@ -228,7 +233,7 @@ public class Appointment2Fragment extends BaseFragment {
                     public void onSuccess(Response<SuccessResponse> response) {
                         if (response.isSuccessful()) {
                             showMessage("Nhận bệnh thành công!");
-                            if(dialog!=null){
+                            if (dialog != null) {
                                 dialog.dismiss();
                             }
                             prepareData(DateUtils.getDate(Calendar.getInstance().getTime(), DateTimeFormat.DATE_TIME_DB_2));
@@ -340,7 +345,7 @@ public class Appointment2Fragment extends BaseFragment {
                 });
     }
 
-    public void changeDentist(int appointmentId, int dentistId,int appointmentPos, int dentisPosition) {
+    public void changeDentist(int appointmentId, int dentistId, int appointmentPos, int dentisPosition) {
         showLoading();
         StaffService service = APIServiceManager.getService(StaffService.class);
         service.changeDentist(appointmentId, dentistId)
@@ -502,7 +507,7 @@ public class Appointment2Fragment extends BaseFragment {
                                     @Override
                                     public void onClick(int position, SearchDentistAdapter.SearchDentisItem searchListItem) {
 //                                        showMessage("id" + listDentist.get(position).getId());
-                                        changeDentist(appointments.get(appointmentPos).getId(),listDentist.get(position).getId(),appointmentPos, position);
+                                        changeDentist(appointments.get(appointmentPos).getId(), listDentist.get(position).getId(), appointmentPos, position);
                                     }
                                 });
                                 if (searchDentistDialog != null && listDentist != null && listDentist.size() > 0) {
@@ -530,6 +535,7 @@ public class Appointment2Fragment extends BaseFragment {
                     }
                 });
     }
+
     private List<SearchDentistAdapter.SearchDentisItem> convertListDentist(List<Staff> list) {
         List<SearchDentistAdapter.SearchDentisItem> listItems = new ArrayList<>();
         for (Staff s : list) {

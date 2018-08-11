@@ -344,7 +344,7 @@ public class SearchPatientFragment extends BaseFragment {
     }
 
     public void removeAllButton() {
-        btnNewPatient.setVisibility(View.GONE);
+//        btnNewPatient.setVisibility(View.GONE);
         btnNewPayment.setVisibility(View.GONE);
         btnNewAppointment.setVisibility(View.GONE);
     }

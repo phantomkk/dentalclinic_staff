@@ -25,7 +25,7 @@ public class TreatmentHistoryAdapter extends ArrayAdapter<TreatmentHistory> {
     }
 
     private static class ViewHolder {
-        TextView txtName, txtPrice, txtStartDate, txtFinishDate, txtToothName, txtDiscount, txtTotal;
+        TextView txtName, txtPrice, txtStartDate, txtFinishDate, txtToothName, txtDiscount, txtTotal, txtSymptoms;
     }
 
     @Override
@@ -43,6 +43,7 @@ public class TreatmentHistoryAdapter extends ArrayAdapter<TreatmentHistory> {
             viewHolder.txtToothName = convertView.findViewById(R.id.txt_tooth_name);
             viewHolder.txtDiscount = convertView.findViewById(R.id.txt_discount);
             viewHolder.txtTotal = convertView.findViewById(R.id.txt_total);
+            viewHolder.txtSymptoms = convertView.findViewById(R.id.txt_symptoms);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -77,6 +78,16 @@ public class TreatmentHistoryAdapter extends ArrayAdapter<TreatmentHistory> {
             }
             if (treatmentHistory.getTotalPrice() != null) {
                 viewHolder.txtTotal.setText(Utils.formatMoney(treatmentHistory.getTotalPrice())+ getContext().getResources().getString(R.string.current_unit));
+            }
+            if(treatmentHistory.getSymptoms()!=null){
+                String rs = "";
+                for (int i = 0 ; i <treatmentHistory.getSymptoms().size();i++){
+                    if(i == treatmentHistory.getSymptoms().size()-1){
+                        rs+="- "+treatmentHistory.getSymptoms();
+                    }else{
+                        rs="- "+ treatmentHistory.getSymptoms()+"\n";
+                    }
+                }
             }
         }
         return convertView;

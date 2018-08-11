@@ -119,6 +119,8 @@ public class AppointmentFragment extends BaseFragment {
                         bundle.putSerializable(AppConst.PATIENT_OBJ, patient);
                         intent.putExtra(AppConst.BUNDLE, bundle);
                         startActivity(intent);
+                    }else{
+
                     }
                 } else {
                     showDialog("Thông tin chưa được cập nhật");

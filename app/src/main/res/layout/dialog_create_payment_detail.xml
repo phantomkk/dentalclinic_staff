@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/input_margin_top"
         android:textColor="@color/color_black"
-        android:text="Điều Trị"/>
+        android:text=""/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/input_margin_top"
         android:textColor="@color/color_black"
-        android:text="Nợ"/>
+        android:text=""/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

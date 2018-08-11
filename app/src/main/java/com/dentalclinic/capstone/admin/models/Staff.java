@@ -1,5 +1,7 @@
 package com.dentalclinic.capstone.admin.models;
 
+import com.dentalclinic.capstone.admin.utils.Utils;
+import com.github.dewinjm.monthyearpicker.Util;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -116,7 +118,7 @@ public class Staff implements Serializable {
     }
 
     public String getAvatar() {
-        return avatar;
+        return Utils.linkServer+ avatar;
     }
 
     public void setAvatar(String avatar) {

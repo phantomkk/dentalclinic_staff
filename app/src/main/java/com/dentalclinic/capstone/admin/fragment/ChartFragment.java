@@ -96,7 +96,7 @@ public class ChartFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 MonthYearPickerDialogFragment dialogFragment = MonthYearPickerDialogFragment
-                        .getInstance(monthSelected, yearSelected);
+                        .getInstance(monthSelected, yearSelected,2010,calendar.getTimeInMillis());
 //                dialogFragment.getDialog().setCanceledOnTouchOutside(true);
                 dialogFragment.setOnDateSetListener(new MonthYearPickerDialog.OnDateSetListener() {
                     @Override
