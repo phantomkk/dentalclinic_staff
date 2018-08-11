@@ -228,7 +228,9 @@ public class CreatePatientActivity extends BaseActivity {
                             tvBirthday.setTextColor(ContextCompat.getColor(CreatePatientActivity.this,
                                     R.color.color_black));
                         }
-                    }, 2000, month, day);
+                    }, AppConst.DEFAULT_BIRTHDAY_YEAR, month, day);
+            dialog.setButton(DatePickerDialog.BUTTON_POSITIVE,getString(R.string.OK), dialog);
+            dialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, getString(R.string.Cancel), (DialogInterface.OnClickListener)null);
             dialog.show();
         });
 

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">DentalClinicAdmin</string>
+    <string name="OK">Chọn</string>
+    <string name="Cancel">Hủy</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Tên Người Dùng</string>
@@ -203,6 +205,7 @@
     <string name="label_date_picker">Lý do</string>
 
     <string name="button_choose_dialog">Chọn</string>
+    <string name="button_cancel_dialog">Hủy</string>
     <string name="label_money">Số tiền</string>
     <string name="label_patient_apppointment">Bệnh nhân này có: %1$d lịch hẹn trong ngày hôm nay</string>
 

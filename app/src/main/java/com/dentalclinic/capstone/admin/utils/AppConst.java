@@ -18,7 +18,7 @@ public class AppConst {
     public final static String GENDER_FEMALE = "FEMALE";
     public final static String GENDER_OTHER = "OTHER";
 
-
+    public final static int DEFAULT_BIRTHDAY_YEAR= 2000;
     public final static int REQUEST_CREATENEW_PATIENT = 909;
 
     public final static String USER_OBJ = "USER_OBJ";
