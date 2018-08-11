@@ -44,14 +44,14 @@
             </intent-filter>
         </service>
 
-        <!--<receiver-->
-            <!--android:name=".firebase.FirebaseDataReceiver"-->
-            <!--android:exported="true"-->
-            <!--android:permission="com.google.android.c2dm.permission.SEND">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <!-- <receiver -->
+        <!-- android:name=".firebase.FirebaseDataReceiver" -->
+        <!-- android:exported="true" -->
+        <!-- android:permission="com.google.android.c2dm.permission.SEND"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.google.android.c2dm.intent.RECEIVE" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
 
         <activity android:name=".activities.SearchPatientActivity" />
         <activity
@@ -74,11 +74,12 @@
         <activity android:name=".activities.ShowTreatmentHistoryActivity" />
         <activity android:name=".activities.CreateTreatmentActivity"></activity>
         <activity android:name=".activities.TreatmentDetailActivity" />
-        <activity android:name=".activities.CreateTreatmentDetailActivity"></activity>
-        <activity android:name=".activities.DatePickerActivity"></activity>
-        <activity android:name=".activities.BookAppointmentActivity"></activity>
-        <activity android:name=".activities.BookAppointmentReceptActivity"></activity>
-        <!--<activity android:name=".activities.CreateTreatmentDetailActivity"></activity>-->
+        <activity android:name=".activities.CreateTreatmentDetailActivity" />
+        <activity android:name=".activities.DatePickerActivity" />
+        <activity android:name=".activities.BookAppointmentActivity" />
+        <activity android:name=".activities.BookAppointmentReceptActivity" />
+        <!-- <activity android:name=".activities.CreateTreatmentDetailActivity"></activity> -->
+        <activity android:name=".activities.SymptomListActivity"></activity>
     </application>
 
 </manifest>

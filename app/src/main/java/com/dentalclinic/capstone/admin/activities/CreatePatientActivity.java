@@ -66,6 +66,8 @@ public class CreatePatientActivity extends BaseActivity {
     public static String LIST_ANAMNESIS = "LIST_ANAMNESIS";
     public static String PATIENT_ANAMNESIS = "PATIENT_ANAMNESIS";
     public static String PREVIOUS_ANAMNESIS = "PREVIOUS_ANAMNESIS";
+    public static String PATIENT_SYMPTOM = "PATIENT_SYMPTOM";
+    public static String LIST_SYMPTOM = "LIST_SYMPTOM";
     AddressService addressService = APIServiceManager.getService(AddressService.class);
     private String phone = "";
     private ArrayList<AnamnesisCatalog> listAnamnesisCatalog;

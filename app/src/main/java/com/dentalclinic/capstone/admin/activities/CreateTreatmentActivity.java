@@ -35,6 +35,7 @@ import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.requestobject.TreatmentHistoryRequest;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.api.services.MedicineService;
+import com.dentalclinic.capstone.admin.api.services.SymtomService;
 import com.dentalclinic.capstone.admin.api.services.ToothService;
 import com.dentalclinic.capstone.admin.api.services.TreatmentHistoryService;
 import com.dentalclinic.capstone.admin.api.services.TreatmentService;
@@ -42,6 +43,7 @@ import com.dentalclinic.capstone.admin.models.Medicine;
 import com.dentalclinic.capstone.admin.models.MedicineQuantity;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Staff;
+import com.dentalclinic.capstone.admin.models.Symptom;
 import com.dentalclinic.capstone.admin.models.Tooth;
 import com.dentalclinic.capstone.admin.models.Treatment;
 import com.dentalclinic.capstone.admin.models.TreatmentImage;
@@ -65,6 +67,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function3;
+import io.reactivex.functions.Function4;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -87,8 +90,10 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private List<Tooth> listTooth;
     private List<Treatment> listTreatment;
     private List<TreatmentStep> crrTreatmentSteps;
-    private List<MedicineQuantity> selectedMedicine;
+    private List<MedicineQuantity> selectedMedicines;
     private List<MedicineQuantity> listMedicine;
+    private List<Symptom> listSymptom;
+    private List<Symptom> listSelectedSymptom;
     private Button btnShowListTooth;
     private Button btnShowListTreatment;
     private Button btnShowListTreatmentStep;
@@ -104,15 +109,19 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
     private SearchableDialog searchableDialogTooth;
     private List<SearchListItem> listItemsTreatment;
     private List<SearchListItem> listItemsTooth;
+
     private int treatmentHistoryId = -1;
     public static String LIST_STEP = "LIST_STEP";
+    public static String LIST_SYMPTOM = "LIST_SYMPTOM";
     public static String LIST_MEDICINE = "LIST_MEDICINE";
     public static String CURRENT_STEP = "CURRENT_STEP";
     public static final String PATIENT_BUNDLE = "PATIENT_BUNDLE";
     public static final String TM_HISTORY_ID_BUNDLE = "PATIENT_BUNDLE";
     public static String SELECTED_MEDICINE = "SELECTED_MEDICINE";
+    public static String SELECTED_SYMPTOM = "SELECTED_SYMPTOM";
     public static final int REQUEST_CODE_STEP = 121;
     public static final int REQUEST_CODE_MEDICINE = 129;
+    public static final int REQUEST_CODE_SYMPTOM = 125;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,8 +155,10 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         recyclerView = findViewById(R.id.recyclerView);
         listTreatment = new ArrayList<>();
         listMedicine = new ArrayList<>();
+        listSymptom = new ArrayList<>();
+        listSelectedSymptom = new ArrayList<>();
         crrTreatmentSteps = new ArrayList<>();
-        selectedMedicine = new ArrayList<>();
+        selectedMedicines = new ArrayList<>();
         adapter = new ToothSpinnerAdapter(this, android.R.layout.simple_spinner_item, listTooth);
         if (getIntent() != null) {
             currentPatient = (Patient) getIntent().getSerializableExtra(PATIENT_BUNDLE);
@@ -211,7 +222,16 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                 showMessage("Danh sách điều trị trống");
             }
         });
-
+        btnShowListSympToms.setOnClickListener((v) -> {
+            Intent intent = new Intent(CreateTreatmentActivity.this, SymptomListActivity.class);
+            intent.putExtra(LIST_SYMPTOM, (ArrayList<Symptom>) listSymptom);
+            if (listSelectedSymptom != null) {
+                intent.putExtra(SELECTED_SYMPTOM, (ArrayList<Symptom>) listSelectedSymptom);
+            } else {
+                logError("btnShowListSympToms", "listPatientSymptom ==null  ");
+            }
+            startActivityForResult(intent, REQUEST_CODE_SYMPTOM);
+        });
         btnShowListTreatmentStep.setOnClickListener((v) -> {
             if (currentTreatment != null) {
                 Intent intent = new Intent(CreateTreatmentActivity.this, StepListActivity.class);
@@ -229,10 +249,10 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         btnShowListMedicine.setOnClickListener((v) -> {
             Intent intent = new Intent(CreateTreatmentActivity.this, MedicineListActivity.class);
             intent.putExtra(LIST_MEDICINE, (ArrayList<MedicineQuantity>) listMedicine);
-            if (selectedMedicine != null) {
-                intent.putExtra(SELECTED_MEDICINE, (ArrayList<MedicineQuantity>) selectedMedicine);
+            if (selectedMedicines != null) {
+                intent.putExtra(SELECTED_MEDICINE, (ArrayList<MedicineQuantity>) selectedMedicines);
             } else {
-                logError("btnShowListMedicine", "selectedMedicine != null else");
+                logError("btnShowListMedicine", "selectedMedicines != null else");
             }
 
             startActivityForResult(intent, REQUEST_CODE_MEDICINE);
@@ -319,6 +339,14 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         lblMedicineQuantity.setText(mStr);
     }
 
+    private void updateSymtomLabel(List<Symptom> symptoms) {
+        String mStr = "";
+        for (Symptom s : symptoms) {
+            mStr += s.getName() + "\n";
+        }
+        lblSymtoms.setText(mStr);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -338,14 +366,14 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
 
 
                 }
-            } else if (requestCode == REQUEST_CODE_MEDICINE) {
+            } else if (requestCode == REQUEST_CODE_SYMPTOM) {
                 if (b != null) {
-                    ArrayList<MedicineQuantity> list = b.get(SELECTED_MEDICINE) instanceof ArrayList ?
-                            (ArrayList<MedicineQuantity>) b.get(SELECTED_MEDICINE) : null;
+                    ArrayList<Symptom> list = b.get(SELECTED_SYMPTOM) instanceof ArrayList ?
+                            (ArrayList<Symptom>) b.get(SELECTED_SYMPTOM) : null;
                     if (list != null) {
-                        selectedMedicine.clear();
-                        selectedMedicine.addAll(list);
-                        updateMedicineLabel(selectedMedicine);
+                        listSelectedSymptom.clear();
+                        listSelectedSymptom.addAll(list);
+                        updateSymtomLabel(listSelectedSymptom);
                     }
                 }
             }
@@ -415,55 +443,6 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
 
     }
 
-//    private void prepareMedicineDummy() {
-//        Medicine m1 = new Medicine();
-//        m1.setId(1);
-//        m1.setName("paradol");
-//        Medicine m2 = new Medicine();
-//        m2.setId(2);
-//        m2.setName("paracetamol");
-//        Medicine m3 = new Medicine();
-//        m3.setId(3);
-//        m3.setName("pharmaton");
-//        Medicine m4 = new Medicine();
-//        m4.setId(4);
-//        m4.setName("tiffy");
-//        Medicine m5 = new Medicine();
-//        m5.setId(5);
-//        m5.setName("aquavina");
-//        Medicine m6 = new Medicine();
-//        m6.setId(6);
-//        m6.setName("beberin");
-//        Medicine m7 = new Medicine();
-//        m7.setId(7);
-//        m7.setName("torbrin");
-//        Medicine m8 = new Medicine();
-//        m8.setId(8);
-//        m8.setName("acitonin");
-//        Medicine m9 = new Medicine();
-//        m9.setId(9);
-//        m9.setName("hiruscar");
-//        Medicine m10 = new Medicine();
-//        m10.setId(10);
-//        m10.setName("thuoc te");
-//        List<Medicine> lst = new ArrayList<>();
-//        lst.add(m1);
-//        lst.add(m2);
-//        lst.add(m3);
-//        lst.add(m4);
-//        lst.add(m5);
-//        lst.add(m6);
-//        lst.add(m7);
-//        lst.add(m8);
-//        lst.add(m9);
-//        lst.add(m10);
-//        for (Medicine m : lst) {
-//            MedicineQuantity q = new MedicineQuantity(m.getId(), 0, 0);
-//            q.setMedicine(m);
-//            listMedicine.add(q);
-//        }
-//    }
-
     private List<MedicineQuantity> convertListMedicine(List<Medicine> list) {
         List<MedicineQuantity> listMQ = new ArrayList<>();
         for (Medicine m : list) {
@@ -486,17 +465,31 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         Single<Response<List<Medicine>>> medicineService = APIServiceManager.getService(MedicineService.class)
                 .getAllMedicine().subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
+        Single<Response<List<Symptom>>> symptomService = APIServiceManager.getService(SymtomService.class)
+                .getAll().subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
 
 
-        Single<CombineClass> combineClass = Single.zip(treatmentService, toothService, medicineService,
-                new Function3<Response<List<Treatment>>, Response<List<Tooth>>, Response<List<Medicine>>, CombineClass>() {
+        Single<CombineClass> combineClass = Single.zip(
+                treatmentService,
+                toothService,
+                medicineService,
+                symptomService,
+                new Function4<
+                        Response<List<Treatment>>,
+                        Response<List<Tooth>>,
+                        Response<List<Medicine>>,
+                        Response<List<Symptom>>,
+                        CombineClass>() {
                     @Override
                     public CombineClass apply(
                             Response<List<Treatment>> listResponse,
                             Response<List<Tooth>> listResponse2,
-                            Response<List<Medicine>> listResponse3)
+                            Response<List<Medicine>> listResponse3,
+                            Response<List<Symptom>> listResponse4
+                    )
                             throws Exception {
-                        return new CombineClass(listResponse, listResponse2, listResponse3);
+                        return new CombineClass(listResponse, listResponse2, listResponse3, listResponse4);
                     }
                 });
         combineClass.subscribe(new SingleObserver<CombineClass>() {
@@ -518,11 +511,11 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                         logError("onSuccess", "list tooth null");
                     }
                 } else if (toothResponse.code() == 500) {
-                    showFatalError(toothResponse.errorBody(), "prepareData");
+                    showFatalError(toothResponse.errorBody(), "prepareData toothResponse");
                 } else if (toothResponse.code() == 401) {
                     showErrorUnAuth();
                 } else if (toothResponse.code() == 400) {
-                    showBadRequestError(toothResponse.errorBody(), "prepareData");
+                    showBadRequestError(toothResponse.errorBody(), "prepareData toothResponse");
                 } else {
                     showDialog(getString(R.string.error_message_api));
                 }
@@ -537,29 +530,46 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                         logError("onSuccess", "list treatment null");
                     }
                 } else if (treatmentResponse.code() == 500) {
-                    showFatalError(treatmentResponse.errorBody(), "prepareData");
+                    showFatalError(treatmentResponse.errorBody(), "prepareData treatmentResponse");
                 } else if (treatmentResponse.code() == 401) {
                     showErrorUnAuth();
                 } else if (treatmentResponse.code() == 400) {
-                    showBadRequestError(treatmentResponse.errorBody(), "prepareData");
+                    showBadRequestError(treatmentResponse.errorBody(), "prepareData treatmentResponse");
                 } else {
                     showDialog(getString(R.string.error_message_api));
                 }
 
                 Response<List<Medicine>> medicineResponse = combineClass.listMedicine;
-                if (treatmentResponse.isSuccessful()) {
-                    if (treatmentResponse.body() != null) {
+                if (medicineResponse.isSuccessful()) {
+                    if (medicineResponse.body() != null) {
                         listMedicine.clear();
                         listMedicine.addAll(convertListMedicine(medicineResponse.body()));
                     } else {
                         logError("onSuccess", "list treatment null");
                     }
-                } else if (treatmentResponse.code() == 500) {
-                    showFatalError(treatmentResponse.errorBody(), "prepareData");
-                } else if (treatmentResponse.code() == 401) {
+                } else if (medicineResponse.code() == 500) {
+                    showFatalError(medicineResponse.errorBody(), "prepareData medicineResponse");
+                } else if (medicineResponse.code() == 401) {
                     showErrorUnAuth();
-                } else if (treatmentResponse.code() == 400) {
-                    showBadRequestError(treatmentResponse.errorBody(), "prepareData");
+                } else if (medicineResponse.code() == 400) {
+                    showBadRequestError(medicineResponse.errorBody(), "prepareData medicineResponse");
+                } else {
+                    showDialog(getString(R.string.error_message_api));
+                }
+                Response<List<Symptom>> symptomResponse = combineClass.listSymtom;
+                if (symptomResponse.isSuccessful()) {
+                    if (symptomResponse.body() != null) {
+                        listSymptom.clear();
+                        listSymptom.addAll(symptomResponse.body());
+                    } else {
+                        logError("onSuccess", "list symptomResponse null");
+                    }
+                } else if (symptomResponse.code() == 500) {
+                    showFatalError(symptomResponse.errorBody(), "prepareData symptomResponse");
+                } else if (symptomResponse.code() == 401) {
+                    showErrorUnAuth();
+                } else if (symptomResponse.code() == 400) {
+                    showBadRequestError(symptomResponse.errorBody(), "prepareData symptomResponse");
                 } else {
                     showDialog(getString(R.string.error_message_api));
                 }
@@ -623,7 +633,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         builder.addFormDataPart("detail_note", actTmDetailNote.getText().toString() + "");
         builder.addFormDataPart("tooth_number", currentTooth.getToothNumber() + "");
         builder.addFormDataPart("price", actPrice.getText().toString().replaceAll("[đ,.]", ""));
-        for (MedicineQuantity mq : selectedMedicine) {
+        for (MedicineQuantity mq : selectedMedicines) {
             builder.addFormDataPart("medicine_id[]", mq.getMedicineId() + "");
             builder.addFormDataPart("medicine_quantity[]", mq.getQuantity() + "");
         }
@@ -631,6 +641,9 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             if (st.isCheck()) {
                 builder.addFormDataPart("step_id[]", st.getStepId() + "");
             }
+        }
+        for (Symptom st : listSelectedSymptom) {
+            builder.addFormDataPart("symptom_id[]", st.getId() + "");
         }
         for (String image : images) {
             File f = new File(image);
@@ -766,13 +779,15 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         private Response<List<Treatment>> listTreatment;
         private Response<List<Tooth>> listTooth;
         private Response<List<Medicine>> listMedicine;
+        private Response<List<Symptom>> listSymtom;
 
         public CombineClass(Response<List<Treatment>> listTreatment,
                             Response<List<Tooth>> listTooth,
-                            Response<List<Medicine>> listMedicine
-        ) {
-            this.listTreatment = listTreatment;
-            this.listTooth = listTooth;
+                            Response<List<Medicine>> listMedicine,
+                            Response<List<Symptom>> listSymtom) {
+            this.setListTreatment(listTreatment);
+            this.setListTooth(listTooth);
+            this.setListSymtom(listSymtom);
             this.setListMedicine(listMedicine);
         }
 
@@ -788,8 +803,16 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
             return listTooth;
         }
 
+        public Response<List<Symptom>> getListSymtom() {
+            return listSymtom;
+        }
+
         public void setListTooth(Response<List<Tooth>> listTooth) {
             this.listTooth = listTooth;
+        }
+
+        public void setListSymtom(Response<List<Symptom>> listSymtom) {
+            this.listSymtom = listSymtom;
         }
 
         public Response<List<Medicine>> getListMedicine() {
@@ -799,6 +822,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
         public void setListMedicine(Response<List<Medicine>> listMedicine) {
             this.listMedicine = listMedicine;
         }
+
     }
 
     @Override
