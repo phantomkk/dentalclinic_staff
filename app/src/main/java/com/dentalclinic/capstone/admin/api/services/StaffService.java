@@ -75,6 +75,8 @@ public interface StaffService {
 //            @Query("month") int month,
 //            @Query("year") int year);
 
+    @GET("api/user/resetPassword/{phone}")
+    Single<Response<SuccessResponse>> resetPassword(@Path("phone")String phone);
     @POST("api/requestAbsent/changeStatusDelete/{id}")
     Single<Response<SuccessResponse>> deleteRequestAbsent(@Path("id") int reqAbsentId);
 
@@ -86,5 +88,15 @@ public interface StaffService {
 
     @POST("api/staff/updateStaffInfo")
     Single<Response<SuccessResponse>> updateStaffInfo(@Body StaffProfileRequest requestObj);
+
+
+    @FormUrlEncoded
+    @POST("api/staff/changeAppointmentStatus")
+    Single<Response<SuccessResponse>> changeStatus(@Field("appointment_id") int id, @Field("status") int status);
+
+    @FormUrlEncoded
+    @POST("api/staff/changeAppointmentDentist")
+    Single<Response<SuccessResponse>> changeDentist(@Field("appointment_id") int appointmentId, @Field("staff_id") int dentistId);
+
 }
 

@@ -32,14 +32,6 @@ public interface AppointmentService {
     @GET("api/appointment/getByDate")
     Single<Response<List<Appointment>>> getApppointmentByDate(@Query("date") String date);
 
-    @FormUrlEncoded
-    @POST("api/appointment/updateStatus")
-    Single<Response<SuccessResponse>> changeStatus(@Field("appointment_id") int id, @Field("status") int status);
-
-    @FormUrlEncoded
-    @POST("api/appointment/changeDentist")
-    Single<Response<SuccessResponse>> changeDentist(@Field("appointment_id") int appointmentId, @Field("staff_id") int dentistId);
-
     @GET("api/appointment/getUserAppointmentByCurrentDate")
     Single<Response<List<Appointment>>> getAppointmentByPhone(@Query("phone") String phone);
 

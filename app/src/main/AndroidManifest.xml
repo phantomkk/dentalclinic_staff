@@ -28,6 +28,7 @@
         <activity android:name=".activities.EditAccoutActivity" />
         <activity android:name=".activities.EditPatientActivity" />
         <activity android:name=".activities.EditPasswordActivity" />
+        <activity android:name=".activities.ForgotPasswordActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />

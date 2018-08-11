@@ -1,111 +1,133 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_weight="1"
-    android:fillViewport="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.dentalclinic.capstone.admin.activities.LoginActivity">
 
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorAccent"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin" >
+        android:layout_weight="1"
+        android:fillViewport="true">
 
-        <!-- Login progress -->
-
-
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
 
-            <LinearLayout
-                android:id="@+id/email_login_form"
+            <!-- Login progress -->
+
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
-                <android.support.design.widget.TextInputLayout
+                <LinearLayout
+                    android:id="@+id/email_login_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp">
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/txt_phone_loginact"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
-                        android:drawableStart="@drawable/ic_phone_iphone_black_24dp"
-                        android:hint="@string/label_phone_book_appt"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:maxLines="1"
-                        android:textSize="@dimen/input_size_normal"
-                        android:singleLine="true" />
+                        android:layout_marginTop="20dp">
 
-                </android.support.design.widget.TextInputLayout>
+                        <AutoCompleteTextView
+                            android:id="@+id/txt_phone_loginact"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="10dp"
+                            android:drawableStart="@drawable/ic_phone_iphone_black_24dp"
+                            android:hint="@string/label_phone_book_appt"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textSize="@dimen/input_size_normal" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp">
+                    </android.support.design.widget.TextInputLayout>
 
-                    <EditText
-                        android:id="@+id/password"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
-                        android:drawableStart="@drawable/ic_lock_outline_black_24dp"
-                        android:hint="@string/label_password_promt"
-                        android:imeActionId="6"
-                        android:imeActionLabel="@string/action_sign_in_short"
-                        android:imeOptions="actionDone"
-                        android:textSize="@dimen/input_size_normal"
-                        android:inputType="textPassword"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
+                        android:layout_marginTop="20dp">
 
-                <TextView
-                    android:id="@+id/txt_error_server_loginact"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textColor="@color/error_label" />
+                        <EditText
+                            android:id="@+id/password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="10dp"
+                            android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                            android:hint="@string/label_password_promt"
+                            android:imeActionId="6"
+                            android:imeActionLabel="@string/action_sign_in_short"
+                            android:imeOptions="actionDone"
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textSize="@dimen/input_size_normal" />
+                    </android.support.design.widget.TextInputLayout>
 
-
-                <Button
-                    android:id="@+id/btn_signin_loginact"
-                    style="@style/custom_button_blue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_button_login"  />
+                    <TextView
+                        android:id="@+id/txt_error_server_loginact"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/error_label" />
 
 
-                <!--<TextView-->
-                    <!--android:id="@+id/tv_link_quickregister"-->
-                    <!--style="?android:textAppearanceSmall"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginTop="15dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:autoLink="web"-->
-                    <!--android:clickable="true"-->
-                    <!--android:gravity="center_horizontal"-->
-                    <!--android:linksClickable="true"-->
-                    <!--android:text="@string/label_suggest_register"-->
-                    <!--android:textColor="@color/color_light_blue_a400" />-->
-            </LinearLayout>
-        </RelativeLayout>
+                    <Button
+                        android:id="@+id/btn_signin_loginact"
+                        style="@style/custom_button_blue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_button_login" />
 
 
-    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_link_forgot_password"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:autoLink="web"
+                        android:clickable="true"
+                        android:gravity="center_horizontal"
+                        android:linksClickable="true"
+                        android:text="Bạn quên mật khẩu?"
+                        android:textColor="@color/color_light_blue_a400" />
 
-</ScrollView>
+                </LinearLayout>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>

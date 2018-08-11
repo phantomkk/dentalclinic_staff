@@ -3,6 +3,7 @@ package com.dentalclinic.capstone.admin.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -50,6 +51,7 @@ public class LoginActivity extends BaseActivity {
     private View btnLinkAppointment;
     private View btnSingin;
     private TextView txtErrorServer;
+    private TextView tvLinkForgotPassword;
     private FingerAuthDialog fingerAuthDialog;
 
 
@@ -72,6 +74,8 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Staff staff = CoreManager.getStaff(this);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         if (staff != null) {
             Calendar  currentTime = Calendar.getInstance();
             Date tokenTime = DateUtils.getDate(staff.getTokenCreatedDate(), DateTimeFormat.DATE_TIME_DB);
@@ -89,7 +93,8 @@ public class LoginActivity extends BaseActivity {
         // Set up the login form.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+//            actionBar.setHomeButtonEnabled(true);
+//            actionBar.setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.side_nav_bar));
         }
         txtPhone = findViewById(R.id.txt_phone_loginact);
@@ -111,7 +116,11 @@ public class LoginActivity extends BaseActivity {
         });
         txtPassword.clearFocus();
         txtPhone.clearFocus();
-
+        tvLinkForgotPassword = findViewById(R.id.tv_link_forgot_password);
+        tvLinkForgotPassword.setOnClickListener((v) -> {
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
     }
 
 

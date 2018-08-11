@@ -301,7 +301,7 @@ public class Appointment2Fragment extends BaseFragment {
 
     public void changeStatus(int status, int position) {
         showLoading();
-        AppointmentService service = APIServiceManager.getService(AppointmentService.class);
+        StaffService service = APIServiceManager.getService(StaffService.class);
         service.changeStatus(appointments.get(position).getId(), status)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -342,7 +342,7 @@ public class Appointment2Fragment extends BaseFragment {
 
     public void changeDentist(int appointmentId, int dentistId,int appointmentPos, int dentisPosition) {
         showLoading();
-        AppointmentService service = APIServiceManager.getService(AppointmentService.class);
+        StaffService service = APIServiceManager.getService(StaffService.class);
         service.changeDentist(appointmentId, dentistId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

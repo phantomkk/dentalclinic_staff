@@ -37,6 +37,7 @@ import com.dentalclinic.capstone.admin.adapter.PatientSwiftAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.api.services.AppointmentService;
+import com.dentalclinic.capstone.admin.api.services.StaffService;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.utils.AppConst;
@@ -287,7 +288,7 @@ public class AppointmentFragment extends BaseFragment {
 
     public void changeStatus(int status, int position) {
         showLoading();
-        AppointmentService service = APIServiceManager.getService(AppointmentService.class);
+        StaffService service = APIServiceManager.getService(StaffService.class);
         service.changeStatus(appointments.get(position).getId(), status)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
