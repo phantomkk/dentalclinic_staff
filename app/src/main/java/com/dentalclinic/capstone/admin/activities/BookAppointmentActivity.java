@@ -103,6 +103,9 @@ public class BookAppointmentActivity extends BaseActivity {
                                 ContextCompat.getColor(BookAppointmentActivity.this, R.color.color_black)
                         );
                     }, year, month, day);
+            dialog.setButton(DatePickerDialog.BUTTON_POSITIVE,getString(R.string.OK), dialog);
+            dialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, getString(R.string.Cancel), (DialogInterface.OnClickListener)null);
+
             dialog.show();
         });
         Calendar cTime = Calendar.getInstance();
