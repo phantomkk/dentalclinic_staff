@@ -1,6 +1,7 @@
 package com.dentalclinic.capstone.admin.activities;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -178,6 +179,8 @@ public class EditAccoutActivity extends BaseActivity implements View.OnClickList
 
                             }
                         }, year, month, day);
+                dialog.setButton(DatePickerDialog.BUTTON_POSITIVE,getString(R.string.OK), dialog);
+                dialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, getString(R.string.Cancel), (DialogInterface.OnClickListener)null);
                 dialog.show();
                 break;
         }

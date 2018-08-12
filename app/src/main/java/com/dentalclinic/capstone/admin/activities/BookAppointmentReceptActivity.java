@@ -367,7 +367,6 @@ public class BookAppointmentReceptActivity extends BaseActivity {
                             if (listResponse.body() != null) {
                                 listDentist.addAll(listResponse.body());
                                 listItemDentist.addAll(convertListDentist(listDentist));
-
                             }
                         } else if (listResponse.code() == 500) {
                             showFatalError(listResponse.errorBody(), "callApiGetListDentist");
