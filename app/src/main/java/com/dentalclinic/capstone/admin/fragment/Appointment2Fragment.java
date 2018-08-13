@@ -105,7 +105,7 @@ public class Appointment2Fragment extends BaseFragment {
                     posAppointment = pos;
                     getPatientsByPhone(appointments.get(pos).getPhone());
                 } else {
-                    receiveAppointmentManually(appointments.get(pos).getId(), appointments.get(pos).getId());
+                    changeStatus(1,pos);
                 }
             }
 

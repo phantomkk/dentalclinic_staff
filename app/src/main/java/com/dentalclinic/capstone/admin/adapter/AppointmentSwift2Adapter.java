@@ -70,14 +70,20 @@ public class AppointmentSwift2Adapter extends RecyclerView.Adapter<AppointmentSw
                     holder.txtStatus.setText("Sẵn Sàng");
                     break;
                 case 2:
+                    holder.btnChangeDoctor.setVisibility(View.GONE);
+                    holder.btnCancle.setVisibility(View.GONE);
                     holder.txtStatus.setText("Đang Khám");
                     holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_deep_orange_500));
                     break;
                 case 3:
+                    holder.btnChangeDoctor.setVisibility(View.GONE);
+                    holder.btnCancle.setVisibility(View.GONE);
                     holder.txtStatus.setText("Hoàn Thành");
                     holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.color_green_500));
                     break;
                 case 4:
+                    holder.btnChangeDoctor.setVisibility(View.GONE);
+                    holder.btnCancle.setVisibility(View.GONE);
                     holder.itemView.setVisibility(View.GONE);
                     break;
                 default:
