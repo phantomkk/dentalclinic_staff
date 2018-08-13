@@ -24,6 +24,7 @@ import java.util.List;
 
 public class MedicineListActivity extends Activity {
     private TextView btnSelectDone;
+    private TextView btnSelectCancel;
     private ListView listView;
     private ArrayAdapter<MedicineQuantity> adapter;
     private EditText edtSearch;
@@ -37,6 +38,7 @@ public class MedicineListActivity extends Activity {
         setContentView(R.layout.activity_medicine_list);
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         btnSelectDone = findViewById(R.id.btn_select_done);
+        btnSelectCancel = findViewById(R.id.btn_select_cancel);
         listView = findViewById(R.id.list_medicine_activity);
         edtSearch = findViewById(R.id.edt_search_medicine);
 
@@ -63,6 +65,8 @@ public class MedicineListActivity extends Activity {
             Intent intent = new Intent();
             intent.putExtra(CreateTreatmentActivity.SELECTED_MEDICINE, selectedMedicineQuantity);
             setResult(RESULT_OK, intent);
+            finish();
+        });btnSelectCancel.setOnClickListener((v) -> {
             finish();
         });
         edtSearch.addTextChangedListener(new TextWatcher() {

@@ -56,7 +56,7 @@
         <activity android:name=".activities.SearchPatientActivity" />
         <activity
             android:name=".activities.AnamnesisListActivity"
-            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
         <activity android:name=".activities.PatientDetailActivity" />
         <activity
             android:name=".activities.TestActivity"
@@ -66,20 +66,21 @@
         <activity android:name=".activities.PatientPaymentActivity" />
         <activity
             android:name=".activities.StepListActivity"
-            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
             android:name=".activities.MedicineListActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity android:name=".activities.PhotoViewActivity" />
         <activity android:name=".activities.ShowTreatmentHistoryActivity" />
-        <activity android:name=".activities.CreateTreatmentActivity"></activity>
+        <activity android:name=".activities.CreateTreatmentActivity" />
         <activity android:name=".activities.TreatmentDetailActivity" />
         <activity android:name=".activities.CreateTreatmentDetailActivity" />
         <activity android:name=".activities.DatePickerActivity" />
         <activity android:name=".activities.BookAppointmentActivity" />
         <activity android:name=".activities.BookAppointmentReceptActivity" />
         <!-- <activity android:name=".activities.CreateTreatmentDetailActivity"></activity> -->
-        <activity android:name=".activities.SymptomListActivity"></activity>
+        <activity android:name=".activities.SymptomListActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
     </application>
 
 </manifest>

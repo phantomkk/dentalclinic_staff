@@ -21,8 +21,8 @@ import java.util.List;
 
 public class SymptomListActivity extends Activity {
 
-    private TextView txtSelectDone;
-    private TextView txtSelectCancel;
+    private TextView btnSelectDone;
+    private TextView btnSelectCancel;
     private ListView listView;
     private EditText edtSearchSymptom;
     private ArrayAdapter<Symptom> SymptomAdapter;
@@ -36,9 +36,9 @@ public class SymptomListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_symptom_list);
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        txtSelectDone = findViewById(R.id.btn_select_done);
-        txtSelectDone = findViewById(R.id.btn_select_done);
-        txtSelectCancel = findViewById(R.id.btn_select_cancel);
+        btnSelectDone = findViewById(R.id.btn_select_done);
+        btnSelectDone = findViewById(R.id.btn_select_done);
+        btnSelectCancel = findViewById(R.id.btn_select_cancel);
         edtSearchSymptom = findViewById(R.id.edt_search_symptom);
         listView = findViewById(R.id.list_symptom_activity);
         listTotalSymptom = (ArrayList<Symptom>) getIntent().getSerializableExtra(CreateTreatmentActivity.LIST_SYMPTOM);
@@ -74,13 +74,13 @@ public class SymptomListActivity extends Activity {
                 SymptomAdapter.notifyDataSetChanged();
             }
         });
-        txtSelectDone.setOnClickListener((v) -> {
+        btnSelectDone.setOnClickListener((v) -> {
             Intent intent = new Intent();
             intent.putExtra(CreateTreatmentActivity.SELECTED_SYMPTOM, patientSymptomes);
             setResult(RESULT_OK, intent);
             finish();
         });
-        txtSelectCancel.setOnClickListener((v) -> {
+        btnSelectCancel.setOnClickListener((v) -> {
             finish();
         });
     }

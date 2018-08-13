@@ -33,7 +33,6 @@ public class AnamnesisListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anamnesis_list);
         txtSelectDone = findViewById(R.id.btn_select_done);
-        txtSelectDone = findViewById(R.id.btn_select_done);
         txtSelectCancel = findViewById(R.id.btn_select_cancel);
         edtSearchAnamnesis = findViewById(R.id.edt_search_anamnesis);
         listView = findViewById(R.id.list_anamnesis_activity);

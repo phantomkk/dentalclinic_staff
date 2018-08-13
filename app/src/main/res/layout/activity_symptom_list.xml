@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="16dp"
     android:orientation="vertical"
     tools:context=".activities.SymptomListActivity">
 
@@ -69,10 +70,11 @@
             android:layout_height="wrap_content"
             android:textAlignment="textEnd"
             android:clickable="true"
-            android:padding="16dp"
+            android:padding="10dp"
             android:layout_marginTop="@dimen/input_margin_top"
             android:layout_toLeftOf="@+id/btn_select_done"
             android:text="@string/button_cancel_dialog"
+            android:textAllCaps="true"
             android:textColor="@color/color_blue_800"
             android:textSize="15dp" />
 
@@ -82,10 +84,11 @@
             android:layout_height="wrap_content"
             android:textAlignment="textEnd"
             android:clickable="true"
-            android:padding="16dp"
+            android:padding="10dp"
             android:layout_alignParentRight="true"
             android:layout_marginTop="@dimen/input_margin_top"
             android:text="@string/button_choose_dialog"
+            android:textAllCaps="true"
             android:textColor="@color/color_blue_800"
             android:textSize="15dp" />
     </RelativeLayout>

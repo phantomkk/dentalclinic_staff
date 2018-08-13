@@ -123,7 +123,7 @@ public class ShowTreatmentHistoryActivity extends BaseActivity {
                                 labelMessage.setVisibility(View.GONE);
                             }
                         } else {
-                            showMessage("Loi roi");
+                            showMessage("Lỗi máy chủ");
                         }
                     }
 

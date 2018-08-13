@@ -19,6 +19,7 @@ import java.util.List;
 
 public class StepListActivity extends Activity {
     private TextView btnSelectDone;
+    private TextView btnSelectCancel;
     private ListView listView;
     private ArrayAdapter<TreatmentStep> stepAdapter;
 
@@ -32,6 +33,7 @@ public class StepListActivity extends Activity {
         setContentView(R.layout.activity_list_step);
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         btnSelectDone = findViewById(R.id.btn_select_done);
+        btnSelectCancel = findViewById(R.id.btn_select_cancel);
         listView = findViewById(R.id.list_step_activity);
         treatmentSteps = (ArrayList<TreatmentStep>) getIntent().getSerializableExtra(CreateTreatmentActivity.LIST_STEP);
         currentStep = (ArrayList<TreatmentStep>) getIntent().getSerializableExtra(CreateTreatmentActivity.CURRENT_STEP);
@@ -52,6 +54,8 @@ public class StepListActivity extends Activity {
             Intent intent = new Intent();
             intent.putExtra(CreateTreatmentActivity.CURRENT_STEP, treatmentSteps);
             setResult(RESULT_OK, intent);
+            finish();
+        });btnSelectCancel.setOnClickListener((v) -> {
             finish();
         });
     }

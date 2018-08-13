@@ -376,6 +376,16 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                         updateSymtomLabel(listSelectedSymptom);
                     }
                 }
+            }else if (requestCode == REQUEST_CODE_MEDICINE) {
+                if (b != null) {
+                    ArrayList<MedicineQuantity> list = b.get(SELECTED_MEDICINE) instanceof ArrayList ?
+                            (ArrayList<MedicineQuantity>) b.get(SELECTED_MEDICINE) : null;
+                    if (list != null) {
+                        selectedMedicines.clear();
+                        selectedMedicines.addAll(list);
+                        updateMedicineLabel(selectedMedicines);
+                    }
+                }
             }
         }
 //

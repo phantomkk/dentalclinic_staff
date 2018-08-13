@@ -13,7 +13,7 @@
         android:id="@+id/spinerTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nhập đơn thuốc"
+        android:text="Kê đơn thuốc"
         android:textSize="17sp"
         android:textStyle="bold" />
 
@@ -46,27 +46,36 @@
         android:layout_weight="1"
         android:minHeight="400dp"
         android:scrollbarStyle="outsideOverlay" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
 
     <TextView
         android:id="@+id/btn_select_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
         android:clickable="true"
-        android:padding="5dp"
-        android:layout_marginTop="@dimen/input_margin_top"
+        android:padding="10dp"
         android:text="@string/button_choose_dialog"
         android:textAllCaps="true"
         android:textColor="@color/color_blue_800"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:textSize="15dp" />
-
-    <!--<Button-->
-        <!--android:id="@+id/btn_select_done"-->
-        <!--style="@style/custom_button_blue"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:layout_weight="0"-->
-        <!--android:text="Chọn"-->
-        <!--/>-->
+    <TextView
+        android:id="@+id/btn_select_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_centerVertical="true"
+        android:padding="10dp"
+        android:layout_marginTop="@dimen/input_margin_top"
+        android:text="Hủy"
+        android:layout_marginRight="@dimen/margin_cancel_ok"
+        android:textAllCaps="true"
+        android:layout_toLeftOf="@id/btn_select_done"
+        android:textColor="@color/color_blue_800"
+        android:textSize="15dp" />
+    </RelativeLayout>
 </LinearLayout>
