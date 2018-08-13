@@ -37,6 +37,7 @@ public class TreatmentHistoryAdapter extends ArrayAdapter<TreatmentHistory> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.item_treatment_history, parent, false);
             viewHolder.txtName = convertView.findViewById(R.id.txt_treatment_name);
+            viewHolder.txtSymptoms = convertView.findViewById(R.id.txt_symptoms);
             viewHolder.txtPrice = convertView.findViewById(R.id.txt_price);
             viewHolder.txtStartDate = convertView.findViewById(R.id.txt_start_date);
             viewHolder.txtFinishDate = convertView.findViewById(R.id.txt_finish_date);
@@ -83,11 +84,12 @@ public class TreatmentHistoryAdapter extends ArrayAdapter<TreatmentHistory> {
                 String rs = "";
                 for (int i = 0 ; i <treatmentHistory.getSymptoms().size();i++){
                     if(i == treatmentHistory.getSymptoms().size()-1){
-                        rs+="- "+treatmentHistory.getSymptoms();
+                        rs+="- "+treatmentHistory.getSymptoms().get(i).getName();
                     }else{
-                        rs="- "+ treatmentHistory.getSymptoms()+"\n";
+                        rs="- "+ treatmentHistory.getSymptoms().get(i).getName()+"\n";
                     }
                 }
+                viewHolder.txtSymptoms.setText(rs);
             }
         }
         return convertView;
