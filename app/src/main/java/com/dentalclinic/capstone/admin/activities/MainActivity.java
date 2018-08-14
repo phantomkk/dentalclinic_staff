@@ -455,7 +455,7 @@ public class MainActivity extends BaseActivity
             return;
         }
         if (staff.getAvatar() != null) {
-            Picasso.get().load(staff.getAvatar()).into(mAvatar);
+            Picasso.get().load(staff.getAvatar()).error(R.drawable.avatar).into(mAvatar);
         }
         if (staff.getName() != null) {
             mStaffName.setText(staff.getName());

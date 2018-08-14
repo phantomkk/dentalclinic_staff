@@ -431,7 +431,7 @@ public class Appointment2Fragment extends BaseFragment {
 
     private List<Appointment> sortList(List<Appointment> appointments) {
         List<Appointment> list = appointments;
-        list.sort(Comparator.comparing(Appointment::getStatus).thenComparing(Appointment::getNumericalOrder));
+        list.sort(Comparator.comparing(Appointment::getNumericalOrder).thenComparing(Appointment::getStatus));
 
 //        List<Appointment> list1 = new ArrayList<>();
 //        for (int i = 0; i < list.size(); i++) {

@@ -1,5 +1,6 @@
 package com.dentalclinic.capstone.admin.models;
 
+import com.dentalclinic.capstone.admin.utils.Utils;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -36,7 +37,7 @@ public class TreatmentImage implements Serializable {
     }
 
     public String getImageLink() {
-        return imageLink;
+        return Utils.linkServer+ imageLink;
     }
 
     public void setImageLink(String imageLink) {
