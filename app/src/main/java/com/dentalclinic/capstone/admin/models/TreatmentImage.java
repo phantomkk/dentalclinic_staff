@@ -15,9 +15,15 @@ public class TreatmentImage implements Serializable {
     private String imageLink;
     @SerializedName("public_date")
     private Date publicDate;
+    private boolean isFile = false;
 
     public TreatmentImage(String imageLink) {
         this.imageLink = imageLink;
+    }
+
+    public TreatmentImage(String imageLink, boolean isFile) {
+        this.imageLink = imageLink;
+        this.isFile = isFile;
     }
 
     public int getId() {
@@ -37,7 +43,11 @@ public class TreatmentImage implements Serializable {
     }
 
     public String getImageLink() {
-        return Utils.linkServer+ imageLink;
+        if(isFile){
+            return imageLink;
+        }else{
+            return Utils.linkServer+ imageLink;
+        }
     }
 
     public void setImageLink(String imageLink) {
@@ -50,5 +60,13 @@ public class TreatmentImage implements Serializable {
 
     public void setPublicDate(Date publicDate) {
         this.publicDate = publicDate;
+    }
+
+    public boolean isFile() {
+        return isFile;
+    }
+
+    public void setFile(boolean file) {
+        isFile = file;
     }
 }

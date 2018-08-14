@@ -36,6 +36,7 @@ import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
+import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
 import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.dentalclinic.capstone.admin.utils.Validation;
@@ -73,7 +74,7 @@ public class BookAppointmentReceptActivity extends BaseActivity {
     private LinearLayout linearLayout;
     private Animation slideDown;
     private Animation slideUp;
-
+    private String phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +92,8 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         if (i != null) {
             patient = (Patient) i.getSerializableExtra(SearchPatientFragment.PATIENT_INFO);
             currentDentist = (Staff) i.getSerializableExtra(SearchPatientFragment.STAFF_INFO);
+            phone =  i.getStringExtra(AppConst.PHONE);
+
         }
         slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
         slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
@@ -137,7 +140,9 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         if (listItemDentist == null) {
             listItemDentist = new ArrayList<>();
         }
-
+        if(phone!=null){
+            tvPhone.setText(phone);
+        }
         callApiGetListDentist();
         searchDentistDialog = new SearchDentistDialog(this, listItemDentist, "Tìm kiếm nha sĩ");
         setListener();

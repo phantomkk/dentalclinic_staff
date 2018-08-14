@@ -76,7 +76,7 @@
     <string name="label_phone_book_appt">Số điện thoại</string>
     <string name="label_date_book_appt">Ngày đặt</string>
     <string name="label_time_book_appt">Giờ đặt</string>
-    <string name="label_content_book_appt">Nội dung</string>
+    <string name="label_content_book_appt">Ghi chú điều trị</string>
     <string name="label_button_book_appt">Đặt lịch</string>
     <!--Register-->
 

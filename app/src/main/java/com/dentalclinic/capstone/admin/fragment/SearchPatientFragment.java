@@ -146,7 +146,9 @@ public class SearchPatientFragment extends BaseFragment {
         btnNewAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), BookAppointmentReceptActivity.class));
+                Intent intent = new Intent(getContext(), BookAppointmentReceptActivity.class);
+                intent.putExtra(AppConst.PHONE, phone);
+                startActivityForResult(intent,REUQUEST_CREATE_APPOINTMENT);
             }
         });
 

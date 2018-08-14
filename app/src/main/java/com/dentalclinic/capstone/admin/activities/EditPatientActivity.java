@@ -60,6 +60,7 @@ public class EditPatientActivity extends BaseActivity {
     private Button btnUpdate;
     private Button btnSelectAnamnesis;
     private TextView tvBirthday;
+    private TextView tvAnamnesis;
     private TextView tvErrorBirthday;
     private Spinner spnCity;
     private Spinner spnDistrict;
@@ -97,6 +98,7 @@ public class EditPatientActivity extends BaseActivity {
         tvErrorBirthday = findViewById(R.id.txt_error_date_edit);
         btnUpdate = findViewById(R.id.btn_edit);
         btnSelectAnamnesis = findViewById(R.id.btn_select_anamnesis);
+        tvAnamnesis = findViewById(R.id.lbl_anamnesis);
         spnCity = findViewById(R.id.spinner_city_edit);
         spnDistrict = findViewById(R.id.spinner_district_edit);
 //        ActionBar actionBar = getSupportActionBar();
@@ -195,6 +197,18 @@ public class EditPatientActivity extends BaseActivity {
                 String address = patient.getAddress();
                 edtAddress.setText(address);
             }
+            String listAnamnesis = "";
+//                        for (AnamnesisCatalog a : patientAnamnesis) {
+//                            listAnamnesis += a.getName() + "\n";
+//                        }
+            for (int i = 0 ;i <patient.getListAnamnesis().size();i++){
+                if(i==patient.getListAnamnesis().size()-1){
+                    listAnamnesis+="-"+ patient.getListAnamnesis().get(i).getName();
+                }else{
+                    listAnamnesis+="-"+ patient.getListAnamnesis().get(i).getName()+"\n";
+                }
+            }
+            tvAnamnesis.setText(listAnamnesis);
         }
     }
 
@@ -249,9 +263,17 @@ public class EditPatientActivity extends BaseActivity {
                         patientAnamnesis.clear();
                         patientAnamnesis.addAll(list);
                         String listAnamnesis = "";
-                        for (AnamnesisCatalog a : patientAnamnesis) {
-                            listAnamnesis += a.getName() + "\n";
+//                        for (AnamnesisCatalog a : patientAnamnesis) {
+//                            listAnamnesis += a.getName() + "\n";
+//                        }
+                        for (int i = 0 ;i <list.size();i++){
+                            if(i==list.size()-1){
+                                listAnamnesis+="-"+ list.get(i).getName();
+                            }else{
+                                listAnamnesis+="-"+ list.get(i).getName()+"\n";
+                            }
                         }
+                        tvAnamnesis.setText(listAnamnesis);
                     }
                 }
             }

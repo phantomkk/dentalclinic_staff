@@ -81,6 +81,9 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
     private AutoCompleteTextView actTmDetailNote;
     private TextView lblTooth;
     private TextView lblTreatment;
+    private TextView lblSymptoms;
+    private TextView lblTotalPrice;
+    private TextView lblNote;
     private TextView lblTreatmentStep;
     private TextView lblMedicineQuantity;
     private String current = "0";
@@ -132,6 +135,9 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
         actTmDetailNote = findViewById(R.id.act_note_tmdetail);
         lblTooth = findViewById(R.id.lbl_tooth_slt);
         lblTreatment = findViewById(R.id.lbl_treatment_slt);
+        lblSymptoms = findViewById(R.id.lbl_symptoms);
+        lblTotalPrice = findViewById(R.id.lbl_total_price);
+        lblNote = findViewById(R.id.lbl_note);
         lblTreatmentStep = findViewById(R.id.lbl_treatmentstep_slt);
         lblMedicineQuantity = findViewById(R.id.lbl_medicine_slt);
         listTooth = new ArrayList<>();
@@ -156,6 +162,23 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
                         currentTreatmentHistory.getTreatment().getTreatmentSteps() : null;
                 lblTreatment.setText(currentTreatment.getName());
                 lblTooth.setText(currentTooth.getToothName());
+                if(currentTreatmentHistory.getSymptoms()!=null){
+                    String rs = "";
+                    for (int i = 0 ; i <currentTreatmentHistory.getSymptoms().size();i++){
+                        if(i == currentTreatmentHistory.getSymptoms().size()-1){
+                            rs+="- "+currentTreatmentHistory.getSymptoms().get(i).getName();
+                        }else{
+                            rs="- "+ currentTreatmentHistory.getSymptoms().get(i).getName()+"\n";
+                        }
+                    }
+                    lblSymptoms.setText(rs);
+                }
+                if(currentTreatmentHistory.getTotalPrice() !=null){
+                    lblTotalPrice.setText(Utils.formatMoney(currentTreatmentHistory.getTotalPrice())+ getResources().getString(R.string.current_unit));
+                }
+                if(currentTreatmentHistory.getDescription() !=null){
+                    lblNote.setText(currentTreatmentHistory.getDescription());
+                }
             }
         }
         btnShowListTreatmentStep.setOnClickListener((v) -> {
@@ -207,7 +230,7 @@ public class CreateTreatmentDetailActivity extends BaseActivity {
                     public void onItemClick(String item, int position) {
                         Intent intent = new Intent(CreateTreatmentDetailActivity.this, PhotoViewActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(AppConst.IMAGE_OBJ, new TreatmentImage(item));
+                        bundle.putSerializable(AppConst.IMAGE_OBJ, new TreatmentImage(item,true));
                         intent.putExtra(AppConst.BUNDLE, bundle);
                         startActivity(intent);
                     }

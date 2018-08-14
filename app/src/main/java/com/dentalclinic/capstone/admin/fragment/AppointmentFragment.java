@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -71,7 +72,7 @@ public class AppointmentFragment extends BaseFragment {
     private LinearLayoutManager mLayoutManager;
     private TextView txtDate, txtMessage;
     private final int REQUEST_BOOK_APPOINTMENT = 902;
-
+    private Button btnLoad;
     public AppointmentFragment() {
         // Required empty public constructor
     }
@@ -84,6 +85,7 @@ public class AppointmentFragment extends BaseFragment {
         getActivity().setTitle(getContext().getResources().getString(R.string.appointment_title));
         View view = inflater.inflate(R.layout.fragment_appointment, container, false);
         textView = view.findViewById(R.id.txt_label_message);
+        btnLoad = view.findViewById(R.id.btn_load);
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         txtDate = view.findViewById(R.id.lb_date);
         txtDate.setText(DateUtils.getCurrentDateFormat());
@@ -95,6 +97,13 @@ public class AppointmentFragment extends BaseFragment {
             }
         });
 //        setData();
+        btnLoad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                prepareData(DateUtils.getDate(Calendar.getInstance().getTime(), DateTimeFormat.DATE_TIME_DB_2));
+                btnLoad.setVisibility(View.GONE);
+            }
+        });
 
         Calendar.getInstance();
         prepareData(DateUtils.getDate(Calendar.getInstance().getTime(), DateTimeFormat.DATE_TIME_DB_2));
@@ -267,6 +276,7 @@ public class AppointmentFragment extends BaseFragment {
                             }
                             swipeRefreshLayout.setRefreshing(false);
                             mListView.getLayoutManager().removeAllViews();
+                            btnLoad.setVisibility(View.GONE);
                         } else if (response.code() == 500) {
                             showFatalError(response.errorBody(), "appointmentService");
                         } else if (response.code() == 401) {
@@ -400,7 +410,8 @@ public class AppointmentFragment extends BaseFragment {
 //            showMessage("APPOINTMENT RELOAD");
             String reloadType = intent.getStringExtra(AppConst.ACTION_RELOAD_TYPE);
             if (reloadType.equals(AppConst.ACTION_RELOAD_APPOINTMENT)) {
-                prepareData(DateUtils.getDate(Calendar.getInstance().getTime(), DateTimeFormat.DATE_TIME_DB_2));
+                btnLoad.setVisibility(View.VISIBLE);
+//                prepareData(DateUtils.getDate(Calendar.getInstance().getTime(), DateTimeFormat.DATE_TIME_DB_2));
             }
 
         }

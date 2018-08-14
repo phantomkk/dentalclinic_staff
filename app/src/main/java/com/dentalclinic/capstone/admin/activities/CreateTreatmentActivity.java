@@ -287,7 +287,7 @@ public class CreateTreatmentActivity extends BaseActivity implements TextWatcher
                     public void onItemClick(String item, int position) {
                         Intent intent = new Intent(CreateTreatmentActivity.this, PhotoViewActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(AppConst.IMAGE_OBJ, new TreatmentImage(item));
+                        bundle.putSerializable(AppConst.IMAGE_OBJ, new TreatmentImage(item,true));
                         intent.putExtra(AppConst.BUNDLE, bundle);
                         startActivity(intent);
                     }
