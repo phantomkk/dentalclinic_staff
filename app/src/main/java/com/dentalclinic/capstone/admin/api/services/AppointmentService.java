@@ -23,7 +23,7 @@ public interface AppointmentService {
     @GET("api/appointment/getById/{id}")
     Single<Response<Appointment>> getById(@Path("id") int id);
 
-    @POST("api/appointment/book")
+    @POST("api/staff/bookAppointment")
     Single<Response<List<Appointment>>> bookAppointment(@Body AppointmentRequest appointmentRequest);
 
     @GET("api/staff/getPatientAppointmentByDate")
