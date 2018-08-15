@@ -409,7 +409,7 @@ public class AppointmentFragment extends BaseFragment {
             Log.d("DEBUG_TAG", "Got message mMessageReceiver");
 //            showMessage("APPOINTMENT RELOAD");
             String reloadType = intent.getStringExtra(AppConst.ACTION_RELOAD_TYPE);
-            if (reloadType.equals(AppConst.ACTION_RELOAD_APPOINTMENT)) {
+            if (reloadType.equals(AppConst.ACTION_RELOAD_DENTIST_APPOINTMENT)) {
                 btnLoad.setVisibility(View.VISIBLE);
 //                prepareData(DateUtils.getDate(Calendar.getInstance().getTime(), DateTimeFormat.DATE_TIME_DB_2));
             }

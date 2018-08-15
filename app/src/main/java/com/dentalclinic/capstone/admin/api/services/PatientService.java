@@ -23,7 +23,4 @@ public interface PatientService {
 
     @POST("api/patient/updatePatient")
     Single<Response<SuccessResponse>> changePatientInfo(@Body PatientProfileRequest request);
-    @FormUrlEncoded
-    @POST("api/patient/receive")
-    Single<Response<SuccessResponse>> beginTreatment(@Field("patient_id") int patientId);
 }

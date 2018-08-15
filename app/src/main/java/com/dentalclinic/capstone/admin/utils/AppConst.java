@@ -37,7 +37,8 @@ public class AppConst {
 
     public final static String ACTION_RELOAD = "ACTION_RELOAD";
     public final static String ACTION_RELOAD_TYPE = "ACTION_RELOAD_TYPE";
-    public final static String ACTION_RELOAD_APPOINTMENT = "ACTION_RELOAD_APPOINTMENT";
+    public final static String ACTION_RELOAD_DENTIST_APPOINTMENT = "ACTION_RELOAD_DENTIST_APPOINTMENT";
+    public final static String ACTION_RELOAD_CLINIC_APPOINTMENT = "ACTION_RELOAD_CLINIC_APPOINTMENT";
 //    public final static String ACTION_RELOAD_APPOINTMENT = "ACTION_RELOAD_APPOINTMENT";
 
     public final static String RESPONSE_APPOINTMENT_REMINDER = "RESPONSE_APPOINTMENT_REMINDER";

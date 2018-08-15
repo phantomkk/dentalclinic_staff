@@ -187,8 +187,8 @@ public class SearchPatientFragment extends BaseFragment {
                 if (pos >= 0 && pos < patients.size()) {
                     showLoading();
                     Patient crrPatient = patients.get(pos);
-                    PatientService service = APIServiceManager.getService(PatientService.class);
-                    service.beginTreatment(patients.get(pos).getId())
+                    StaffService service = APIServiceManager.getService(StaffService.class);
+                    service.receiveAppt(patients.get(pos).getId())
                             .subscribeOn(Schedulers.newThread())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new SingleObserver<Response<SuccessResponse>>() {

@@ -219,7 +219,7 @@ public class Appointment2Fragment extends BaseFragment {
 
     public void receiveAppointmentManually(int appointmentId, int patientId) {
         showLoading();
-        AppointmentService service = APIServiceManager.getService(AppointmentService.class);
+        StaffService service = APIServiceManager.getService(StaffService.class);
         service.receiAppointmentManual(patientId, appointmentId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

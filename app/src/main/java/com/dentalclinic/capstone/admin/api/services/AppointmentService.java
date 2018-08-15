@@ -35,7 +35,5 @@ public interface AppointmentService {
     @GET("api/appointment/getUserAppointmentByCurrentDate")
     Single<Response<List<Appointment>>> getAppointmentByPhone(@Query("phone") String phone);
 
-    @FormUrlEncoded
-    @POST("api/patient/receiveManually")
-    Single<Response<SuccessResponse>> receiAppointmentManual(@Field("patient_id") int patientId, @Field("appointment_id") int appointmentId);
+
 }

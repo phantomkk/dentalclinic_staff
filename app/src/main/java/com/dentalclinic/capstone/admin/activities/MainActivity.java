@@ -662,7 +662,7 @@ public class MainActivity extends BaseActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             String actionReloadType = intent.getStringExtra(AppConst.ACTION_RELOAD_TYPE);
-            if (actionReloadType.equals(AppConst.ACTION_RELOAD_APPOINTMENT)) {
+            if (actionReloadType.equals(AppConst.ACTION_RELOAD_DENTIST_APPOINTMENT)) {
                 increaseNumAppointment();
             }
 

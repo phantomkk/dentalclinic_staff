@@ -76,9 +76,18 @@ public interface StaffService {
 //            @Query("year") int year);
 
     @GET("api/user/resetPassword/{phone}")
-    Single<Response<SuccessResponse>> resetPassword(@Path("phone")String phone);
+    Single<Response<SuccessResponse>> resetPassword(@Path("phone") String phone);
+
     @POST("api/requestAbsent/changeStatusDelete/{id}")
     Single<Response<SuccessResponse>> deleteRequestAbsent(@Path("id") int reqAbsentId);
+
+    @FormUrlEncoded
+    @POST("api/staff/receiveApptManually")
+    Single<Response<SuccessResponse>> receiAppointmentManual(@Field("patient_id") int patientId, @Field("appointment_id") int appointmentId);
+
+    @FormUrlEncoded
+    @POST("api/staff/receiveAppt")
+    Single<Response<SuccessResponse>> receiveAppt(@Field("patient_id") int patientId);
 
     @GET("api/staff/getListRequestAbsent")
     Single<Response<List<RequestAbsent>>> getListRequestAbsent(@Query("staff_id") int staffid);
