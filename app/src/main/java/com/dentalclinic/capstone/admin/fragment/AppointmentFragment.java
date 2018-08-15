@@ -412,6 +412,8 @@ public class AppointmentFragment extends BaseFragment {
             if (reloadType.equals(AppConst.ACTION_RELOAD_DENTIST_APPOINTMENT)) {
                 btnLoad.setVisibility(View.VISIBLE);
 //                prepareData(DateUtils.getDate(Calendar.getInstance().getTime(), DateTimeFormat.DATE_TIME_DB_2));
+            } else if (reloadType.equals(AppConst.ACTION_RELOAD_CLINIC_APPOINTMENT)) {
+                //donothing
             }
 
         }

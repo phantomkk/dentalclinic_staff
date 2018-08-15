@@ -10,6 +10,8 @@ import android.util.Log;
 import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.model.FingerAuthObj;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -167,5 +169,11 @@ public class Utils {
         return rs;
     }
 
+    public static void subscribeReloadClinicAppointment() {
+        FirebaseMessaging.getInstance().subscribeToTopic(AppConst.TOPIC_RELOAD_APPOINTMENT);
+    }
 
+    public static void unsubscribeReloadClinicAppointment() {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(AppConst.TOPIC_RELOAD_APPOINTMENT);
+    }
 }

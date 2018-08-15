@@ -43,5 +43,6 @@ public class AppConst {
 
     public final static String RESPONSE_APPOINTMENT_REMINDER = "RESPONSE_APPOINTMENT_REMINDER";
     public final static String TOPIC_PROMOTION = "PROMOTION";
+    public final static String TOPIC_RELOAD_APPOINTMENT = "TOPIC_RELOAD_APPOINTMENT";
 
 }

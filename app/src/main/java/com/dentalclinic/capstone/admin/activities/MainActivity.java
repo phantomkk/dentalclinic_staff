@@ -59,6 +59,7 @@ import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
 import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.dentalclinic.capstone.admin.utils.SettingManager;
 import com.dentalclinic.capstone.admin.utils.Utils;
+import com.github.dewinjm.monthyearpicker.Util;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.squareup.picasso.Picasso;
 
@@ -164,11 +165,13 @@ public class MainActivity extends BaseActivity
             navigationView.getMenu().findItem(R.id.nav_history).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_appointment_list).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_chart).setVisible(false);
+            Utils.subscribeReloadClinicAppointment();
         } else if (Utils.isDentist(MainActivity.this)) {
             navigationView.getMenu().findItem(R.id.nav_appointment_list_2).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_bar_chart).setVisible(false);
             appointmentItem = navigationView.getMenu().findItem(R.id.nav_appointment_list);
             setNumAppointment(appointmentItem, 0);
+            Utils.unsubscribeReloadClinicAppointment();
         }
     }
 
@@ -559,6 +562,7 @@ public class MainActivity extends BaseActivity
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
+            Utils.unsubscribeReloadClinicAppointment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -664,6 +668,8 @@ public class MainActivity extends BaseActivity
             String actionReloadType = intent.getStringExtra(AppConst.ACTION_RELOAD_TYPE);
             if (actionReloadType.equals(AppConst.ACTION_RELOAD_DENTIST_APPOINTMENT)) {
                 increaseNumAppointment();
+            } else if (actionReloadType.equals(AppConst.ACTION_RELOAD_CLINIC_APPOINTMENT)) {
+                //donothing
             }
 
         }
