@@ -28,6 +28,7 @@ import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
 import com.dentalclinic.capstone.admin.utils.DateUtils;
+import com.dentalclinic.capstone.admin.utils.Utils;
 import com.dentalclinic.capstone.admin.utils.Validation;
 
 import java.util.Calendar;
@@ -53,6 +54,7 @@ public class BookAppointmentActivity extends BaseActivity {
     private Patient patient;
     private boolean isDateValid = true;
     private int pos = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +69,7 @@ public class BookAppointmentActivity extends BaseActivity {
             );
         }
         Bundle bundle = getIntent().getBundleExtra(AppConst.BUNDLE);
-        if(bundle!=null){
+        if (bundle != null) {
             pos = bundle.getInt("POSITION_APPOINTMENT");
             patient = (Patient) bundle.getSerializable(AppConst.PATIENT_OBJ);
         }
@@ -103,8 +105,8 @@ public class BookAppointmentActivity extends BaseActivity {
                                 ContextCompat.getColor(BookAppointmentActivity.this, R.color.color_black)
                         );
                     }, year, month, day);
-            dialog.setButton(DatePickerDialog.BUTTON_POSITIVE,getString(R.string.OK), dialog);
-            dialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, getString(R.string.Cancel), (DialogInterface.OnClickListener)null);
+            dialog.setButton(DatePickerDialog.BUTTON_POSITIVE, getString(R.string.OK), dialog);
+            dialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, getString(R.string.Cancel), (DialogInterface.OnClickListener) null);
 
             dialog.show();
         });
@@ -118,7 +120,7 @@ public class BookAppointmentActivity extends BaseActivity {
                         cTime.set(Calendar.MINUTE, iMinute);
                         if (cTime.before(curentDay)) {
                             tvEstimatedTimeError.setText("Vui lòng chọn thời gian");
-                        }else {
+                        } else {
                             tvEstimatedTimeError.setText("");
                             String timeStr = iHours + ":" + iMinute;
                             tvEstimatedTime.setText(timeStr);
@@ -126,7 +128,7 @@ public class BookAppointmentActivity extends BaseActivity {
                     },
                     cTime.get(Calendar.HOUR),
                     cTime.get(Calendar.MINUTE),
-                    true);
+                    false);
             timePickerDialog.show();
         });
 
@@ -157,13 +159,13 @@ public class BookAppointmentActivity extends BaseActivity {
         }
     }
 
-    private void setData(){
-        if(patient!=null){
-            if(patient.getName()!=null){
+    private void setData() {
+        if (patient != null) {
+            if (patient.getName() != null) {
                 tvFullname.setText(patient.getName());
                 tvFullname.setEnabled(false);
             }
-            if(patient.getPhone()!=null){
+            if (patient.getPhone() != null) {
                 tvPhone.setText(patient.getPhone());
                 tvPhone.setEnabled(false);
             }
@@ -171,9 +173,6 @@ public class BookAppointmentActivity extends BaseActivity {
     }
 
     public AppointmentRequest getFormData() {
-//        User user = CoreManager.getUser(this);
-//        if (user != null) {
-//            String phone = user.getPhone();
         String phone = tvPhone.getText().toString().trim();
         String dateBooking = tvDate.getText().toString().trim();
         String note = comtvNote.getText().toString().trim();
@@ -183,14 +182,19 @@ public class BookAppointmentActivity extends BaseActivity {
                 DateTimeFormat.DATE_APP,
                 DateTimeFormat.DATE_TIME_DB);
         AppointmentRequest request = new AppointmentRequest();
-        request.setStaffId(CoreManager.getStaff(BookAppointmentActivity.this).getId()+"");
+        request.setStaffId(CoreManager.getStaff(BookAppointmentActivity.this).getId() + "");
         request.setDate(bookingDate);
         request.setNote(note);
         request.setFullname(name);
         request.setPhone(phone);
-        if(patient !=null){
-            if(patient.getId()!=-1){
-                request.setPatientId(patient.getId()+"");
+        if (Utils.isDentist(BookAppointmentActivity.this)) {
+            request.setIsAllowOvertime(0);
+        }else{
+            request.setIsAllowOvertime(1);
+        }
+        if (patient != null) {
+            if (patient.getId() != -1) {
+                request.setPatientId(patient.getId() + "");
             }
         }
         return request;

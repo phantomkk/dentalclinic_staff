@@ -39,6 +39,7 @@ import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
 import com.dentalclinic.capstone.admin.utils.DateUtils;
+import com.dentalclinic.capstone.admin.utils.Utils;
 import com.dentalclinic.capstone.admin.utils.Validation;
 
 import java.util.ArrayList;
@@ -240,6 +241,11 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         request.setNote(note);
         request.setFullname(name);
         request.setPhone(phone);
+        if (Utils.isDentist(BookAppointmentReceptActivity.this)) {
+            request.setIsAllowOvertime(0);
+        }else{
+            request.setIsAllowOvertime(1);
+        }
         if (patient != null) {
             request.setPatientId(patient.getId() + "");
             logError("METHOD", "PATINET ko null");

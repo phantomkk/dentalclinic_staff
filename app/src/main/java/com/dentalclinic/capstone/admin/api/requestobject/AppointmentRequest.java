@@ -20,6 +20,8 @@ public class AppointmentRequest implements Serializable {
     private String patientId = null;
     @SerializedName("estimated_time")
     private String estimatedTime;
+    @SerializedName("is_allow_overtime")
+    private int isAllowOvertime;
 
     public AppointmentRequest() {
     }
@@ -78,5 +80,13 @@ public class AppointmentRequest implements Serializable {
 
     public void setPatientId(String patientId) {
         this.patientId = patientId;
+    }
+
+    public int getIsAllowOvertime() {
+        return isAllowOvertime;
+    }
+
+    public void setIsAllowOvertime(int isAllowOvertime) {
+        this.isAllowOvertime = isAllowOvertime;
     }
 }
