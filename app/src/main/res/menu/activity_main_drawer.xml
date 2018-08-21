@@ -11,6 +11,7 @@
             android:title="@string/search_patient_titie" />
         <item
             android:id="@+id/nav_appointment_list_2"
+            app:actionLayout="@layout/menu_counter"
             android:icon="@drawable/ic_date_range_black_24dp"
             android:title="@string/appointment_title_2" />
         <item

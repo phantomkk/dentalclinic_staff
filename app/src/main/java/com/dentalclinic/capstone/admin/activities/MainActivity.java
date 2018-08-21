@@ -8,9 +8,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -24,7 +21,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 
 import io.reactivex.functions.BiFunction;
 
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,7 +40,6 @@ import com.dentalclinic.capstone.admin.fragment.Appointment2Fragment;
 import com.dentalclinic.capstone.admin.fragment.AppointmentFragment;
 import com.dentalclinic.capstone.admin.fragment.BarChartFragment;
 import com.dentalclinic.capstone.admin.fragment.BaseWeekViewFragment;
-import com.dentalclinic.capstone.admin.fragment.CalendarFragment;
 import com.dentalclinic.capstone.admin.fragment.ChartFragment;
 import com.dentalclinic.capstone.admin.fragment.MyAccoutFragment;
 import com.dentalclinic.capstone.admin.fragment.SearchPatientFragment;
@@ -52,19 +47,14 @@ import com.dentalclinic.capstone.admin.fragment.SettingFragment;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Staff;
-import com.dentalclinic.capstone.admin.models.User;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
-import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
-import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.dentalclinic.capstone.admin.utils.SettingManager;
 import com.dentalclinic.capstone.admin.utils.Utils;
-import com.github.dewinjm.monthyearpicker.Util;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -72,10 +62,8 @@ import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -87,10 +75,12 @@ public class MainActivity extends BaseActivity
     Staff staff = new Staff();
     private NavigationView navigationView;
     private String phone = "";
-    private MenuItem appointmentItem;
+    private MenuItem dentistAppointmentItem;
+    private MenuItem clinicAppointmentItem;
     private MenuItem selectedMenuItem;
     private final int REQUEST_CREATE_PATIENT = 109;
-    private static int numAppointment = 0;
+    private static int numDentistAppointment = 0;
+    private static int numClinicAppointment = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,12 +155,14 @@ public class MainActivity extends BaseActivity
             navigationView.getMenu().findItem(R.id.nav_history).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_appointment_list).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_chart).setVisible(false);
+            clinicAppointmentItem = navigationView.getMenu().findItem(R.id.nav_appointment_list_2);
+            setNumMenuItem(clinicAppointmentItem, 0);
             Utils.subscribeReloadClinicAppointment();
         } else if (Utils.isDentist(MainActivity.this)) {
             navigationView.getMenu().findItem(R.id.nav_appointment_list_2).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_bar_chart).setVisible(false);
-            appointmentItem = navigationView.getMenu().findItem(R.id.nav_appointment_list);
-            setNumAppointment(appointmentItem, 0);
+            dentistAppointmentItem = navigationView.getMenu().findItem(R.id.nav_appointment_list);
+            setNumMenuItem(dentistAppointmentItem, 0);
             Utils.unsubscribeReloadClinicAppointment();
         }
     }
@@ -525,11 +517,12 @@ public class MainActivity extends BaseActivity
             fragmentManager.beginTransaction().replace(R.id.main_fragment, calendarFragment).commit();
         } else if (id == R.id.nav_appointment_list_2) {
             setTitle("Nhận bệnh");
+            clearNumClinicAppointment(item);
             Appointment2Fragment appointment2Fragment = new Appointment2Fragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, appointment2Fragment).commit();
         } else if (id == R.id.nav_appointment_list) {
             //clear number in tab menuItem
-            clearNumAppointment(item);
+            clearNumDentistAppointment(item);
             ///////////////////////
             setTitle("Khám bệnh");
             AppointmentFragment calendarFragment = new AppointmentFragment();
@@ -628,21 +621,35 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    public void increaseNumAppointment() {
-        if (Utils.isDentist(MainActivity.this) && appointmentItem!=null && selectedMenuItem != appointmentItem) {
-            numAppointment++;
-            setNumAppointment(appointmentItem, numAppointment);
+    public void increaseNumDentistAppointment() {
+        if (Utils.isDentist(MainActivity.this) && dentistAppointmentItem!=null && selectedMenuItem != dentistAppointmentItem) {
+            numDentistAppointment++;
+            setNumMenuItem(dentistAppointmentItem, numDentistAppointment);
         }
     }
 
-    public void clearNumAppointment(MenuItem item) {
+    public void clearNumDentistAppointment(MenuItem item) {
         if (Utils.isDentist(MainActivity.this) && item!=null) {
-            numAppointment = 0;
-            setNumAppointment(item, numAppointment);
+            numDentistAppointment = 0;
+            setNumMenuItem(item, numDentistAppointment);
         }
     }
 
-    public void setNumAppointment(MenuItem item, int num) {
+    public void increaseNumClinicAppointment() {
+        if (Utils.isRceiption(MainActivity.this) && clinicAppointmentItem!=null) {
+            numClinicAppointment++;
+            setNumMenuItem(clinicAppointmentItem, numClinicAppointment);
+
+        }
+    }
+
+    public void clearNumClinicAppointment(MenuItem item) {
+        if (Utils.isRceiption(MainActivity.this) && item!=null) {
+            numClinicAppointment = 0;
+            setNumMenuItem(item, numClinicAppointment);
+        }
+    }
+    public void setNumMenuItem(MenuItem item, int num) {
             TextView v = (TextView) item.getActionView();
             v.setText(num + "");
     }
@@ -667,9 +674,9 @@ public class MainActivity extends BaseActivity
         public void onReceive(Context context, Intent intent) {
             String actionReloadType = intent.getStringExtra(AppConst.ACTION_RELOAD_TYPE);
             if (actionReloadType.equals(AppConst.ACTION_RELOAD_DENTIST_APPOINTMENT)) {
-                increaseNumAppointment();
+                increaseNumDentistAppointment();
             } else if (actionReloadType.equals(AppConst.ACTION_RELOAD_CLINIC_APPOINTMENT)) {
-                //donothing
+                increaseNumClinicAppointment();
             }
 
         }
