@@ -28,6 +28,7 @@ import com.dentalclinic.capstone.admin.api.services.StaffService;
 import com.dentalclinic.capstone.admin.dialog.AppointmentDetailDialog;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.DateCheck;
+import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
 import com.dentalclinic.capstone.admin.utils.DateUtils;
 
@@ -236,7 +237,7 @@ public class BaseWeekViewFragment extends BaseFragment implements WeekView.Event
 //            showMessage("mont" + newMonth);
             dateChecks.add(dateCheck);
             StaffService service = APIServiceManager.getService(StaffService.class);
-            service.getAppointments(2, newMonth - 1, newYear)
+            service.getAppointments(CoreManager.getStaff(getContext()).getId(), newMonth - 1, newYear)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new SingleObserver<Response<List<Appointment>>>() {

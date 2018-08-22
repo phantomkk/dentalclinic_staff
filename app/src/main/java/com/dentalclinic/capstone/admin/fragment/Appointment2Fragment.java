@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import com.dentalclinic.capstone.admin.adapter.AppointmentSwift2Adapter;
 import com.dentalclinic.capstone.admin.adapter.AppointmentSwiftAdapter;
 import com.dentalclinic.capstone.admin.adapter.AppointmentSwiftForReceipAdapter;
 import com.dentalclinic.capstone.admin.adapter.SearchDentistAdapter;
+import com.dentalclinic.capstone.admin.adapter.StatusAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.api.services.AppointmentService;
@@ -35,11 +37,18 @@ import com.dentalclinic.capstone.admin.dialog.SearchDentistDialog;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Staff;
+import com.dentalclinic.capstone.admin.models.Status;
 import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.DateTimeFormat;
 import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
+import com.yalantis.filter.adapter.FilterAdapter;
+import com.yalantis.filter.listener.FilterListener;
+import com.yalantis.filter.widget.Filter;
+import com.yalantis.filter.widget.FilterItem;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,6 +65,9 @@ import retrofit2.Response;
  * A simple {@link Fragment} subclass.
  */
 public class Appointment2Fragment extends BaseFragment {
+    private int[] mColors;
+    private String[] mTitles;
+    private Filter<Status> mFilter;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView textView;
@@ -69,7 +81,6 @@ public class Appointment2Fragment extends BaseFragment {
     private List<SearchDentistAdapter.SearchDentisItem> listItemDentist = new ArrayList<>();
     private List<Staff> listDentist = new ArrayList<>();
     private SearchDentistDialog searchDentistDialog;
-
     public Appointment2Fragment() {
         // Required empty public constructor
     }
@@ -80,6 +91,8 @@ public class Appointment2Fragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_appointment2, container, false);
+
+
         textView = view.findViewById(R.id.txt_label_message);
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         txtDate = view.findViewById(R.id.lb_date);
@@ -150,9 +163,49 @@ public class Appointment2Fragment extends BaseFragment {
         });
 
 
+
+        //searchfilter status
+        mColors = getResources().getIntArray(R.array.colors_status);
+        mTitles = getResources().getStringArray(R.array.status);
+        mFilter = (Filter<Status>) view.findViewById(R.id.filter);
+        mFilter.setAdapter(new StatusAdapter(getTags()));
+        mFilter.setListener(new FilterListener<Status>() {
+            @Override
+            public void onFiltersSelected(ArrayList<Status> arrayList) {
+
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+
+            @Override
+            public void onFilterSelected(Status status) {
+
+            }
+
+            @Override
+            public void onFilterDeselected(Status status) {
+
+            }
+        });
+        mFilter.setNoSelectedItemText(getString(R.string.str_all_selected));
+        mFilter.build();
+
+
         return view;
     }
 
+    private List<Status> getTags() {
+        List<Status> tags = new ArrayList<>();
+
+        for (int i = 0; i < mTitles.length; ++i) {
+            tags.add(new Status(mTitles[i], mColors[i]));
+        }
+
+        return tags;
+    }
     private List<Patient> patients;
 
     private void getPatientsByPhone(String phone) {
@@ -562,6 +615,31 @@ public class Appointment2Fragment extends BaseFragment {
                     }
                 }
             }
+        }
+    }
+
+
+    class StatusAdapter extends FilterAdapter<Status> {
+
+        StatusAdapter(@NotNull List<? extends Status> items) {
+            super(items);
+        }
+
+        @NotNull
+        @Override
+        public FilterItem createView(int position, Status item) {
+            FilterItem filterItem = new FilterItem(getContext());
+
+            filterItem.setStrokeColor(mColors[0]);
+            filterItem.setTextColor(mColors[0]);
+            filterItem.setCornerRadius(14);
+            filterItem.setCheckedTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
+            filterItem.setColor(ContextCompat.getColor(getContext(), android.R.color.white));
+            filterItem.setCheckedColor(mColors[position]);
+            filterItem.setText(item.getText());
+            filterItem.deselect();
+
+            return filterItem;
         }
     }
 }

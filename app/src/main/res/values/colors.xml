@@ -288,4 +288,11 @@
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
     <color name="white_transparent">#80FFFFFF</color>
 
+    <array name="colors_status">
+        <item name="all">#827f93</item>
+        <item name="new">#2196F3</item>
+        <item name="ready">#4CAF50</item>
+        <item name="in_process">#FF9800</item>
+        <item name="done">#558B2F</item>
+    </array>
 </resources>

@@ -204,10 +204,17 @@
     <string name="search_phone_hint">Nhập số điện thoại</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="label_date_picker">Lý do</string>
+    <string name="str_all_selected">Tất Cả Trạng Thái</string>
 
     <string name="button_choose_dialog">Chọn</string>
     <string name="button_cancel_dialog">Hủy</string>
     <string name="label_money">Số tiền</string>
     <string name="label_patient_apppointment">Bệnh nhân này có: %1$d lịch hẹn trong ngày hôm nay</string>
-
+    <string-array name="status">
+        <item>Tất Cả Trạng Thái</item>
+        <item>Mới</item>
+        <item>Sẵn Sàng</item>
+        <item>Đang Khám</item>
+        <item>Hoàn Thành</item>
+    </string-array>
 </resources>
