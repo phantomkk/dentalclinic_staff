@@ -478,7 +478,9 @@ public class SearchPatientFragment extends BaseFragment {
                     @Override
                     public void onSuccess(Response<List<String>> userResponse) {
                         if (userResponse.isSuccessful()) {
-                            ((MainActivity)getActivity()).setSugesstion(userResponse.body());
+                            if (getActivity() != null && userResponse.body() !=null) {
+                                ((MainActivity) getActivity()).setSugesstion(userResponse.body());
+                            }
                         } else if (userResponse.code() == 500) {
                             showFatalError(userResponse.errorBody(), "callApiLogin");
                         } else if (userResponse.code() == 401) {
