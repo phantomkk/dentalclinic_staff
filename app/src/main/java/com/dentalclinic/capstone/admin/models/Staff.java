@@ -53,6 +53,11 @@ public class Staff implements Serializable {
     public Staff() {
     }
 
+    public Staff(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Staff(String name, String email, String phone, String avatar) {
         this.name = name;
         this.email = email;

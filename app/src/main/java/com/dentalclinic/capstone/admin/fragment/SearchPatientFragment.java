@@ -656,6 +656,8 @@ public class SearchPatientFragment extends BaseFragment {
         if(requestCode == REUQUEST_CREATE_APPOINTMENT){
             if(resultCode == getActivity().RESULT_OK){
                 ((MainActivity) getActivity()).getPatienst(phone);
+                appointmentRecyclerView.getLayoutManager().removeAllViews();
+                recyclerView.getLayoutManager().removeAllViews();
             }
         }
     }

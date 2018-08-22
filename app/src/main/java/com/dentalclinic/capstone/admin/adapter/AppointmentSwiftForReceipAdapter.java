@@ -148,7 +148,7 @@ public class AppointmentSwiftForReceipAdapter extends RecyclerView.Adapter<Appoi
 
     public void setStatus(int status, TextView textView) {
 
-        textView.setText(mTitles[status+1]);
+        textView.setText(mTitles[status]);
         textView.setTextColor(mContext.getResources().getColor(R.color.white));
         GradientDrawable gd = new GradientDrawable();
 
@@ -156,7 +156,7 @@ public class AppointmentSwiftForReceipAdapter extends RecyclerView.Adapter<Appoi
         gd.setShape(GradientDrawable.RECTANGLE);
 
         // Set the fill color of drawable
-        gd.setColor(mColors[status+1]); // make the background transparent
+        gd.setColor(mColors[status]); // make the background transparent
 
         // Create a 2 pixels width red colored border for drawable
 //        gd.setStroke(0, Color.RED); // border width and color

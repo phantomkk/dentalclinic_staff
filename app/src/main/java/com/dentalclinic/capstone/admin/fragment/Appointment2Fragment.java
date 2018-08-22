@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.dentalclinic.capstone.admin.R;
@@ -25,6 +26,7 @@ import com.dentalclinic.capstone.admin.adapter.AppointmentSwift2Adapter;
 import com.dentalclinic.capstone.admin.adapter.AppointmentSwiftAdapter;
 import com.dentalclinic.capstone.admin.adapter.AppointmentSwiftForReceipAdapter;
 import com.dentalclinic.capstone.admin.adapter.SearchDentistAdapter;
+import com.dentalclinic.capstone.admin.adapter.SearchDentistFiterAdapter;
 import com.dentalclinic.capstone.admin.adapter.StatusAdapter;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
@@ -34,6 +36,7 @@ import com.dentalclinic.capstone.admin.api.services.StaffService;
 import com.dentalclinic.capstone.admin.dialog.AppointmentDetailDialog;
 import com.dentalclinic.capstone.admin.dialog.ChoosePatientForAppointmentDialog;
 import com.dentalclinic.capstone.admin.dialog.SearchDentistDialog;
+import com.dentalclinic.capstone.admin.dialog.SearchDentistWithFilterDialog;
 import com.dentalclinic.capstone.admin.models.Appointment;
 import com.dentalclinic.capstone.admin.models.Patient;
 import com.dentalclinic.capstone.admin.models.Staff;
@@ -68,19 +71,25 @@ public class Appointment2Fragment extends BaseFragment {
     private int[] mColors;
     private String[] mTitles;
     private Filter<Status> mFilter;
-
+    private Button btnShowDentist;
+    private TextView txtDentistName;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView textView;
     private RecyclerView mListView;
     private List<Appointment> appointments = new ArrayList<>();
+    private List<Appointment> orgAppointments = new ArrayList<>();
     private AppointmentSwiftForReceipAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private TextView txtDate, txtMessage;
     private ChoosePatientForAppointmentDialog dialog;
     private int posAppointment = -1;
     private List<SearchDentistAdapter.SearchDentisItem> listItemDentist = new ArrayList<>();
+    private List<SearchDentistFiterAdapter.SearchDentisItem> listItemDentist2 = new ArrayList<>();
     private List<Staff> listDentist = new ArrayList<>();
     private SearchDentistDialog searchDentistDialog;
+    private SearchDentistWithFilterDialog searchDentistWithFilterDialog;
+    private List<Status> statusSelected= new ArrayList<>();
+    private Staff staffSelected = new Staff();
     public Appointment2Fragment() {
         // Required empty public constructor
     }
@@ -94,6 +103,8 @@ public class Appointment2Fragment extends BaseFragment {
 
 
         textView = view.findViewById(R.id.txt_label_message);
+//        txtDentistName = view.findViewById(R.id.txt_dentist_name);
+//        btnShowDentist = view.findViewById(R.id.btn_show_dentist);
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         txtDate = view.findViewById(R.id.lb_date);
         txtDate.setText(DateUtils.getCurrentDateFormat());
@@ -118,7 +129,7 @@ public class Appointment2Fragment extends BaseFragment {
                     posAppointment = pos;
                     getPatientsByPhone(appointments.get(pos).getPhone());
                 } else {
-                    changeStatus(1,pos);
+                    changeStatus(1, pos);
                 }
             }
 
@@ -163,16 +174,32 @@ public class Appointment2Fragment extends BaseFragment {
         });
 
 
-
         //searchfilter status
         mColors = getResources().getIntArray(R.array.colors_status);
         mTitles = getResources().getStringArray(R.array.status);
         mFilter = (Filter<Status>) view.findViewById(R.id.filter);
         mFilter.setAdapter(new StatusAdapter(getTags()));
+        mFilter.setNoSelectedItemText(getString(R.string.str_all_selected));
+        mFilter.build();
+//        btnShowDentist.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                callApiGetListDentist2();
+//            }
+//        });
+
         mFilter.setListener(new FilterListener<Status>() {
             @Override
             public void onFiltersSelected(ArrayList<Status> arrayList) {
-
+                    appointments.clear();
+                    for (Status status : statusSelected){
+                        for(int  i = 0 ; i<orgAppointments.size();i++){
+                            if(orgAppointments.get(i).getStatus() == status.getId()){
+                                appointments.add(orgAppointments.get(i));
+                            }
+                        }
+                    }
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -182,16 +209,32 @@ public class Appointment2Fragment extends BaseFragment {
 
             @Override
             public void onFilterSelected(Status status) {
-
+                statusSelected.add(status);
             }
 
             @Override
             public void onFilterDeselected(Status status) {
+                for(int i = 0; i <statusSelected.size();i++){
+                    if(statusSelected.get(i).getId() == status.getId()){
+                        statusSelected.remove(i);
+                    }
+                }
+                for (int i = 0 ; i<appointments.size();i++){
+                    if(appointments.get(i).getStatus() == status.getId()){
+                        appointments.remove(i);
+                        mListView.getLayoutManager().removeAllViews();
+                        mAdapter.notifyItemRemoved(i);
+                    }
+                }
+                if(statusSelected.isEmpty()){
+                        appointments.clear();
+                        appointments.addAll(orgAppointments);
+                        mAdapter.notifyDataSetChanged();
+
+                }
 
             }
         });
-        mFilter.setNoSelectedItemText(getString(R.string.str_all_selected));
-        mFilter.build();
 
 
         return view;
@@ -201,11 +244,11 @@ public class Appointment2Fragment extends BaseFragment {
         List<Status> tags = new ArrayList<>();
 
         for (int i = 0; i < mTitles.length; ++i) {
-            tags.add(new Status(mTitles[i], mColors[i]));
+            tags.add(new Status(i,mTitles[i], mColors[i]));
         }
-
         return tags;
     }
+
     private List<Patient> patients;
 
     private void getPatientsByPhone(String phone) {
@@ -327,7 +370,9 @@ public class Appointment2Fragment extends BaseFragment {
                     public void onSuccess(Response<List<Appointment>> response) {
                         if (response.isSuccessful()) {
                             appointments.clear();
-                            appointments.addAll(response.body());
+                            appointments.addAll(sortList(response.body()));
+                            orgAppointments.clear();
+                            orgAppointments.addAll(sortList(response.body()));
                             mAdapter.notifyDataSetChanged();
                             mListView.getRecycledViewPool().clear();
                             if (appointments.isEmpty()) {
@@ -335,7 +380,7 @@ public class Appointment2Fragment extends BaseFragment {
                             } else {
                                 txtMessage.setVisibility(View.GONE);
                             }
-
+//                            mFilter.build();
                         } else if (response.code() == 500) {
                             showFatalError(response.errorBody(), "appointmentService");
                         } else if (response.code() == 401) {
@@ -414,6 +459,7 @@ public class Appointment2Fragment extends BaseFragment {
                         if (successResponseResponse.isSuccessful()) {
                             showMessage("Đổi bác sĩ thành công!");
                             appointments.get(appointmentPos).setStaff(listDentist.get(dentisPosition));
+//                            orgAppointments.get(appointmentPos).setStaff(listDentist.get(dentisPosition));
                             mAdapter.notifyDataSetChanged();
                         } else if (successResponseResponse.code() == 500) {
                             showFatalError(successResponseResponse.errorBody(), "appointmentService");
@@ -451,7 +497,9 @@ public class Appointment2Fragment extends BaseFragment {
                     public void onSuccess(Response<List<Appointment>> response) {
                         if (response.isSuccessful()) {
                             appointments.clear();
-                            appointments.addAll(response.body());
+                            appointments.addAll(sortList(response.body()));
+                            orgAppointments.clear();
+                            orgAppointments.addAll(sortList(response.body()));
                             mAdapter.notifyDataSetChanged();
                             mListView.getRecycledViewPool().clear();
                             if (appointments.isEmpty()) {
@@ -461,6 +509,7 @@ public class Appointment2Fragment extends BaseFragment {
                             }
                             swipeRefreshLayout.setRefreshing(false);
                             mListView.getLayoutManager().removeAllViews();
+//                            mFilter.build();
                         } else if (response.code() == 500) {
                             showFatalError(response.errorBody(), "appointmentService");
                         } else if (response.code() == 401) {
@@ -484,7 +533,7 @@ public class Appointment2Fragment extends BaseFragment {
 
     private List<Appointment> sortList(List<Appointment> appointments) {
         List<Appointment> list = appointments;
-        list.sort(Comparator.comparing(Appointment::getNumericalOrder).thenComparing(Appointment::getStatus));
+        list.sort(Comparator.comparing(Appointment::getNumericalOrder));
 
 //        List<Appointment> list1 = new ArrayList<>();
 //        for (int i = 0; i < list.size(); i++) {
@@ -589,11 +638,120 @@ public class Appointment2Fragment extends BaseFragment {
                 });
     }
 
+//    private void callApiGetListDentist2() {
+//        StaffService service = APIServiceManager.getService(StaffService.class);
+//        Calendar c = Calendar.getInstance();
+//        String currentDate = DateUtils.getDate(c.getTime(), DateTimeFormat.DATE_TIME_DB_2);
+//        service.getCurrentFreeDentistAt(currentDate)
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new SingleObserver<Response<List<Staff>>>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(Response<List<Staff>> listResponse) {
+//                        if (listResponse.isSuccessful()) {
+//                            if (listResponse.body() != null) {
+//                                listDentist.clear();
+//                                listItemDentist2.clear();
+//                                listDentist.add(new Staff(-1,"Tất cả bác sĩ"));
+//                                listDentist.addAll(listResponse.body());
+//                                listItemDentist2.addAll(convertListDentist2(listDentist));
+//                                searchDentistWithFilterDialog = new SearchDentistWithFilterDialog(getActivity(), listItemDentist2, "Tìm kiếm nha sĩ");
+//                                searchDentistWithFilterDialog.setOnItemSelected(new SearchDentistWithFilterDialog.OnSearchDentistItemSelected() {
+//                                    @Override
+//                                    public void onClick(int position, SearchDentistFiterAdapter.SearchDentisItem searchListItem) {
+//                                        txtDentistName.setText(listDentist.get(position).getName());
+//                                        List<Appointment> list = new ArrayList<>();
+//                                        staffSelected = listDentist.get(position);
+//                                        if(position == 0){
+//                                            if(statusSelected.isEmpty()){
+//                                                appointments.clear();
+//                                                appointments.addAll(orgAppointments);
+//                                                mAdapter.notifyDataSetChanged();
+//                                            }else{
+//                                                appointments.clear();
+//                                                for (Status status: statusSelected){
+//                                                    for (int i = 0 ; i< orgAppointments.size();i++){
+//                                                        if(orgAppointments.get(i).getStatus() == status.getId()){
+//                                                            appointments.add(orgAppointments.get(i));
+//                                                        }
+//                                                    }
+//                                                }
+//                                                mAdapter.notifyDataSetChanged();
+//                                            }
+//                                        }else{
+//                                            if(statusSelected.isEmpty()){
+//                                                for (int i = 0;i<orgAppointments.size(); i++){
+//                                                    if(orgAppointments.get(i).getStaff().getId() == listDentist.get(position).getId()){
+//                                                        list.add(orgAppointments.get(i));
+//                                                    }
+//                                                }
+//                                                appointments.clear();
+//                                                appointments.addAll(list);
+//                                                mAdapter.notifyDataSetChanged();
+//                                            }else{
+//                                                for (Status status: statusSelected) {
+//                                                    for (int i = 0; i < orgAppointments.size(); i++) {
+//                                                        if (orgAppointments.get(i).getStaff().getId() == listDentist.get(position).getId()
+//                                                                && orgAppointments.get(i).getStatus() == status.getId()) {
+//                                                            list.add(appointments.get(i));
+//                                                        }
+//                                                    }
+//                                                }
+//                                                appointments.clear();
+//                                                appointments.addAll(list);
+//                                                mAdapter.notifyDataSetChanged();
+//                                            }
+//
+//
+//                                        }
+//                                    }
+//                                });
+//                                if (searchDentistWithFilterDialog != null && listDentist != null && listDentist.size() > 0) {
+//                                    searchDentistWithFilterDialog.show();
+//                                } else {
+//                                    showMessage("Danh sách nha sĩ trống");
+//                                }
+//                            }
+//                        } else if (listResponse.code() == 500) {
+//                            showFatalError(listResponse.errorBody(), "callApiGetListDentist");
+//                        } else if (listResponse.code() == 401) {
+//                            showErrorUnAuth();
+//                        } else if (listResponse.code() == 400) {
+//                            showBadRequestError(listResponse.errorBody(), "callApiGetListDentist");
+//                        } else {
+//                            showDialog(getString(R.string.error_message_api));
+//                        }
+//                        hideLoading();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        e.printStackTrace();
+//                        showErrorMessage("Không thể kết nối đến máy chủ");
+//                    }
+//                });
+//    }
+
     private List<SearchDentistAdapter.SearchDentisItem> convertListDentist(List<Staff> list) {
         List<SearchDentistAdapter.SearchDentisItem> listItems = new ArrayList<>();
         for (Staff s : list) {
             SearchDentistAdapter.SearchDentisItem item =
                     new SearchDentistAdapter.SearchDentisItem(s.getId(), s.getName(), s.getStatus());
+            listItems.add(item);
+        }
+        return listItems;
+    }
+
+    private List<SearchDentistFiterAdapter.SearchDentisItem> convertListDentist2(List<Staff> list) {
+        List<SearchDentistFiterAdapter.SearchDentisItem> listItems = new ArrayList<>();
+        for (Staff s : list) {
+            SearchDentistFiterAdapter.SearchDentisItem item =
+                    new SearchDentistFiterAdapter.SearchDentisItem(s.getId(), s.getName(), s.getStatus(), s.getAvatar());
             listItems.add(item);
         }
         return listItems;

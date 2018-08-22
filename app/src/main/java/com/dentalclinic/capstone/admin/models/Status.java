@@ -8,12 +8,27 @@ import com.yalantis.filter.model.FilterModel;
  * Created by galata on 16.09.16.
  */
 public class Status implements FilterModel {
+    private int id;
     private String text;
     private int color;
 
     public Status(String text, int color) {
         this.text = text;
         this.color = color;
+    }
+
+    public Status(int id, String text, int color) {
+        this.id = id;
+        this.text = text;
+        this.color = color;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @NonNull
