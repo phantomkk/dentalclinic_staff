@@ -55,7 +55,6 @@ import retrofit2.Response;
 public class BookAppointmentReceptActivity extends BaseActivity {
     private AutoCompleteTextView tvPhone;
     private AutoCompleteTextView tvFullname;
-    private AutoCompleteTextView tvEstimatedTime;
     private TextView tvDate;
     private TextView tvDateError;
     private TextView tvDentist;
@@ -91,8 +90,8 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         }
         Intent i = getIntent();
         if (i != null) {
-            patient = (Patient) i.getSerializableExtra(SearchPatientFragment.PATIENT_INFO);
-            currentDentist = (Staff) i.getSerializableExtra(SearchPatientFragment.STAFF_INFO);
+            patient = (Patient) (i.getSerializableExtra(SearchPatientFragment.PATIENT_INFO));
+//            currentDentist = (Staff) i.getSerializableExtra(SearchPatientFragment.STAFF_INFO);
             phone =  i.getStringExtra(AppConst.PHONE);
 
         }
@@ -125,7 +124,6 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         tvDate = findViewById(R.id.tv_date_book_appt);
         tvDentist = findViewById(R.id.lbl_dentist_slt);
         tvDateError = findViewById(R.id.tv_date_error_book_appt);
-        tvEstimatedTime = findViewById(R.id.tv_estimated_time);
         tvPhone = findViewById(R.id.tv_phone_book_appt);
         btnBookAppt = findViewById(R.id.btn_book_appt);
         btnShowListDentist = findViewById(R.id.btn_list_dentist);
@@ -233,9 +231,7 @@ public class BookAppointmentReceptActivity extends BaseActivity {
                 dateBooking,
                 DateTimeFormat.DATE_APP,
                 DateTimeFormat.DATE_TIME_DB);
-        int estimatedTime = Integer.parseInt(tvEstimatedTime.getText().toString());
-        logError("LOG_ABC", estimatedTime + "");
-        String time = getTimeInStr(estimatedTime);
+        String time = getTimeInStr(30);
         AppointmentRequest request = new AppointmentRequest();
         request.setDate(bookingDate);
         request.setNote(note);
@@ -280,7 +276,6 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         String phone = tvPhone.getText().toString().trim();
         String note = comtvNote.getText().toString().trim();
         String txtDate = tvDate.getText().toString().trim();
-        String txtEstimatedTime = tvEstimatedTime.getText().toString().trim();
         View viewFocus = null;
         int min = 0;
         if (!Validation.isPhoneValid(phone)) {
@@ -292,16 +287,6 @@ public class BookAppointmentReceptActivity extends BaseActivity {
             viewFocus = tvDateError;
             tvDateError.setText("Vui lòng chọn ngày");
             isAllFieldValid = false;
-        } else if (txtEstimatedTime.trim().length() == 0) {
-            tvEstimatedTime.setError("Vui lòng điền số phút ước tính");
-        } else if ((Integer.parseInt(tvEstimatedTime.getText().toString().trim())) > 120) {
-            tvEstimatedTime.setError("Số phút không được vượt quá 120 phút");
-            isAllFieldValid = false;
-            viewFocus = tvEstimatedTime;
-        } else if ((Integer.parseInt(tvEstimatedTime.getText().toString().trim())) < 5) {
-            tvEstimatedTime.setError("Số phút nhỏ nhất là 5 phút");
-            isAllFieldValid = false;
-            viewFocus = tvEstimatedTime;
         }
         if (!isAllFieldValid) {
             viewFocus.requestFocus();
@@ -316,14 +301,14 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         appointmentService.bookAppointment(requestObj)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<List<Appointment>>>() {
+                .subscribe(new SingleObserver<Response<Appointment>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         appointmentDisposable = d;
                     }
 
                     @Override
-                    public void onSuccess(Response<List<Appointment>> response) {
+                    public void onSuccess(Response<Appointment> response) {
                         if (response.isSuccessful()) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(BookAppointmentReceptActivity.this)
                                     .setTitle(getString(R.string.dialog_default_title))

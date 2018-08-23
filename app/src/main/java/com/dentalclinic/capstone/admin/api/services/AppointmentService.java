@@ -24,7 +24,7 @@ public interface AppointmentService {
     Single<Response<Appointment>> getById(@Path("id") int id);
 
     @POST("api/staff/bookAppointment")
-    Single<Response<List<Appointment>>> bookAppointment(@Body AppointmentRequest appointmentRequest);
+    Single<Response<Appointment>> bookAppointment(@Body AppointmentRequest appointmentRequest);
 
     @GET("api/staff/getPatientAppointmentByDate")
     Single<Response<List<Appointment>>> getApppointmentByDate(@Query("staff_id") int id, @Query("date") String date);

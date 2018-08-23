@@ -231,14 +231,14 @@ public class BookAppointmentActivity extends BaseActivity {
         appointmentService.bookAppointment(requestObj)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<List<Appointment>>>() {
+                .subscribe(new SingleObserver<Response<Appointment>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         appointmentDisposable = d;
                     }
 
                     @Override
-                    public void onSuccess(Response<List<Appointment>> response) {
+                    public void onSuccess(Response<Appointment> response) {
                         if (response.isSuccessful()) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(BookAppointmentActivity.this)
                                     .setTitle(getString(R.string.dialog_default_title))
