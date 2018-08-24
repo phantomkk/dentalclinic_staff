@@ -164,27 +164,27 @@
     <string name="my_acc_birthday_label">Ngày sinh</string>
     <string name="my_acc_degree_label">Chức Vụ</string>
     <string name="my_acc_email_label">Email</string>
-    <string name="my_acc_edit_button">Chỉnh Sửa Tài Khoản</string>
-    <string name="my_acc_edit_treatment_detail">Chỉnh Sửa</string>
+    <string name="my_acc_edit_button">Chỉnh sửa tài khoản</string>
+    <string name="my_acc_edit_treatment_detail">Chỉnh sửa</string>
     <string name="my_acc_district_text">Quận</string>
     <string name="my_acc_city_text">Thành phố</string>
     <!-- Edit Accout Activity -->
-    <string name="edit_acc_title">Chỉnh Sửa Tài Khoản</string>
-    <string name="edit_acc_update_button">Cập Nhật</string>
+    <string name="edit_acc_title">Chỉnh sửa tài khoản</string>
+    <string name="edit_acc_update_button">Cập nhật</string>
     <!-- Edit Password Activity -->
-    <string name="edit_pass_title">Chỉnh Sửa Mật Khẩu</string>
-    <string name="edit_pass_button">Cập Nhật</string>
+    <string name="edit_pass_title">Chỉnh sửa mật khẩu</string>
+    <string name="edit_pass_button">Cập nhật</string>
 
 
-    <string name="label_content_feedback">Góp Ý</string>
+    <string name="label_content_feedback">Góp ý</string>
     <string name="label_question_feedback">Bạn thấy dịch vụ của chúng tôi như thế nào?</string>
     <string name="error_message_api">Có vẻ như đã có lỗi xảy ra, vui lòng thử lại.</string>
-    <string name="success_message_api">Cập Nhật Thành Công</string>
+    <string name="success_message_api">Cập nhật thành công</string>
     <string name="title_activity_main">MainActivity</string>
 
     <string name="search_patient_titie">Tìm Kiếm Bệnh Nhân</string>
-    <string name="history_work_title">Lịch hẹn</string>
-    <string name="appointment_title">Khám bệnh</string>
+    <string name="history_work_title">Lịch Hẹn</string>
+    <string name="appointment_title">Khám Bệnh</string>
     <string name="appointment_title_2">Nhận Bệnh</string>
     <string name="absent_title">Nghỉ Phép</string>
     <string name="chart_title">Biểu Đồ Khám Bệnh</string>
@@ -192,10 +192,10 @@
     <string name="line_chart_title">Doanh Thu</string>
 
 
-    <string name="action_today">Hôm Hay</string>
+    <string name="action_today">Hôm nay</string>
     <string name="action_day_view">Xem ngày</string>
     <string name="action_three_day_view">Xem 3 ngày</string>
-    <string name="action_week_view">Xem Tuần</string>
+    <string name="action_week_view">Xem tuần</string>
     <string name="async_error">Không thể tải dữ liệu</string>
 
 
@@ -204,7 +204,7 @@
     <string name="search_phone_hint">Nhập số điện thoại</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="label_date_picker">Lý do</string>
-    <string name="str_all_selected">Tất Cả Trạng Thái</string>
+    <string name="str_all_selected">Tất cả trạng thái</string>
 
     <string name="button_choose_dialog">Chọn</string>
     <string name="button_cancel_dialog">Hủy</string>

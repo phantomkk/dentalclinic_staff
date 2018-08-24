@@ -236,7 +236,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="Sửa hồ sơ bệnh nhân" />
+                android:text="Hoàn thành" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -201,12 +201,15 @@ public class EditPatientActivity extends BaseActivity {
 //                        for (AnamnesisCatalog a : patientAnamnesis) {
 //                            listAnamnesis += a.getName() + "\n";
 //                        }
+            if (patient.getListAnamnesis() != null) {
+
             for (int i = 0 ;i <patient.getListAnamnesis().size();i++){
                 if(i==patient.getListAnamnesis().size()-1){
                     listAnamnesis+="-"+ patient.getListAnamnesis().get(i).getName();
                 }else{
                     listAnamnesis+="-"+ patient.getListAnamnesis().get(i).getName()+"\n";
                 }
+            }
             }
             tvAnamnesis.setText(listAnamnesis);
         }

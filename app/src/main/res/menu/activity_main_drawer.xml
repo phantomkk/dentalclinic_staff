@@ -51,7 +51,7 @@
                 <item
                     android:id="@+id/nav_setting"
                     android:icon="@drawable/ic_settings_black_24dp"
-                    android:title="Cài đặt" />
+                    android:title="Cài Đặt" />
             </group>
             <item
                 android:id="@+id/nav_log_out" android:numericShortcut="@string/label_address_book_appt"

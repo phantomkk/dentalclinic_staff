@@ -17,7 +17,7 @@
     <dimen name="margin_cancel_ok">10dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
-    <dimen name="input_size_normal">16sp</dimen>
+    <dimen name="input_size_normal">14sp</dimen>
     <dimen name="spacing">16dp</dimen>
 
 </resources>

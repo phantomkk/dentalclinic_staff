@@ -156,13 +156,13 @@ public class MainActivity extends BaseActivity
             navigationView.getMenu().findItem(R.id.nav_appointment_list).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_chart).setVisible(false);
             clinicAppointmentItem = navigationView.getMenu().findItem(R.id.nav_appointment_list_2);
-            setNumMenuItem(clinicAppointmentItem, 0);
+//            setNumMenuItem(clinicAppointmentItem, 0);
             Utils.subscribeReloadClinicAppointment();
         } else if (Utils.isDentist(MainActivity.this)) {
             navigationView.getMenu().findItem(R.id.nav_appointment_list_2).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_bar_chart).setVisible(false);
             dentistAppointmentItem = navigationView.getMenu().findItem(R.id.nav_appointment_list);
-            setNumMenuItem(dentistAppointmentItem, 0);
+//            setNumMenuItem(dentistAppointmentItem, 0);
             Utils.unsubscribeReloadClinicAppointment();
         }
     }
@@ -545,7 +545,7 @@ public class MainActivity extends BaseActivity
             MyAccoutFragment newFragment = new MyAccoutFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, newFragment).commit();
         } else if (id == R.id.nav_setting) {
-            setTitle("Cài đặt");
+            setTitle("Cài Đặt");
             SettingFragment settingFragment = new SettingFragment();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, settingFragment).commit();
             //donothing
@@ -624,21 +624,21 @@ public class MainActivity extends BaseActivity
     public void increaseNumDentistAppointment() {
         if (Utils.isDentist(MainActivity.this) && dentistAppointmentItem!=null && selectedMenuItem != dentistAppointmentItem) {
             numDentistAppointment++;
-            setNumMenuItem(dentistAppointmentItem, numDentistAppointment);
+            setNumMenuItem(dentistAppointmentItem, numDentistAppointment+ "");
         }
     }
 
     public void clearNumDentistAppointment(MenuItem item) {
         if (Utils.isDentist(MainActivity.this) && item!=null) {
             numDentistAppointment = 0;
-            setNumMenuItem(item, numDentistAppointment);
+            setNumMenuItem(item, "");
         }
     }
 
     public void increaseNumClinicAppointment() {
         if (Utils.isRceiption(MainActivity.this) && clinicAppointmentItem!=null) {
             numClinicAppointment++;
-            setNumMenuItem(clinicAppointmentItem, numClinicAppointment);
+            setNumMenuItem(clinicAppointmentItem, numClinicAppointment+ "");
 
         }
     }
@@ -646,12 +646,12 @@ public class MainActivity extends BaseActivity
     public void clearNumClinicAppointment(MenuItem item) {
         if (Utils.isRceiption(MainActivity.this) && item!=null) {
             numClinicAppointment = 0;
-            setNumMenuItem(item, numClinicAppointment);
+            setNumMenuItem(item, "");
         }
     }
-    public void setNumMenuItem(MenuItem item, int num) {
+    public void setNumMenuItem(MenuItem item, String num) {
             TextView v = (TextView) item.getActionView();
-            v.setText(num + "");
+            v.setText(num);
     }
     @Override
     public void onResume() {
