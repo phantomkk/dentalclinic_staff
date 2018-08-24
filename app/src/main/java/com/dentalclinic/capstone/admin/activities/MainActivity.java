@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity
         mStaffName = header.findViewById(R.id.txt_staff_name);
         mStaffPhone = header.findViewById(R.id.txt_staff_phone);
         staff = CoreManager.getStaff(MainActivity.this);
-        Utils.setVNLocale(this);
+//        Utils.setVNLocale(this);
         SettingManager.initSetting(this);
         setDataHeader(staff);
 //

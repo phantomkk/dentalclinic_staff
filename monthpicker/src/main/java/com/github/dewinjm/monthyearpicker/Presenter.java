@@ -21,7 +21,9 @@ public class Presenter implements NumberPicker.OnValueChangeListener {
     private OnDateChangedListener onDateChangedListener;
 
     Presenter(IPickerView pickerView) {
-        setCurrentLocale(Locale.getDefault());
+//        setCurrentLocale(Locale.getDefault());
+//        setCurrentLocale(new Locale("vi", "VN"));
+        setCurrentLocale( Locale.forLanguageTag("vi_VN"));
 
         this.pickerView = pickerView;
         pickerView.setShortMonth(shortMonths);
