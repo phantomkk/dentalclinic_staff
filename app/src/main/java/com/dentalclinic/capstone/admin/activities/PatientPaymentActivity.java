@@ -38,6 +38,7 @@ public class PatientPaymentActivity extends BaseActivity {
     private FloatingActionButton btnCreateNew;
     private String phone;
     private CreateNewPaymentDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,28 +60,32 @@ public class PatientPaymentActivity extends BaseActivity {
         Intent i = getIntent();
         payments = (ArrayList<Payment>) i.getSerializableExtra(PatientDetailActivity.LIST_PAYMENT);
         phone = i.getStringExtra(AppConst.PHONE);
-        if(payments.isEmpty()){
+        if (payments.isEmpty()) {
             txtMessage.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             txtMessage.setVisibility(View.GONE);
         }
         adapter = new PaymentAdapter(this, payments, expandableListView);
         expandableListView.setAdapter(adapter);
-        if(Utils.isDentist(PatientPaymentActivity.this)){
+        if (Utils.isDentist(PatientPaymentActivity.this)) {
             btnCreateNew.setVisibility(View.GONE);
         }
         btnCreateNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog = new CreateNewPaymentDialog(PatientPaymentActivity.this, payments.get(payments.size()-1));
-                dialog.setListener(new CreateNewPaymentDialog.OnButtonClickListener() {
-                    @Override
-                    public void onSave(float money, Payment payment) {
-                        CreateNewPaymentDetail(money,payment, phone);
-                    }
-                });
-                dialog.setCanceledOnTouchOutside(true);
-                dialog.show();
+                if (!payments.isEmpty()) {
+                    dialog = new CreateNewPaymentDialog(PatientPaymentActivity.this, payments.get(payments.size() - 1));
+                    dialog.setListener(new CreateNewPaymentDialog.OnButtonClickListener() {
+                        @Override
+                        public void onSave(float money, Payment payment) {
+                            CreateNewPaymentDetail(money, payment, phone);
+                        }
+                    });
+                    dialog.setCanceledOnTouchOutside(true);
+                    dialog.show();
+                }else{
+                    showMessage("Bệnh nhân này chưa có chi trả hoặc chưa được khám bệnh");
+                }
             }
         });
     }
@@ -101,10 +106,10 @@ public class PatientPaymentActivity extends BaseActivity {
 
     }
 
-    public void CreateNewPaymentDetail(float money, Payment payment, String phone){
+    public void CreateNewPaymentDetail(float money, Payment payment, String phone) {
         showLoading();
         PaymentService service = APIServiceManager.getService(PaymentService.class);
-        service.updatePayment(phone, CoreManager.getStaff(this).getId(),money,payment.getId())
+        service.updatePayment(phone, CoreManager.getStaff(this).getId(), money, payment.getId())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Response<List<Payment>>>() {
@@ -115,7 +120,7 @@ public class PatientPaymentActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(Response<List<Payment>> listResponse) {
-                        if(listResponse.isSuccessful()){
+                        if (listResponse.isSuccessful()) {
                             payments.clear();
                             payments.addAll(listResponse.body());
                             adapter.notifyDataSetChanged();

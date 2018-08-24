@@ -96,6 +96,7 @@
     <string name="percent">%</string>
     <string name="status_not_done">Chưa Hoàn Thành</string>
     <string name="status_done">Hoàn Thành</string>
+    <string name="status_cancle">Hủy</string>
     <string name="account_nav_bar_title">Tài Khoản</string>
 
 

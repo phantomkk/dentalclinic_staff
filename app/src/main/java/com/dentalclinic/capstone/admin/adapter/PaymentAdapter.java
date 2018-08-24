@@ -226,13 +226,27 @@ private BtnCheckoutListenter btnCheckOutClickListener;
         if(payment.getTotalPrice()!=null && payment.getPaid()!=null){
             viewHolder.txtNotPayYet.setText(Utils.formatMoney(payment.getTotalPrice()-payment.getPaid()) + context.getResources().getString(R.string.current_unit));
         }
-        if (payment.isDone() == 1) {
-            viewHolder.txtStatus.setText(context.getResources().getString(R.string.status_done));
-            viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.color_green_500));
-        } else {
-            viewHolder.txtStatus.setText(context.getResources().getString(R.string.status_not_done));
-            viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.color_red_500));
+        switch (payment.getStatus()){
+            case 0:
+                viewHolder.txtStatus.setText(context.getResources().getString(R.string.status_not_done));
+                viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.color_red_500));
+                break;
+            case 1:
+                viewHolder.txtStatus.setText(context.getResources().getString(R.string.status_done));
+                viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.color_green_500));
+                break;
+            case 2:
+                viewHolder.txtStatus.setText(context.getResources().getString(R.string.status_cancle));
+                viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.color_red_500));
+                break;
         }
+//        if (payment.isDone() == 1) {
+//            viewHolder.txtStatus.setText(context.getResources().getString(R.string.status_done));
+//            viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.color_green_500));
+//        } else {
+//            viewHolder.txtStatus.setText(context.getResources().getString(R.string.status_not_done));
+//            viewHolder.txtStatus.setTextColor(context.getResources().getColor(R.color.color_red_500));
+//        }
         return convertView;
     }
 

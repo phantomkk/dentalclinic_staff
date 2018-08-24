@@ -16,6 +16,8 @@ public class Payment implements Serializable {
     private User user;
     @SerializedName("is_done")
     private int isDone;
+    @SerializedName("status")
+    private int status;
     @SerializedName("treatment_histories")
     private List<TreatmentHistory> treatmentHistories;
     @SerializedName("payment_details")
@@ -98,5 +100,13 @@ public class Payment implements Serializable {
 
     public void setPaid(Long paid) {
         this.paid = paid;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
