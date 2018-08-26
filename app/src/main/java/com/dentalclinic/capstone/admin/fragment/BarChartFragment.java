@@ -194,7 +194,7 @@ public class BarChartFragment extends BaseFragment implements OnChartValueSelect
     private void prepareData() {
         showLoading();
         ChartService service = APIServiceManager.getService(ChartService.class);
-        service.getDataBarChart(monthSelected, yearSelected)
+        service.getDataBarChart(monthSelected+1, yearSelected)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Response<List<BarChartData>>>() {
