@@ -51,6 +51,7 @@ import com.dentalclinic.capstone.admin.utils.AppConst;
 import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.SettingManager;
 import com.dentalclinic.capstone.admin.utils.Utils;
+import com.github.dewinjm.monthyearpicker.Util;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.squareup.picasso.Picasso;
 
@@ -253,18 +254,22 @@ public class MainActivity extends BaseActivity
                                 searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
 //                                searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
                                 searchPatientFragment.removeAllButton();
-                                searchPatientFragment.addButtonNewPatient();
+                                if (Utils.isRceiption(MainActivity.this)) {
+                                    searchPatientFragment.addButtonNewPatient();
+                                }
+                                searchPatientFragment.addButtonAppointment();
                             }
                         } else {
                             if (searchPatientFragment != null) {
                                 searchPatientFragment.setPatientsAndNotifiAdapter(combinePatientClass.getPatients().body());
 //                                searchPatientFragment.setAppointmentAndNotifiAdapter(response.body().getAppointments());
-                                searchPatientFragment.enableAllButton();
+//                                searchPatientFragment.enableAllButton();
                                 searchPatientFragment.removeAllButton();
-                                searchPatientFragment.addButtonNewPatient();
-                                searchPatientFragment.addButtonPayment();
+                                if (Utils.isRceiption(MainActivity.this)) {
+                                    searchPatientFragment.addButtonNewPatient();
+                                    searchPatientFragment.addButtonPayment();
+                                }
                                 searchPatientFragment.addButtonAppointment();
-
                             }
                         }
                     } else if (combinePatientClass.getPatients().code() == 500) {
@@ -280,7 +285,11 @@ public class MainActivity extends BaseActivity
                             searchPatientFragment.setPatientsAndNotifiAdapter(new ArrayList<Patient>());
 //                            searchPatientFragment.setAppointmentAndNotifiAdapter(new ArrayList<Appointment>());
                             searchPatientFragment.removeAllButton();
-                            searchPatientFragment.addButtonNewPatient();
+//                            searchPatientFragment.addButtonNewPatient();
+                            if (Utils.isRceiption(MainActivity.this)) {
+                                searchPatientFragment.addButtonNewPatient();
+                            }
+                            searchPatientFragment.addButtonAppointment();
                         }
 //                        showBadRequestError(combinePatientClass.getAppointments().errorBody(),"combineGetAppointment");
                         logError("calPatient", "lỗi");
@@ -622,49 +631,51 @@ public class MainActivity extends BaseActivity
     }
 
     public void increaseNumDentistAppointment() {
-        if (Utils.isDentist(MainActivity.this) && dentistAppointmentItem!=null && selectedMenuItem != dentistAppointmentItem) {
+        if (Utils.isDentist(MainActivity.this) && dentistAppointmentItem != null && selectedMenuItem != dentistAppointmentItem) {
             numDentistAppointment++;
-            setNumMenuItem(dentistAppointmentItem, numDentistAppointment+ "");
+            setNumMenuItem(dentistAppointmentItem, numDentistAppointment + "");
         }
     }
 
     public void clearNumDentistAppointment(MenuItem item) {
-        if (Utils.isDentist(MainActivity.this) && item!=null) {
+        if (Utils.isDentist(MainActivity.this) && item != null) {
             numDentistAppointment = 0;
             setNumMenuItem(item, "");
         }
     }
 
     public void increaseNumClinicAppointment() {
-        if (Utils.isRceiption(MainActivity.this) && clinicAppointmentItem!=null) {
+        if (Utils.isRceiption(MainActivity.this) && clinicAppointmentItem != null) {
             numClinicAppointment++;
-            setNumMenuItem(clinicAppointmentItem, numClinicAppointment+ "");
+            setNumMenuItem(clinicAppointmentItem, numClinicAppointment + "");
 
         }
     }
 
     public void clearNumClinicAppointment(MenuItem item) {
-        if (Utils.isRceiption(MainActivity.this) && item!=null) {
+        if (Utils.isRceiption(MainActivity.this) && item != null) {
             numClinicAppointment = 0;
             setNumMenuItem(item, "");
         }
     }
+
     public void setNumMenuItem(MenuItem item, String num) {
-            TextView v = (TextView) item.getActionView();
-            v.setText(num);
+        TextView v = (TextView) item.getActionView();
+        v.setText(num);
     }
+
     @Override
     public void onResume() {
         super.onResume();
-            LocalBroadcastManager.getInstance(this)
-                    .registerReceiver(mMessageReceiver, new IntentFilter(AppConst.ACTION_RELOAD));
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(mMessageReceiver, new IntentFilter(AppConst.ACTION_RELOAD));
         Log.d("DEBUG_TAG", "MainActivity REGISTER");
     }
 
     @Override
     public void onPause() {
-            LocalBroadcastManager.getInstance(this)
-                    .unregisterReceiver(mMessageReceiver);
+        LocalBroadcastManager.getInstance(this)
+                .unregisterReceiver(mMessageReceiver);
         Log.d("DEBUG_TAG", "MainActivity PAUSE");
         super.onPause();
     }

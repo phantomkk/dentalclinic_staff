@@ -180,7 +180,7 @@
         android:layout_width="100dp"
         android:layout_height="match_parent"
         android:background="@color/color_blue_800"
-        android:text="Đổi bác sĩ"
+        android:text="Đổi nha sĩ"
         android:textColor="@android:color/white" />
     <Button
         android:id="@+id/btn_cancle"

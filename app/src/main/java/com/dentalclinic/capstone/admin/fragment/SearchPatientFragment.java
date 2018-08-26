@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.ajithvgiri.searchdialog.SearchableDialog;
 import com.dentalclinic.capstone.admin.R;
+import com.dentalclinic.capstone.admin.activities.BookAppointmentActivity;
 import com.dentalclinic.capstone.admin.activities.BookAppointmentReceptActivity;
 import com.dentalclinic.capstone.admin.activities.CreatePatientActivity;
 import com.dentalclinic.capstone.admin.activities.LoginActivity;
@@ -61,6 +62,7 @@ import com.dentalclinic.capstone.admin.utils.DateUtils;
 import com.dentalclinic.capstone.admin.utils.Utils;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.github.dewinjm.monthyearpicker.Util;
 import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
@@ -146,7 +148,13 @@ public class SearchPatientFragment extends BaseFragment {
         btnNewAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), BookAppointmentReceptActivity.class);
+                Intent intent;
+                if(Utils.isRceiption(getContext())){
+                    intent = new Intent(getContext(), BookAppointmentReceptActivity.class);
+                }else{
+                    intent = new Intent(getContext(), BookAppointmentActivity.class);
+                }
+//                Intent intent = new Intent(getContext(), BookAppointmentReceptActivity.class);
                 intent.putExtra(AppConst.PHONE, phone);
                 startActivityForResult(intent,REUQUEST_CREATE_APPOINTMENT);
             }
@@ -167,9 +175,9 @@ public class SearchPatientFragment extends BaseFragment {
         });
 
         menuMultipleActions = view.findViewById(R.id.multiple_actions);
-        if(Utils.isDentist(getContext())){
-            menuMultipleActions.setVisibility(View.GONE);
-        }
+//        if(Utils.isDentist(getContext())){
+//            menuMultipleActions.setVisibility(View.GONE);
+//        }
         menuMultipleActions.addButton(btnNewAppointment);
         menuMultipleActions.addButton(btnNewPayment);
         menuMultipleActions.addButton(btnNewPatient);
@@ -347,8 +355,13 @@ public class SearchPatientFragment extends BaseFragment {
 
     public void removeAllButton() {
 //        btnNewPatient.setVisibility(View.GONE);
-        btnNewPayment.setVisibility(View.GONE);
-        btnNewAppointment.setVisibility(View.GONE);
+        if(Utils.isDentist(getContext())){
+            btnNewPayment.setVisibility(View.GONE);
+            btnNewPatient.setVisibility(View.GONE);
+        }else{
+            btnNewPayment.setVisibility(View.GONE);
+        }
+//        btnNewAppointment.setVisibility(View.GONE);
     }
 
     public void addButtonNewPatient() {
@@ -625,7 +638,7 @@ public class SearchPatientFragment extends BaseFragment {
                     @Override
                     public void onSuccess(Response<SuccessResponse> successResponseResponse) {
                         if (successResponseResponse.isSuccessful()) {
-                            showMessage("Đổi bác sĩ thành công!");
+                            showMessage("Đổi nha sĩ thành công!");
                             appointments.get(appointmentPos).setStaff(listDentist.get(dentisPosition));
                             mAdapter2.notifyDataSetChanged();
                         } else if (successResponseResponse.code() == 500) {

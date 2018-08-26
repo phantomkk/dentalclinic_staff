@@ -457,7 +457,7 @@ public class Appointment2Fragment extends BaseFragment {
                     @Override
                     public void onSuccess(Response<SuccessResponse> successResponseResponse) {
                         if (successResponseResponse.isSuccessful()) {
-                            showMessage("Đổi bác sĩ thành công!");
+                            showMessage("Đổi nha sĩ thành công!");
                             appointments.get(appointmentPos).setStaff(listDentist.get(dentisPosition));
 //                            orgAppointments.get(appointmentPos).setStaff(listDentist.get(dentisPosition));
                             mAdapter.notifyDataSetChanged();

@@ -11,8 +11,10 @@ import com.dentalclinic.capstone.admin.R;
 import com.dentalclinic.capstone.admin.api.APIServiceManager;
 import com.dentalclinic.capstone.admin.api.responseobject.SuccessResponse;
 import com.dentalclinic.capstone.admin.api.services.StaffService;
+import com.dentalclinic.capstone.admin.model.FingerAuthObj;
 import com.dentalclinic.capstone.admin.models.Staff;
 import com.dentalclinic.capstone.admin.utils.AppConst;
+import com.dentalclinic.capstone.admin.utils.CoreManager;
 import com.dentalclinic.capstone.admin.utils.Validation;
 
 import io.reactivex.SingleObserver;
@@ -126,6 +128,9 @@ public class EditPasswordActivity extends BaseActivity implements View.OnClickLi
                             if (response.body() != null) {
                                 showMessage("Đổi mật khẩu thành công");
                                 finish();
+                                FingerAuthObj obj = CoreManager.getFingerAuthObj(EditPasswordActivity.this);
+                                obj.setPassword(newPassword);
+                                CoreManager.setFingerAuthObj(EditPasswordActivity.this,obj);
                             }
                         } else if (response.code() == 500) {
                             showFatalError(response.errorBody(), "callApiUpdate password");
