@@ -301,18 +301,18 @@ public class BookAppointmentReceptActivity extends BaseActivity {
         appointmentService.bookAppointment(requestObj)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<Appointment>>() {
+                .subscribe(new SingleObserver<Response<String>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         appointmentDisposable = d;
                     }
 
                     @Override
-                    public void onSuccess(Response<Appointment> response) {
+                    public void onSuccess(Response<String> response) {
                         if (response.isSuccessful()) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(BookAppointmentReceptActivity.this)
                                     .setTitle(getString(R.string.dialog_default_title))
-                                    .setMessage("Đặt lịch thành công")
+                                    .setMessage(response.body())
                                     .setPositiveButton("Xác nhận", (DialogInterface var1, int var2) -> {
                                         setResult(RESULT_OK);
                                         finish();

@@ -231,18 +231,18 @@ public class BookAppointmentActivity extends BaseActivity {
         appointmentService.bookAppointment(requestObj)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<Appointment>>() {
+                .subscribe(new SingleObserver<Response<String>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         appointmentDisposable = d;
                     }
 
                     @Override
-                    public void onSuccess(Response<Appointment> response) {
+                    public void onSuccess(Response<String> response) {
                         if (response.isSuccessful()) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(BookAppointmentActivity.this)
                                     .setTitle(getString(R.string.dialog_default_title))
-                                    .setMessage("Đặt lịch thành công")
+                                    .setMessage(response.body())
                                     .setPositiveButton("Xác nhận", (DialogInterface var1, int var2) -> {
                                         setResult(Activity.RESULT_OK,
                                                 new Intent().putExtra("POSITION_APPOINTMENT", pos));
