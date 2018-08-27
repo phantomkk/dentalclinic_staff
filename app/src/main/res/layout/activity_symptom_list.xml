@@ -12,7 +12,7 @@
         android:id="@+id/spinerTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nhập tiền sử bệnh"
+        android:text="Triệu chứng"
         android:padding="5dp"
         android:textSize="17sp"
         android:textStyle="bold" />
